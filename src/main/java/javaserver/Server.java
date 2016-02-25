@@ -1,89 +1,72 @@
 package javaserver;
 
-import java.io.BufferedReader;
 import java.io.DataOutputStream;
 import java.io.IOException;
-import java.io.InputStreamReader;
 import java.net.ServerSocket;
 import java.net.Socket;
-import java.util.ArrayList;
 
-public class Server {
-	ServerSocket serverSocket;
-	Socket clientSocket;
-	static BufferedReader in;
-	static DataOutputStream out;
-
+public class Server {	
+	int port;
+	
+	private Socket clientSocket;
+	private final ServerSocket serverSocket;
+	private Reader reader;
+	private DataOutputStream output;
+	
+	private static int DEFAULT_PORT = 5000;
+	private static final String OK = "HTTP/1.1 200 OK\r\n";
 	private static final String OUTPUT_END_OF_HEADERS = "\r\n\r\n";
 
-	static int DEFAULT_PORT = 5000;
-	int port;
-	ArrayList<String> requests = new ArrayList<String>();
-	
-	Server () {
+	Server(ServerSocket serverSocket, Reader reader) {
 		this.port = DEFAULT_PORT;
+		this.serverSocket = serverSocket;
+		this.reader = reader;
 	}
 
-	Server(int port) {
+	Server(int port, ServerSocket serverSocket, Reader reader) {
 		this.port = port;
+		this.serverSocket = serverSocket;
+		this.reader = reader;
+	}	
+	
+	public void run() throws IOException {
+		this.clientSocket = acceptClient();
+		readFromSocket();
+		this.output = createOutput(clientSocket);
+		respond(OK);
+		closeSocket(clientSocket);
 	}
 
-	public void listenOnPort() {
+	public Socket acceptClient() {
 		try {
-			serverSocket = new ServerSocket(port);
-		} catch(IOException e) {
-			System.out.println("Exception caught when trying to listen on port " + port + " or listening for a connection");
-			System.out.println(e.getMessage());
-		}
-	}
-
-	public void acceptClient(ServerSocket serverSocket) {
-		try {
-			clientSocket = serverSocket.accept();
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-	}
-
-	public BufferedReader createReaderWithInput(Socket inputSocket) {
-		try {
-			return new BufferedReader(new InputStreamReader(inputSocket.getInputStream()));
+			Socket clientSocket = this.serverSocket.accept();
+			return clientSocket;
 		} catch (IOException e) {
 			e.printStackTrace();
 			return null;
 		}
 	}
-	
-	public void readFromSocket(BufferedReader reader, Socket clientSocket) throws IOException {
+
+	public void readFromSocket() throws IOException {
+		reader.initialize(clientSocket);
 		String line;
-		String request = "";
 		while ((line = reader.readLine()) != null) {
-			if (line.length() == 0) {
+			if (line.length() == 0)
 				break;
-			} else {
-				request += (line);
-			}
 		}
-			requests.add(request);
+		reader.close();
 	}
 	
-	public DataOutputStream createOutputStream() {
-		try {
-			DataOutputStream out = new DataOutputStream(clientSocket.getOutputStream());
-			return out;
-		} catch (IOException e) {
-			e.printStackTrace();
-			return null;
-		}
+	private DataOutputStream createOutput(Socket clientSocket) throws IOException {
+		return new DataOutputStream(clientSocket.getOutputStream());
 	}
 
-	public void respond(DataOutputStream out, String response) throws IOException {
-		out.writeBytes(response + OUTPUT_END_OF_HEADERS); 
+	public void respond(String response) throws IOException {
+		output.writeBytes(response + OUTPUT_END_OF_HEADERS); 
+		output.close();
 	}
 
-	public void tearDown() throws IOException {
-		out.close();
-		in.close();
-		clientSocket.close();
+	public void closeSocket(Socket socket) throws IOException {
+		socket.close();
 	}
 }

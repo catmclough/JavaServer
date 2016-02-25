@@ -1,30 +1,18 @@
 package javaserver;
 
+import org.junit.Before;
+
 import junit.framework.TestCase;
 
 public class AppTest extends TestCase{
+	//TODO: Test that acceptClientAndSetSocket() properly returns a clientSocket
+	Server server;
 	
+	@Before
 	public void setUp() {
-		
 	}
 	
-	public void testServer() {
-		
-	}
+	public void testCreatesServerSocket() {
 	
-	public void acceptsClient() {
-		
-	}
-	
-	public void readsFromSocket() {
-		
-	}
-	
-	public void responds() {
-		
-	}
-	
-	public void tearsDown() {
-		
 	}
 }
