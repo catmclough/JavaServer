@@ -1,78 +1,76 @@
 package javaserver;
 
 import static org.mockito.Mockito.atLeastOnce;
+import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.spy;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static org.mockito.Matchers.*;
 
-import java.io.DataOutputStream;
 import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
 
-import org.junit.Before;
+import org.junit.BeforeClass;
+import org.junit.Rule;
 import org.junit.Test;
-//import org.mockito.stubbing.Answer;
+import org.junit.rules.ExpectedException;
 
 import junit.framework.TestCase;
 
-
 public class ServerTest extends TestCase {
-	Server server;
-	ServerSocket mockedServerSocket;
+	private Server testServer;
+	private ServerSocket mockedServerSocket;
 	Socket mockedClientSocket;
-	Reader mockedReader;
+	private Reader mockedReader;
+	private SocketWriter mockedWriter;
 
-	String hostName = "localhost";
 	int defaultPort = 5000;
 	String simpleGetRequest = "GET / HTTP/1.1\r\n";
+	
+	@Rule
+	public final ExpectedException exception = ExpectedException.none();
 
-	@Before
+	@BeforeClass
 	public void setUp() {
 		this.mockedServerSocket = mock(ServerSocket.class);
 		this.mockedReader = mock(Reader.class);
-		server = new Server(mockedServerSocket, mockedReader);
+		this.mockedWriter = mock(SocketWriter.class);
+		this.testServer = spy(new Server(mockedServerSocket));
+		this.mockedClientSocket = mock(Socket.class);
 	}
+
+	
+//	@Test
+//	public void testRuns() throws IOException {
+		//test that it accepts a client
+//		when(this.mockedServerSocket.accept()).thenReturn(this.mockedClientSocket);
+//		doNothing().when(testServer).setReaderAndWriter();
+//		verify(this.mockedServerSocket).accept();
+//		assertEquals(testServer.clientSocket, mockedClientSocket);
+
+		//test that it sets a reader and writer
+		//test that it tells the reader to read from socket
+		//test that it tells the writer to respond
+//	}
 	
 	@Test
-	public void testDefaultPort() {
-		assertEquals("Default port was not set.", defaultPort , server.port);
+	public void testAcceptsClient() throws IOException {
 	}
-
-	@Test
-	public void testExplicitPortSetting() {
-		Server explicitPortServer = new Server(9090, mockedServerSocket, mockedReader);
-		assertEquals("Port was not set when constructor was called with port number as argument.", explicitPortServer.port, 9090);
-	}
-
-	@Test
-	public void testAcceptsOneClient() throws IOException {
-		ServerSocket mockedServerSocket = mock(ServerSocket.class);
-		server = new Server(mockedServerSocket, mockedReader);
-
-		server.acceptClient();
-		verify(mockedServerSocket).accept();
-	}
+//	
+//	@Test
+//	public void testServerRuns() throws IOException {
+//		this.testServer.run();
+//		verify(mockedReader, atLeastOnce()).readFromSocket(any(Socket.class));
+//		verify(mockedWriter, atLeastOnce()).respond(anyString());
+//	}
 	
-	@Test
-	public void testReadsSimpleGet() throws IOException {
-		mockedClientSocket = mock(Socket.class);
-		when(mockedReader.readLine()).thenReturn(simpleGetRequest, "");
-		server.readFromSocket();
-		verify(mockedReader, atLeastOnce()).readLine();
-		verify(mockedReader).close();
-	}
-	
-	@Test
-	public void testResponse() throws IOException {
-		//mock DataOutputStream
-		//mock response String
-		//check that writeBytes is called with response and proper end to response
-
-//		String mockOKResponse = "200";
-//		DataOutputStream mockedOut = mock(DataOutputStream.class);
-//		server.respond(mockedOut, mockOKResponse);
-//		verify(mockedOut).close();
-	}
+//	@Test 
+//	public void testTearDown() throws IOException {
+////		testServer.tearDown(mockedReader, mockedWriter, mockedClientSocket);
+//		verify(mockedReader).close();
+//		verify(mockedWriter).close();
+//		verify(mockedClientSocket).close();
+//	}
 }

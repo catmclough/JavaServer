@@ -1,3 +1,5 @@
 javaserver/App.class
 javaserver/Reader.class
+javaserver/ServerFactory.class
+javaserver/SocketWriter.class
 javaserver/Server.class

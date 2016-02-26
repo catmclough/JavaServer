@@ -2,17 +2,28 @@ package javaserver;
 
 import java.io.BufferedReader;
 import java.io.IOException;
-import java.io.InputStreamReader;
-import java.net.Socket;
 
 public class Reader {
 	private BufferedReader readingMechanism;
-	
-	public void initialize(Socket clientSocket) throws IOException {
-		this.readingMechanism = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()));
+
+	Reader(BufferedReader readingMechanism) {
+		this.readingMechanism = readingMechanism; 
 	}
 	
-	public String readLine() throws IOException {
+	public String readFromSocket() throws IOException {
+		String line;
+		String fullRequest = "";
+		while ((line = readLine()) != null) {
+			if (line.length() == 0) {
+				break;
+			} else {
+				fullRequest += line;
+			}
+		}	
+		return fullRequest;
+	}
+	
+	private String readLine() throws IOException {
 		return readingMechanism.readLine();
 	}
 	

@@ -1,2 +1,5 @@
+javaserver/ReaderTest.class
+javaserver/ServerFactoryTest.class
+javaserver/SocketWriterTest.class
 javaserver/ServerTest.class
 javaserver/AppTest.class
