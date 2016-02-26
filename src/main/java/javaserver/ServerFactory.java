@@ -9,7 +9,7 @@ import java.net.ServerSocket;
 import java.net.Socket;
 
 public class ServerFactory {
-	public static Server createServer(int port) throws IOException {
+	public Server createServer(int port) throws IOException {
 		ServerSocket serverSocket = new ServerSocket(port);
 		Server server = new Server(serverSocket);;
 		return server;

@@ -5,10 +5,10 @@ import java.net.ServerSocket;
 import java.net.Socket;
 
 public class Server {	
-	public Socket clientSocket;
+	Socket clientSocket;
 	private ServerSocket serverSocket;
-	private Reader reader;
-	private SocketWriter writer;
+	Reader reader;
+	SocketWriter writer;
 	
 	private static final String OK = "HTTP/1.1 200 OK\r\n";
 	private static final String END_OF_HEADERS = "\r\n\r\n";
@@ -24,7 +24,7 @@ public class Server {
 		writer.respond(OK + END_OF_HEADERS);
 	}
 
-	private void acceptClient() throws IOException {
+	void acceptClient() throws IOException {
 		this.clientSocket = serverSocket.accept();
 	}
 	

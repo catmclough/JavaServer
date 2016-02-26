@@ -1,6 +1,5 @@
 package javaserver;
 
-import static org.mockito.Mockito.atLeastOnce;
 import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.spy;
@@ -35,42 +34,39 @@ public class ServerTest extends TestCase {
 	@BeforeClass
 	public void setUp() {
 		this.mockedServerSocket = mock(ServerSocket.class);
-		this.mockedReader = mock(Reader.class);
-		this.mockedWriter = mock(SocketWriter.class);
 		this.testServer = spy(new Server(mockedServerSocket));
 		this.mockedClientSocket = mock(Socket.class);
+		testServer.clientSocket = mockedClientSocket;
+		this.mockedReader = mock(Reader.class);
+		this.mockedWriter = mock(SocketWriter.class);
+		testServer.reader = mockedReader;
+		testServer.writer = mockedWriter;
 	}
-
-	
-//	@Test
-//	public void testRuns() throws IOException {
-		//test that it accepts a client
-//		when(this.mockedServerSocket.accept()).thenReturn(this.mockedClientSocket);
-//		doNothing().when(testServer).setReaderAndWriter();
-//		verify(this.mockedServerSocket).accept();
-//		assertEquals(testServer.clientSocket, mockedClientSocket);
-
-		//test that it sets a reader and writer
-		//test that it tells the reader to read from socket
-		//test that it tells the writer to respond
-//	}
 	
 	@Test
-	public void testAcceptsClient() throws IOException {
+	public void testRuns() throws IOException {
+		when(this.mockedServerSocket.accept()).thenReturn(this.mockedClientSocket);
+		doNothing().when(testServer).setReaderAndWriter();
+
+		testServer.run();
+		verify(this.mockedServerSocket).accept();
+		assertEquals(mockedClientSocket, testServer.clientSocket);
+
+		verify(testServer).setReaderAndWriter();
+		assertTrue(testServer.reader != null);
+		assertTrue(testServer.writer != null);
+		
+		verify(testServer.reader).readFromSocket();
+
+		verify(testServer.writer).respond(anyString());
 	}
-//	
-//	@Test
-//	public void testServerRuns() throws IOException {
-//		this.testServer.run();
-//		verify(mockedReader, atLeastOnce()).readFromSocket(any(Socket.class));
-//		verify(mockedWriter, atLeastOnce()).respond(anyString());
-//	}
 	
-//	@Test 
-//	public void testTearDown() throws IOException {
-////		testServer.tearDown(mockedReader, mockedWriter, mockedClientSocket);
-//		verify(mockedReader).close();
-//		verify(mockedWriter).close();
-//		verify(mockedClientSocket).close();
-//	}
+	
+	@Test 
+	public void testTearDown() throws IOException {
+		testServer.tearDown();
+		verify(testServer.reader).close();
+		verify(testServer.writer).close();
+		verify(testServer.clientSocket).close();
+	}
 }

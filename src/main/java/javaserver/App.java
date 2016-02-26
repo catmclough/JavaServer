@@ -7,11 +7,16 @@ public class App {
 	static Server server;
 	
 	public static void main(String[] args) throws IOException {
-		server = ServerFactory.createServer(PORT);
+		ServerFactory serverFactory = new ServerFactory();
+		setUpServer(serverFactory);
 		runServer(server);
 	}	
 	
-	private static void runServer(Server server) throws IOException {
+	public static void setUpServer(ServerFactory serverFactory) throws IOException {
+		server = serverFactory.createServer(PORT);
+	}
+	
+	public static void runServer(Server server) throws IOException {
 		server.run();
 		server.tearDown();
 	}
