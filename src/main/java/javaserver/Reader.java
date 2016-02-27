@@ -26,8 +26,4 @@ public class Reader {
 	private String readLine() throws IOException {
 		return readingMechanism.readLine();
 	}
-	
-	public void close() throws IOException {
-		readingMechanism.close();
-	}
 }

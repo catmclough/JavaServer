@@ -37,9 +37,4 @@ public class AppTest extends TestCase{
 		App.runServer(mockedServer);
 		verify(mockedServer).run();
 	}
-	
-	public void testTearsDownServer() throws IOException {
-		App.runServer(mockedServer);
-		verify(mockedServer).tearDown();
-	}
 }

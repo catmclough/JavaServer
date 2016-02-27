@@ -12,18 +12,18 @@ public class Server {
 	
 	private static final String OK = "HTTP/1.1 200 OK\r\n";
 	private static final String END_OF_HEADERS = "\r\n\r\n";
-
+	
 	Server(ServerSocket serverSocket) {
 		this.serverSocket = serverSocket;
 	}
-	
+
 	public void run() throws IOException {
 		acceptClient();
 		setReaderAndWriter();
 		reader.readFromSocket();
 		writer.respond(OK + END_OF_HEADERS);
 	}
-
+	
 	void acceptClient() throws IOException {
 		this.clientSocket = serverSocket.accept();
 	}
@@ -31,11 +31,5 @@ public class Server {
 	public void setReaderAndWriter() throws IOException {
 		this.reader = ServerFactory.createReader(clientSocket);
 		this.writer = ServerFactory.createSocketWriter(clientSocket);
-	}
-	
-	public void tearDown() throws IOException {
-		reader.close();
-		writer.close();
-		clientSocket.close();
-	}
+	}	
 }

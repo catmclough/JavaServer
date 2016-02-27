@@ -13,8 +13,4 @@ public class SocketWriter {
 	public void respond(String response) throws IOException {
 		writingMechanism.writeBytes(response); 
 	}
-
-	public void close() throws IOException {
-		writingMechanism.close();
-	}
 }

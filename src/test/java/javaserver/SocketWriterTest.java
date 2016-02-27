@@ -1,39 +1,40 @@
 package javaserver;
 
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.spy;
-import static org.mockito.Mockito.verify;
-
+import java.io.ByteArrayOutputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
 
-import org.junit.BeforeClass;
+import org.junit.Before;
 import org.junit.Test;
 
 public class SocketWriterTest {
 	private static SocketWriter testWriter;
-	private static DataOutputStream mockDataOutputStream;
+	private static String standardResponse = "200 A-OKAY";
 
-	@BeforeClass
-	public static void setUp() {
-		OutputStream mockOutputStream = mock(OutputStream.class);
-		mockDataOutputStream = spy(new DataOutputStream(mockOutputStream));
-		testWriter = spy(new SocketWriter(mockDataOutputStream));
+	@Before
+	public void setUp() {
+		ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
+		DataOutputStream dataOutputStream = new DataOutputStream(outputStream);
+		testWriter = new SocketWriter(dataOutputStream);
 	}
 	
 	@Test
 	public void testResponds() throws IOException {
-		String mockResponse = "200 A-OKAY";
-		testWriter.respond(mockResponse);
-		verify(mockDataOutputStream).writeBytes(mockResponse);
-	}
-	
-	@Test
-	public void testClosesWriter() throws IOException {
-		//TODO: It says there are zero calls to close on the mock object...WEIRD
-//		testWriter.close();
-//		verify(mockDataOutputStream).close();
+		testWriter.respond(standardResponse);
+//		assertEquals()
+//		verify(mockDataOutputStream).writeBytes(mockResponse);
 	}
 
+//	class MockDataOutputStream extends DataOutputStream {
+//		MockDataOutputStream(OutputStream outputStream) throws IOException {
+//			super(outputStream);
+//		}
+//	
+//		@Override
+//		public void writeBytes(String toWrite) throws IOException {
+//			return toWrite;
+//		}
+//	}
+	
 }
