@@ -23,6 +23,8 @@ public class Server {
     } catch(IOException e) {
         e.printStackTrace();
         System.out.println("Exception Caught in Server#run!");
+    } finally {
+    	serverSocket.close();
     }
 	}
 
