@@ -18,7 +18,7 @@ public class SocketWriterTest {
 		DataOutputStream dataOutputStream = new DataOutputStream(outputStream);
 		testWriter = new SocketWriter(dataOutputStream);
 	}
-	
+
 	@Test
 	public void testResponds() throws IOException {
 		testWriter.respond(standardResponse);
@@ -30,11 +30,10 @@ public class SocketWriterTest {
 //		MockDataOutputStream(OutputStream outputStream) throws IOException {
 //			super(outputStream);
 //		}
-//	
+//
 //		@Override
 //		public void writeBytes(String toWrite) throws IOException {
 //			return toWrite;
 //		}
 //	}
-	
 }

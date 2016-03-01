@@ -20,7 +20,7 @@ public class ServerFactory {
 		BufferedReader readingMechanism = new BufferedReader(input);
 		return new Reader(readingMechanism);
 	}
-	
+
 	public static SocketWriter createSocketWriter(Socket clientSocket) throws IOException {
 		OutputStream outputStream = clientSocket.getOutputStream();
 		DataOutputStream output = new DataOutputStream(outputStream);

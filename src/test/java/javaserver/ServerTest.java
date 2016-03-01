@@ -13,7 +13,7 @@ public class ServerTest extends TestCase {
 	private Server testServer;
 	private ServerSocket mockedServerSocket;
 	Socket mockedClientSocket;
-	
+
 	int defaultPort = 6000;
 
 	@Before
@@ -23,8 +23,8 @@ public class ServerTest extends TestCase {
 	}
 
 	@Test
-	public void testRuns() throws IOException {
-		testServer.run();
+	public void testAcceptsClient() throws IOException {
+		testServer.acceptClient();
 		assertEquals(mockedClientSocket.getChannel() ,mockedServerSocket.getChannel());
 	}
 

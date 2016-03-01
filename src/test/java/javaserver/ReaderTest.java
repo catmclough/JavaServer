@@ -14,7 +14,7 @@ public class ReaderTest {
 	private Reader testReader;
 	private BufferedReader testBufferedReader;
 	private String exampleRequest = "GET /example HTTP/1.1";
-	
+
 	@Before
 	public void setUp() {
 		ByteArrayInputStream inputStream = new ByteArrayInputStream(exampleRequest.getBytes());
@@ -22,7 +22,7 @@ public class ReaderTest {
 		testBufferedReader = new BufferedReader(new InputStreamReader(inputStream));
 		testReader = new Reader(testBufferedReader);
 	}
-	
+
 	@Test
 	public void testReadFromSocket() throws IOException {
 		assertEquals(testReader.readFromSocket(), exampleRequest);

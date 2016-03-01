@@ -9,8 +9,10 @@ public class SocketWriter {
 	SocketWriter(DataOutputStream dataOutput) {
 		this.writingMechanism = dataOutput;
 	}
-	
+
 	public void respond(String response) throws IOException {
-		writingMechanism.writeBytes(response); 
+		writingMechanism.writeBytes(response);
+		writingMechanism.close();
 	}
 }
+

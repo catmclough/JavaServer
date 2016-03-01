@@ -4,32 +4,30 @@ import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
 
-public class Server {	
+public class Server {
 	Socket clientSocket;
 	private ServerSocket serverSocket;
-	Reader reader;
-	SocketWriter writer;
-	
-	private static final String OK = "HTTP/1.1 200 OK\r\n";
-	private static final String END_OF_HEADERS = "\r\n\r\n";
-	
+
 	Server(ServerSocket serverSocket) {
 		this.serverSocket = serverSocket;
 	}
 
 	public void run() throws IOException {
-		acceptClient();
-		setReaderAndWriter();
-		reader.readFromSocket();
-		writer.respond(OK + END_OF_HEADERS);
+		try {
+			ClientWorker w;
+			while (true) {
+				  w = new ClientWorker(serverSocket.accept());
+          Thread t = new Thread(w);
+          t.start();
+      }
+    } catch(IOException e) {
+        e.printStackTrace();
+        System.out.println("Exception Caught in Server#run!");
+    }
 	}
-	
+
 	void acceptClient() throws IOException {
 		this.clientSocket = serverSocket.accept();
 	}
-	
-	public void setReaderAndWriter() throws IOException {
-		this.reader = ServerFactory.createReader(clientSocket);
-		this.writer = ServerFactory.createSocketWriter(clientSocket);
-	}	
 }
+
