@@ -1,9 +1,9 @@
 package javaserver;
 
+import static org.junit.Assert.*;
+
 import java.io.ByteArrayOutputStream;
 import java.io.DataOutputStream;
-import java.io.IOException;
-import java.io.OutputStream;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -19,21 +19,15 @@ public class SocketWriterTest {
 		testWriter = new SocketWriter(dataOutputStream);
 	}
 
+	Exception exception;
 	@Test
-	public void testResponds() throws IOException {
-		testWriter.respond(standardResponse);
-//		assertEquals()
-//		verify(mockDataOutputStream).writeBytes(mockResponse);
+	public void testResponds() {
+		try {
+			testWriter.respond(standardResponse);
+		} catch (Exception e){
+			exception = e;
+		}
+		assertEquals(exception, null);
 	}
-
-//	class MockDataOutputStream extends DataOutputStream {
-//		MockDataOutputStream(OutputStream outputStream) throws IOException {
-//			super(outputStream);
-//		}
-//
-//		@Override
-//		public void writeBytes(String toWrite) throws IOException {
-//			return toWrite;
-//		}
-//	}
 }
+

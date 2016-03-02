@@ -7,25 +7,27 @@ import java.net.Socket;
 public class Server {
 	Socket clientSocket;
 	private ServerSocket serverSocket;
+	private boolean isRunning;
 
 	Server(ServerSocket serverSocket) {
 		this.serverSocket = serverSocket;
+		this.isRunning = true;
 	}
 
 	public void run() throws IOException {
-		try {
-			ClientWorker w;
-			while (true) {
-				  w = new ClientWorker(serverSocket.accept());
-          Thread t = new Thread(w);
-          t.start();
-      }
-    } catch(IOException e) {
-        e.printStackTrace();
-        System.out.println("Exception Caught in Server#run!");
-    } finally {
-    	serverSocket.close();
-    }
+		ClientWorker w;
+		while (isOn()) {
+			clientSocket = null;
+			acceptClient();
+			w = new ClientWorker(this.clientSocket);
+			Thread t = new Thread(w);
+			t.start();
+	  }
+		clientSocket.close();
+	}
+
+	private boolean isOn() {
+		return this.isRunning;
 	}
 
 	void acceptClient() throws IOException {

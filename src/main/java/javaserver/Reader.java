@@ -14,20 +14,23 @@ public class Reader {
 		String line;
 		String fullRequest = "";
 		try {
-			while ((line = readLine()) != null) {
+			line = readLine();
+			while (line != null) {
 				if (line.length() == 0) {
 					break;
 				} else {
 					fullRequest += line;
+					line = readLine();
 				}
 			}
 		} catch (IOException e) {
-      //This is caught every time the reader doesn't see a request, which is called in        a while loop!
+			System.out.println("Exception Caught!");
 		}
 		return fullRequest;
 	}
 
-	private String readLine() throws IOException {
+	public String readLine() throws IOException {
 		return readingMechanism.readLine();
 	}
 }
+
