@@ -15,11 +15,12 @@ public class Server {
 	}
 
 	public void run() throws IOException {
+    Responder responder = new Responder();
 		ClientWorker w;
 		while (isOn()) {
 			clientSocket = null;
 			acceptClient();
-			w = new ClientWorker(this.clientSocket);
+			w = new ClientWorker(this.clientSocket, responder);
 			Thread t = new Thread(w);
 			t.start();
 	  }

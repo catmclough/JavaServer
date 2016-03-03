@@ -3,6 +3,7 @@ javaserver/ReaderTest.class
 javaserver/ServerTest.class
 javaserver/ClientWorkerTest$MockClientWorker.class
 javaserver/AppTest.class
+javaserver/ResponderTest.class
 javaserver/ClientWorkerTest$MockSocketWriter.class
 javaserver/ServerTest$MockServerSocket.class
 javaserver/SocketWriterTest.class
