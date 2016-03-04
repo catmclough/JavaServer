@@ -5,34 +5,36 @@ import java.net.ServerSocket;
 import java.net.Socket;
 
 public class Server {
-	Socket clientSocket;
+	private Socket clientSocket;
 	private ServerSocket serverSocket;
-	private boolean isRunning;
+	private Reader reader;
+	private RequestParser parser;
+	private Responder responder;
+	private SocketWriter writer;
 
-	Server(ServerSocket serverSocket) {
+	Server(ServerSocket serverSocket, RequestParser parser, Responder responder) {
 		this.serverSocket = serverSocket;
-		this.isRunning = true;
+		this.parser = parser;
+		this.responder = responder;
 	}
 
 	public void run() throws IOException {
-    Responder responder = new Responder();
-		ClientWorker w;
-		while (isOn()) {
+		while (true) {
 			clientSocket = null;
 			acceptClient();
-			w = new ClientWorker(this.clientSocket, responder);
+			setReaderAndWriter();
+			ClientWorker w = new ClientWorker(clientSocket, reader, parser, responder, writer);
 			Thread t = new Thread(w);
 			t.start();
-	  }
-		clientSocket.close();
+	    }
 	}
 
-	private boolean isOn() {
-		return this.isRunning;
-	}
-
-	void acceptClient() throws IOException {
+	public void acceptClient() throws IOException {
 		this.clientSocket = serverSocket.accept();
 	}
+	
+	private void setReaderAndWriter() throws IOException {
+		this.reader = ServerFactory.createReader(clientSocket);
+		this.writer = ServerFactory.createSocketWriter(clientSocket);
+	}
 }
-

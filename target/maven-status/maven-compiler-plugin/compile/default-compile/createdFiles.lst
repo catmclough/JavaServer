@@ -4,4 +4,5 @@ javaserver/App.class
 javaserver/ServerFactory.class
 javaserver/SocketWriter.class
 javaserver/Responder.class
+javaserver/RequestParser.class
 javaserver/Server.class

@@ -4,47 +4,35 @@ import java.io.IOException;
 import java.net.Socket;
 
 public class ClientWorker implements Runnable {
-	private Socket client;
 	private Reader reader;
-	private SocketWriter writer;
+	public SocketWriter writer;
 	private Responder responder;
-	private String request;
-
-	public ClientWorker(Socket clientSocket, Responder responder) {
-		this.client = clientSocket;
+	private RequestParser parser;
+	
+	public ClientWorker(Socket clientSocket, Reader reader, RequestParser parser, Responder responder, SocketWriter writer) {
+		this.reader = reader;
+		this.parser = parser;
 		this.responder = responder;
+		this.writer = writer;
 	}
-
+	
 	public void run() {
+		String request = getRequest();
+		respond(request);
+		
 		try {
-			setReader();
-			setWriter();
+			writer.closeOutputStream();
 		} catch (IOException e) {
-			System.out.println("Setup of reader or writer failed.");
-			e.printStackTrace();
-		}
-
-		try {
-			readAndRespond(this.reader, this.writer);
-		} catch(IOException e) {
-			System.out.println("Error caught when trying to read or respond in ClientWorker");
+			System.out.println("Unable to close Writer's OutputStream");;
 		}
 	}
-
-	public void setReader() throws IOException {
-		this.reader = ServerFactory.createReader(client);
+	
+	private String getRequest() {
+		return reader.readFromSocket();
 	}
-
-	public void setWriter() throws IOException {
-		this.writer = ServerFactory.createSocketWriter(client);
-	}
-
-	public void readAndRespond(Reader reader, SocketWriter writer) throws IOException {
-		this.request = reader.readFromSocket();
-		String[] requestParts = this.request.split(" ");
-		String requestType = requestParts[0];
-		String destination = requestParts[1];
-		responder.respond(requestType, destination, writer);
+	
+	private void respond(String request) {
+		responder.respond(parser.getRequestType(request), parser.getRequestURI(request), writer);
 	}
 }
 

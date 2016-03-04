@@ -4,6 +4,7 @@ import static org.junit.Assert.*;
 
 import java.io.ByteArrayOutputStream;
 import java.io.DataOutputStream;
+import java.io.IOException;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -19,15 +20,20 @@ public class SocketWriterTest {
 		testWriter = new SocketWriter(dataOutputStream);
 	}
 
-	Exception exception;
 	@Test
 	public void testResponds() {
+		Exception exception = null;
 		try {
 			testWriter.respond(standardResponse);
 		} catch (Exception e){
 			exception = e;
 		}
-		assertEquals(exception, null);
+		assertNull(exception);
+	}
+	
+	@Test
+	public void testClosesOutputStream() throws IOException {
+		testWriter.closeOutputStream();
+		assertFalse(testWriter.isOutputStreamOpen);
 	}
 }
-

@@ -29,7 +29,7 @@ public class Reader {
 		return fullRequest;
 	}
 
-	public String readLine() throws IOException {
+	private String readLine() throws IOException {
 		return readingMechanism.readLine();
 	}
 }

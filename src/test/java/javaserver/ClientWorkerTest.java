@@ -15,62 +15,49 @@ import org.junit.Test;
 import junit.framework.TestCase;
 
 public class ClientWorkerTest extends TestCase {
-	Socket testClientSocket;
-	Responder responder;
-	MockClientWorker mockClientWorker;
+	Socket testClientSocket; 
+	ClientWorker testClientWorker;
 	BufferedReader mockGetReader;
-	private String getRequest = "GET / HTTP/1.1\r\n";
+	private RequestParser parser;
+	private Responder responder;
 
 	@Before
 	public void setUp() throws Exception {
-		testClientSocket = new Socket();
+		this.testClientSocket = new Socket();
+		this.parser = new RequestParser();
 		this.responder = new Responder();
-		mockClientWorker = new MockClientWorker(testClientSocket, responder);
-
-		InputStream stubInputStreamWithGet = new ByteArrayInputStream(getRequest.getBytes());
-		InputStreamReader inputReader = new InputStreamReader(stubInputStreamWithGet);
-		mockGetReader = new BufferedReader(inputReader);
+		MockReader mockReader = new MockReader(stubGetRequestReader());
+		MockSocketWriter mockWriter = new MockSocketWriter(mockOutputStream());
+		this.testClientWorker = new ClientWorker(testClientSocket, mockReader, parser, responder, mockWriter);
 	}
 
 	@Test
 	public void testRun() throws IOException {
-	  mockClientWorker.stubReaderWithRequest(mockGetReader);
-	  mockClientWorker.setReader();
-	  mockClientWorker.setWriter();
-	  mockClientWorker.readAndRespond(mockClientWorker.reader, mockClientWorker.writer);
-//	  assertEquals(mockClientWorker.TWO_HUNDRED, mockClientWorker.writer.latestResponse);
+	  testClientWorker.run();
+	  assertEquals(responder.TWO_HUNDRED, testClientWorker.writer.latestResponse);
 	}
 
- 
 
-  class MockClientWorker extends ClientWorker {
-    Socket client;
-    Reader reader;
-    BufferedReader bufferedReader;
-    SocketWriter writer;
-
-    MockClientWorker(Socket clientSocket, Responder responder) {
-      super(clientSocket, responder);
-      this.client = clientSocket;
-    }
-
-    public void stubReaderWithRequest(BufferedReader bufferedReader) {
-    	this.bufferedReader = bufferedReader;
-    }
-
-    @Override
-    public void setReader() throws IOException {
-    	this.reader = new Reader(bufferedReader);
-    }
-
-    public void setWriter() throws IOException {
-    	ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
-		DataOutputStream dataOutputStream = new DataOutputStream(outputStream);
-		this.writer = new MockSocketWriter(dataOutputStream);
+	private BufferedReader stubGetRequestReader() {
+			String getRequest = "GET / HTTP/1.1\r\n";
+			InputStream stubInputStreamWithGet = new ByteArrayInputStream(getRequest.getBytes());
+			InputStreamReader inputReader = new InputStreamReader(stubInputStreamWithGet);
+			return new BufferedReader(inputReader);
 	}
-  }
 
-  class MockSocketWriter extends SocketWriter {
+	private DataOutputStream mockOutputStream() {
+		  ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
+		  return new DataOutputStream(outputStream);
+	}
+}
+
+class MockReader extends Reader {
+	MockReader(BufferedReader mockBufferedReader) {
+		super(mockBufferedReader);
+	}
+}
+
+class MockSocketWriter extends SocketWriter {
 	 MockSocketWriter(DataOutputStream mockOutputStream) {
 		 super(mockOutputStream);
 	 }
@@ -79,6 +66,4 @@ public class ClientWorkerTest extends TestCase {
 	 public void respond(String response) {
 		 this.latestResponse = response;
 	 }
-  }
 }
-

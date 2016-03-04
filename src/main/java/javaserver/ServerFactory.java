@@ -10,8 +10,7 @@ import java.net.Socket;
 
 public class ServerFactory {
 	public Server createServer(int port) throws IOException {
-		ServerSocket serverSocket = new ServerSocket(port);
-		Server server = new Server(serverSocket);;
+		Server server = new Server(new ServerSocket(port), new RequestParser(), new Responder());
 		return server;
 	}
 

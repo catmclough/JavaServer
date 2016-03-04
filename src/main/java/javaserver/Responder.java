@@ -10,10 +10,9 @@ public class Responder {
 	private String root = "/";
 	private String response;
 
-
-	public String respond(String requestType, String destination, SocketWriter writer) {
+	public String respond(String requestType, String requestURI, SocketWriter writer) {
 		if (requestType.equals(getRequest)) {
-			if (destination.equals(root)) {
+			if (requestURI.equals(root)) {
 				this.response = TWO_HUNDRED;
 			} else {
 				this.response = FOUR_OH_FOUR;

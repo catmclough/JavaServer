@@ -19,14 +19,17 @@ public class ServerTest extends TestCase {
 	@Before
 	public void setUp() throws Exception {
 		mockedServerSocket = new MockServerSocket(defaultPort);
-		testServer = new Server(mockedServerSocket);
+		testServer = new Server(mockedServerSocket, new RequestParser(), new Responder());
 	}
-
+	
 	@Test
 	public void testAcceptsClient() throws IOException {
 		testServer.acceptClient();
 		assertEquals(mockedClientSocket.getChannel() ,mockedServerSocket.getChannel());
 	}
+	
+	//sets reader and writer
+	//starts a new thread with a client worker i guess?
 
   class MockServerSocket extends ServerSocket {
     private int port;
