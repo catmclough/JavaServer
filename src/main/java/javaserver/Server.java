@@ -27,7 +27,7 @@ public class Server {
 			startNewThread(w);
 	    }
 	}
-	
+
 	private void startNewThread(ClientWorker worker) {
 		Thread t = new Thread(worker);
 		t.start();
@@ -36,12 +36,12 @@ public class Server {
 	public void acceptClient() throws IOException {
 		this.clientSocket = serverSocket.accept();
 	}
-	
-	private void setReaderAndWriter() throws IOException {
+
+	public void setReaderAndWriter() throws IOException {
 		this.reader = ServerFactory.createReader(clientSocket);
 		this.writer = ServerFactory.createSocketWriter(clientSocket);
 	}
-	
+
 	public void shutDown() throws IOException {
 		clientSocket.close();
 		serverSocket.close();

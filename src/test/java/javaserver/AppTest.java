@@ -24,7 +24,7 @@ public class AppTest extends TestCase{
 		this.responder = new Responder();
 		this.mockServer = new MockServer(socket, parser, responder);
 	}
-	
+
 	@After
 	public void shutDown() throws IOException {
 		socket.close();
@@ -48,11 +48,11 @@ public class AppTest extends TestCase{
 
 class MockServer extends Server {
 	public boolean isRunning;
-	
+
 	MockServer(ServerSocket socket, RequestParser parser, Responder responder) {
 		super(socket, parser, responder);
 	}
-	
+
 	@Override
 	public void run() {
 		this.isRunning = true;

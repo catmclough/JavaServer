@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
 
+import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -22,20 +23,33 @@ public class ServerTest extends TestCase {
 		testServer = new Server(mockedServerSocket, new RequestParser(), new Responder());
 	}
 	
+	@After
+	public void tearDown() throws IOException {
+		testServer.shutDown();
+	}
+		
 	@Test
 	public void testAcceptsClient() throws IOException {
 		testServer.acceptClient();
 		assertEquals(mockedClientSocket.getChannel() ,mockedServerSocket.getChannel());
-		testServer.shutDown();
+	}
+
+	@Test
+	public void testSetsReader() throws IOException {
+		testServer.acceptClient();
+		assertNull("Reader should be null upon accepting a client", testServer.reader);
+		testServer.setReaderAndWriter();
+		assertNotNull("Reader was not properly created", testServer.reader);
 	}
 	
-//	@Test
-//	public void testServerSetsReader() throws IOException, InterruptedException {
-//		testServer.run();
-//		Thread.sleep(5000);
-//		assertNotNull("Reader was not properly created", testServer.reader);
-//		testServer.shutDown();
-//	}
+	@Test
+	public void testSetsWriter() throws IOException {
+		testServer.acceptClient();
+		assertNull("Writer should be null upon accepting a client", testServer.writer);
+		testServer.setReaderAndWriter();
+		assertNotNull("Writer was not properly created", testServer.writer);
+	}
+	
 
   class MockServerSocket extends ServerSocket {
     private int port;

@@ -30,10 +30,11 @@ public class SocketWriterTest {
 		}
 		assertNull(exception);
 	}
-	
+
 	@Test
 	public void testClosesOutputStream() throws IOException {
 		testWriter.closeOutputStream();
 		assertFalse(testWriter.isOutputStreamOpen);
 	}
 }
+

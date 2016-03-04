@@ -23,7 +23,7 @@ public class ReaderTest {
 		testReader = new Reader(testBufferedReader);
 		assertEquals("Simple request line was not properly read", testReader.readFromSocket(), exampleRequestLine);
 	}
-	
+
 	@Test
 	public void testReaderWithBlankRequest() {
 		ByteArrayInputStream inputStream = new ByteArrayInputStream(blankRequest.getBytes());
@@ -32,3 +32,4 @@ public class ReaderTest {
 		assertEquals("Blank request line threw exception", testReader.readFromSocket(), blankRequest);
 	}
 }
+

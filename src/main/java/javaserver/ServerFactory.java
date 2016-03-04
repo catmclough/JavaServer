@@ -26,3 +26,4 @@ public class ServerFactory {
 		return new SocketWriter(output);
 	}
 }
+
