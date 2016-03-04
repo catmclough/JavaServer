@@ -19,7 +19,6 @@ public class ClientWorker implements Runnable {
 	public void run() {
 		String request = getRequest();
 		respond(request);
-		
 		try {
 			writer.closeOutputStream();
 		} catch (IOException e) {

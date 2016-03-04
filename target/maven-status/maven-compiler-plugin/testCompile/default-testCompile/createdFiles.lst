@@ -1,6 +1,7 @@
 javaserver/MockReader.class
 javaserver/MockSocketWriter.class
 javaserver/RequestParserTest.class
+javaserver/MockServer.class
 javaserver/ClientWorkerTest.class
 javaserver/ReaderTest.class
 javaserver/ServerTest.class

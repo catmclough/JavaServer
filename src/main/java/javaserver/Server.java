@@ -5,12 +5,12 @@ import java.net.ServerSocket;
 import java.net.Socket;
 
 public class Server {
-	private Socket clientSocket;
+	public Socket clientSocket;
 	private ServerSocket serverSocket;
-	private Reader reader;
-	private RequestParser parser;
-	private Responder responder;
-	private SocketWriter writer;
+	public Reader reader;
+	public RequestParser parser;
+	public Responder responder;
+	public SocketWriter writer;
 
 	Server(ServerSocket serverSocket, RequestParser parser, Responder responder) {
 		this.serverSocket = serverSocket;
@@ -24,9 +24,13 @@ public class Server {
 			acceptClient();
 			setReaderAndWriter();
 			ClientWorker w = new ClientWorker(clientSocket, reader, parser, responder, writer);
-			Thread t = new Thread(w);
-			t.start();
+			startNewThread(w);
 	    }
+	}
+	
+	private void startNewThread(ClientWorker worker) {
+		Thread t = new Thread(worker);
+		t.start();
 	}
 
 	public void acceptClient() throws IOException {
@@ -36,5 +40,10 @@ public class Server {
 	private void setReaderAndWriter() throws IOException {
 		this.reader = ServerFactory.createReader(clientSocket);
 		this.writer = ServerFactory.createSocketWriter(clientSocket);
+	}
+	
+	public void shutDown() throws IOException {
+		clientSocket.close();
+		serverSocket.close();
 	}
 }

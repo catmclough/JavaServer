@@ -26,10 +26,16 @@ public class ServerTest extends TestCase {
 	public void testAcceptsClient() throws IOException {
 		testServer.acceptClient();
 		assertEquals(mockedClientSocket.getChannel() ,mockedServerSocket.getChannel());
+		testServer.shutDown();
 	}
 	
-	//sets reader and writer
-	//starts a new thread with a client worker i guess?
+//	@Test
+//	public void testServerSetsReader() throws IOException, InterruptedException {
+//		testServer.run();
+//		Thread.sleep(5000);
+//		assertNotNull("Reader was not properly created", testServer.reader);
+//		testServer.shutDown();
+//	}
 
   class MockServerSocket extends ServerSocket {
     private int port;
