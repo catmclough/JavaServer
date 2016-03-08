@@ -27,8 +27,13 @@ public class ResponderTest {
 	}
 	
 	@Test
-	public void testPostResponde() {
+	public void testPostResponse() {
 		assertEquals(responder.respond("POST", "/form", writer), responder.TWO_HUNDRED);
+	}
+	
+	@Test
+	public void testPutResponse() {
+		assertEquals(responder.respond("PUT", "/form", writer), responder.TWO_HUNDRED);
 	}
 	
 	@Test

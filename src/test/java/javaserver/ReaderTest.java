@@ -12,7 +12,7 @@ import org.junit.Test;
 public class ReaderTest {
 	private Reader testReader;
 	private BufferedReader testBufferedReader;
-	private String exampleRequestMessage = "GET /example HTTP/1.1\r\n\r\nData";
+	private String exampleRequestMessage = "GET /example HTTP/1.1\r\n\r\n\"Data\"=\"My Info\"";
 
 	@Test
 	public void testReaderWithSimpleRequest() throws IOException {
