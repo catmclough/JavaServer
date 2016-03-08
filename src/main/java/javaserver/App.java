@@ -17,7 +17,9 @@ public class App {
 	}
 
 	public static void runServer(Server server) throws IOException {
-		server.run();
+		while (true) {
+			server.run();
+		}
 	}
 }
 

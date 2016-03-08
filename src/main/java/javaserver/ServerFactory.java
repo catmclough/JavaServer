@@ -10,20 +10,24 @@ import java.net.Socket;
 
 public class ServerFactory {
 	public Server createServer(int port) throws IOException {
-		Server server = new Server(new ServerSocket(port), new RequestParser(), new Responder());
+		Server server = new Server(this, new ServerSocket(port), new RequestParser(), new Responder());
 		return server;
 	}
 
-	public static Reader createReader(Socket clientSocket) throws IOException {
+	public Reader createReader(Socket clientSocket) throws IOException {
 		InputStreamReader input = new InputStreamReader(clientSocket.getInputStream());
 		BufferedReader readingMechanism = new BufferedReader(input);
 		return new Reader(readingMechanism);
 	}
 
-	public static SocketWriter createSocketWriter(Socket clientSocket) throws IOException {
+	public SocketWriter createSocketWriter(Socket clientSocket) throws IOException {
 		OutputStream outputStream = clientSocket.getOutputStream();
 		DataOutputStream output = new DataOutputStream(outputStream);
 		return new SocketWriter(output);
+	}
+	
+	public ClientWorker createClientWorker(Socket clientSocket, Reader reader, RequestParser parser, Responder responder, SocketWriter writer) {		
+		return new ClientWorker(clientSocket, reader, parser, responder, writer);
 	}
 }
 

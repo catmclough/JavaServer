@@ -26,6 +26,7 @@ public class Reader {
 		} catch (IOException e) {
 			System.out.println("Exception Caught!");
 		}
+		System.out.println(fullRequest);
 		return fullRequest;
 	}
 

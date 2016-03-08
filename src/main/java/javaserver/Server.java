@@ -5,41 +5,42 @@ import java.net.ServerSocket;
 import java.net.Socket;
 
 public class Server {
+	public ServerFactory serverFactory;
 	public Socket clientSocket;
+	public ClientWorker clientWorker;
 	private ServerSocket serverSocket;
 	public Reader reader;
 	public RequestParser parser;
 	public Responder responder;
 	public SocketWriter writer;
 
-	Server(ServerSocket serverSocket, RequestParser parser, Responder responder) {
+	Server(ServerFactory serverFactory, ServerSocket serverSocket, RequestParser parser, Responder responder) {
+		this.serverFactory = serverFactory;
 		this.serverSocket = serverSocket;
 		this.parser = parser;
 		this.responder = responder;
 	}
 
 	public void run() throws IOException {
-		while (true) {
-			clientSocket = null;
-			acceptClient();
-			setReaderAndWriter();
-			ClientWorker w = new ClientWorker(clientSocket, reader, parser, responder, writer);
-			startNewThread(w);
-	    }
-	}
-
-	private void startNewThread(ClientWorker worker) {
-		Thread t = new Thread(worker);
-		t.start();
+		clientSocket = null;
+		acceptClient();
+		setReaderAndWriter();
+		clientWorker = serverFactory.createClientWorker(clientSocket, reader, parser, responder, writer);
+		startNewThread(clientWorker);
 	}
 
 	public void acceptClient() throws IOException {
 		this.clientSocket = serverSocket.accept();
 	}
 
-	public void setReaderAndWriter() throws IOException {
-		this.reader = ServerFactory.createReader(clientSocket);
-		this.writer = ServerFactory.createSocketWriter(clientSocket);
+	private void setReaderAndWriter() throws IOException {
+		this.reader = serverFactory.createReader(clientSocket);
+		this.writer = serverFactory.createSocketWriter(clientSocket);
+	}
+
+	private void startNewThread(ClientWorker clientWorker) {
+		Thread t = new Thread(clientWorker);
+		t.start();
 	}
 
 	public void shutDown() throws IOException {

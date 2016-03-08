@@ -28,6 +28,11 @@ public class ResponderTest {
 	}
 	
 	@Test
+	public void testPostResponde() {
+		assertEquals(responder.respond("POST", "/form", writer), responder.TWO_HUNDRED);
+	}
+	
+	@Test
 	public void testFourOhFour() throws IOException {
 		assertEquals(responder.respond("GET", "/foobar", writer), responder.FOUR_OH_FOUR);
 	}
