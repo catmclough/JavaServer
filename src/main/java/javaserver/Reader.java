@@ -11,16 +11,15 @@ public class Reader {
 	}
 
 	public String readFromSocket() {
-		String line;
+		char nextChar;
 		String fullRequest = "";
 		try {
-			line = readLine();
-			while (line != null) {
-				if (line.length() == 0) {
-					break;
+			while (readingMechanism.ready() || fullRequest.length() < 5) {
+				nextChar = read();
+				if (nextChar != -1) {
+					fullRequest += nextChar;
 				} else {
-					fullRequest += line;
-					line = readLine();
+					break;
 				}
 			}
 		} catch (IOException e) {
@@ -30,8 +29,8 @@ public class Reader {
 		return fullRequest;
 	}
 
-	private String readLine() throws IOException {
-		return readingMechanism.readLine();
+	private char read() throws IOException {
+		return (char) readingMechanism.read();
 	}
 }
 

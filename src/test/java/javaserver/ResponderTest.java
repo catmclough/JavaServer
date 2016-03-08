@@ -21,7 +21,6 @@ public class ResponderTest {
 		this.writer = new SocketWriter(dataOutputStream);
 	}	
 	
-	
 	@Test
 	public void testGetResponse() throws IOException {
 		assertEquals(responder.respond("GET", "/", writer), responder.TWO_HUNDRED);
