@@ -1,7 +1,6 @@
 package javaserver;
 
 import java.io.IOException;
-import java.net.Socket;
 import java.util.HashMap;
 
 public class ClientWorker implements Runnable {
@@ -10,7 +9,7 @@ public class ClientWorker implements Runnable {
 	private Responder responder;
 	private RequestBuilder requestBuilder;
 	
-	public ClientWorker(Socket clientSocket, Reader reader, RequestBuilder requestBuilder, Responder responder, SocketWriter writer) {
+	public ClientWorker(Reader reader, RequestBuilder requestBuilder, Responder responder, SocketWriter writer) {
 		this.reader = reader;
 		this.requestBuilder = requestBuilder;
 		this.responder = responder;
@@ -18,7 +17,8 @@ public class ClientWorker implements Runnable {
 	}
 	
 	public void run() {
-		HashMap<String, String> request = requestBuilder.buildRequest(getRequest());
+		String rawRequest = getRequest();
+		HashMap<String, String> request = requestBuilder.buildRequest(rawRequest);
 		respond(request);
 		try {
 			writer.closeOutputStream();
@@ -28,7 +28,13 @@ public class ClientWorker implements Runnable {
 	}
 	
 	private String getRequest() {
-		return reader.readFromSocket();
+		String request = "";
+		try {
+			request = reader.readFromSocket();
+		} catch (IOException e) {
+			System.out.println("Unable to read request");
+		}
+		return request;
 	}
 	
 	private void respond(HashMap<String, String> request) {

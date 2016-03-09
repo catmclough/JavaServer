@@ -23,7 +23,6 @@ public class ServerTest extends TestCase {
 		mockedServerFactory = new MockServerFactory();
 		mockedServerSocket = new MockServerSocket(defaultPort);
 		testServer = new Server(mockedServerFactory, mockedServerSocket, new RequestBuilder(), new Responder());
-		testServer.acceptClient();
 	}
 	
 	@After
@@ -33,6 +32,7 @@ public class ServerTest extends TestCase {
 		
 	@Test
 	public void testAcceptsClient() throws IOException {
+		testServer.run();
 		assertEquals(mockedClientSocket.getChannel() ,mockedServerSocket.getChannel());
 	}
 
@@ -88,9 +88,9 @@ public class ServerTest extends TestCase {
 		}
 		
 		@Override
-		public ClientWorker createClientWorker(Socket clientSocket, Reader reader, RequestBuilder requestBuilder, Responder responder, SocketWriter writer) {
+		public ClientWorker createClientWorker(Reader reader, RequestBuilder requestBuilder, Responder responder, SocketWriter writer) {
 			this.threadsCreated++;
-			this.mockedWorker = new MockClientWorker(clientSocket, reader, requestBuilder, responder, writer);
+			this.mockedWorker = new MockClientWorker(reader, requestBuilder, responder, writer);
 			return mockedWorker;
 		}
 		
@@ -102,8 +102,8 @@ public class ServerTest extends TestCase {
 	class MockClientWorker extends ClientWorker {
 		public boolean threadStarted;
 		
-		MockClientWorker(Socket clientSocket, Reader reader, RequestBuilder requestBuilder, Responder responder, SocketWriter writer) {
-			super(clientSocket, reader, requestBuilder, responder, writer);
+		MockClientWorker(Reader reader, RequestBuilder requestBuilder, Responder responder, SocketWriter writer) {
+			super(reader, requestBuilder, responder, writer);
 		}
 		
 		@Override

@@ -21,5 +21,18 @@ public class ReaderTest {
 		testReader = new Reader(testBufferedReader);
 		assertEquals("Simple request line was not properly read", testReader.readFromSocket(), exampleRequestMessage);
 	}
+	
+	@Test
+	public void testReaderWithBrokenInputStream() throws IOException {
+		ByteArrayInputStream inputStream = new ByteArrayInputStream(exampleRequestMessage.getBytes());
+		testBufferedReader = new BufferedReader(new InputStreamReader(inputStream));
+		testBufferedReader.close();
+		try {
+			testReader = new Reader(testBufferedReader);
+			testReader.readFromSocket();
+			fail("Error wasn't thrown when Reader attempts to read from a closed stream.");
+		} catch (IOException expectedException) {
+		}
+	}
 }
 

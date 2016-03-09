@@ -22,14 +22,12 @@ public class Server {
 	}
 
 	public void run() throws IOException {
-		clientSocket = null;
 		acceptClient();
 		setReaderAndWriter();
-		clientWorker = serverFactory.createClientWorker(clientSocket, reader, requestBuilder, responder, writer);
-		startNewThread(clientWorker);
+		openNewThread();
 	}
 
-	public void acceptClient() throws IOException { 
+	private void acceptClient() throws IOException { 
 		this.clientSocket = serverSocket.accept();
 	}
 
@@ -37,10 +35,19 @@ public class Server {
 		this.reader = serverFactory.createReader(clientSocket);
 		this.writer = serverFactory.createSocketWriter(clientSocket);
 	}
+	
+	private void openNewThread() {
+		clientWorker = serverFactory.createClientWorker(reader, requestBuilder, responder, writer);
+		Thread t = createNewThread(clientWorker);
+		startThread(t);
+	}
 
-	private void startNewThread(ClientWorker clientWorker) {
-		Thread t = new Thread(clientWorker);
-		t.start();
+	private Thread createNewThread(ClientWorker clientWorker) {
+		return new Thread(clientWorker);
+	}
+	
+	private void startThread(Thread thread) {
+		thread.run();
 	}
 
 	public void shutDown() throws IOException {

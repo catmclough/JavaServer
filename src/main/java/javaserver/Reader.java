@@ -10,20 +10,16 @@ public class Reader {
 		this.readingMechanism = readingMechanism;
 	}
 
-	public String readFromSocket() {
+	public String readFromSocket() throws IOException {
 		char nextChar;
 		String fullRequest = "";
-		try {
-			while (readingMechanism.ready() || fullRequest.length() < 5) {
-				nextChar = read();
-				if (nextChar != -1) {
-					fullRequest += nextChar;
-				} else {
-					break;
-				}
+		while (readingMechanism.ready() || fullRequest.length() < 5) {
+			nextChar = read();
+			if (nextChar != -1) {
+				fullRequest += nextChar;
+			} else {
+				break;
 			}
-		} catch (IOException e) {
-			System.out.println("Exception Caught!");
 		}
 		return fullRequest;
 	}

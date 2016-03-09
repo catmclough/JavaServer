@@ -26,8 +26,8 @@ public class ServerFactory {
 		return new SocketWriter(output);
 	}
 	
-	public ClientWorker createClientWorker(Socket clientSocket, Reader reader, RequestBuilder requestBuilder, Responder responder, SocketWriter writer) {		
-		return new ClientWorker(clientSocket, reader, requestBuilder, responder, writer);
+	public ClientWorker createClientWorker(Reader reader, RequestBuilder requestBuilder, Responder responder, SocketWriter writer) {		
+		return new ClientWorker(reader, requestBuilder, responder, writer);
 	}
 }
 

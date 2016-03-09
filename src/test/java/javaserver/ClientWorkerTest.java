@@ -28,7 +28,7 @@ public class ClientWorkerTest extends TestCase {
 		this.responder = new Responder();
 		MockReader mockReader = new MockReader(stubGetRequestReader());
 		MockSocketWriter mockWriter = new MockSocketWriter(mockOutputStream());
-		this.testClientWorker = new ClientWorker(testClientSocket, mockReader, requestBuilder, responder, mockWriter);
+		this.testClientWorker = new ClientWorker(mockReader, requestBuilder, responder, mockWriter);
 	}
 
 	@Test
