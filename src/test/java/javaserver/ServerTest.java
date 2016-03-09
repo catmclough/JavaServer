@@ -58,11 +58,11 @@ public class ServerTest extends TestCase {
 		assertEquals(mockedServerFactory.getNumThreads(), 3);
 	}
 	
-//	@Test
-//	public void testStartsThread() throws IOException {
-//		testServer.run();
-//		assertEquals(true, mockedServerFactory.mockedWorker.threadStarted);
-//	}
+	@Test
+	public void testStartsThread() throws IOException {
+		testServer.run();
+		assertEquals(true, mockedServerFactory.mockedWorker.threadStarted);
+	}
 	
 	class MockServerSocket extends ServerSocket {
 		private int port;

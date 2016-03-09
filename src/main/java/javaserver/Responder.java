@@ -26,8 +26,8 @@ public class Responder {
 	public String respond(HashMap<String, String> request, SocketWriter writer) {
 		String requestType = request.get("Type");
 		String requestURI = request.get("URI");
-		String[] dems = acceptableRequests.get(requestURI);
-		if (dems != null && (Arrays.asList(dems).contains(requestType))) {
+		String[] relevantRequests = acceptableRequests.get(requestURI);
+		if (relevantRequests != null && (Arrays.asList(relevantRequests).contains(requestType))) {
 			this.response = TWO_HUNDRED;
 		} else {
 			this.response = FOUR_OH_FOUR;
