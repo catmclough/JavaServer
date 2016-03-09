@@ -10,20 +10,21 @@ import junit.framework.TestCase;
 
 public class AppTest extends TestCase{
 	App testApp;
+	private ServerFactory factory;
 	private ServerSocket socket;
-//	private RequestParser parser;
-//	private Responder responder;
-//	private MockServer mockServer;
+	private RequestBuilder requestBuilder;
+	private Responder responder;
+	private MockServer mockServer;
 	static int defaultPort = 5000;
 
 	@BeforeClass
 	public void setUp() throws IOException {
-//		this.factory = new ServerFactory();
+		this.factory = new ServerFactory();
 		this.testApp = new App();
 		this.socket = new ServerSocket();
-//		this.parser = new RequestParser();
-//		this.responder = new Responder();
-//		this.mockServer = new MockServer(socket, parser, responder);
+		this.requestBuilder = new RequestBuilder();
+		this.responder = new Responder();
+		this.mockServer = new MockServer(factory, socket, requestBuilder, responder);
 	}
 
 	@After
@@ -41,10 +42,10 @@ public class AppTest extends TestCase{
 		assertNotNull(App.server);
 	}
 
-//	public void testRunsServer() throws IOException {
-//		App.runServer(mockServer);
-//		assertTrue(mockServer.isRunning);
-//	}
+	public void testRunsServer() throws IOException {
+		App.runServer(mockServer);
+		assertTrue(mockServer.isRunning);
+	}
 }
 
 class MockServer extends Server {
@@ -57,6 +58,7 @@ class MockServer extends Server {
 	@Override
 	public void run() {
 		this.isRunning = true;
+		App.close();
 	}
 }
 

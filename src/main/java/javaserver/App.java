@@ -5,6 +5,7 @@ import java.io.IOException;
 public class App {
 	static int PORT = 5000;
 	static Server server;
+	private static boolean isOn = false;
 
 	public static void main(String[] args) throws IOException {
 		ServerFactory serverFactory = new ServerFactory();
@@ -17,9 +18,14 @@ public class App {
 	}
 
 	public static void runServer(Server server) throws IOException {
-		while (true) {
+		isOn = true;
+		while (isOn) {
 			server.run();
 		}
+	}
+	
+	public static void close() {
+		isOn = false;
 	}
 }
 
