@@ -5,9 +5,11 @@ import static org.junit.Assert.*;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.io.ByteArrayInputStream;
 
 import org.junit.Test;
+
+import java.io.ByteArrayInputStream;
+
 
 public class ReaderTest {
 	private Reader testReader;
@@ -15,24 +17,11 @@ public class ReaderTest {
 	private String exampleRequestMessage = "GET /example HTTP/1.1\r\n\r\n\"Data\"=\"My Info\"";
 
 	@Test
-	public void testReaderWithSimpleRequest() throws IOException {
+	public void testReaderReadsFullMessage() throws IOException {
 		ByteArrayInputStream inputStream = new ByteArrayInputStream(exampleRequestMessage.getBytes());
 		testBufferedReader = new BufferedReader(new InputStreamReader(inputStream));
 		testReader = new Reader(testBufferedReader);
 		assertEquals("Simple request line was not properly read", testReader.readFromSocket(), exampleRequestMessage);
-	}
-	
-	@Test
-	public void testReaderWithBrokenInputStream() throws IOException {
-		ByteArrayInputStream inputStream = new ByteArrayInputStream(exampleRequestMessage.getBytes());
-		testBufferedReader = new BufferedReader(new InputStreamReader(inputStream));
-		testBufferedReader.close();
-		try {
-			testReader = new Reader(testBufferedReader);
-			testReader.readFromSocket();
-			fail("Error wasn't thrown when Reader attempts to read from a closed stream.");
-		} catch (IOException expectedException) {
-		}
 	}
 }
 

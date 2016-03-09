@@ -13,6 +13,8 @@ import org.junit.Test;
 public class ResponderTest {
 	SocketWriter writer;
 	Responder responder;
+	String twoHundred;
+	String fourOhFour;
 	
 	@Before
 	public void setUp() {
@@ -20,6 +22,9 @@ public class ResponderTest {
     	ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
 		DataOutputStream dataOutputStream = new DataOutputStream(outputStream);
 		this.writer = new SocketWriter(dataOutputStream);
+		
+		twoHundred = responder.responseCodes.get("200");
+		fourOhFour = responder.responseCodes.get("404");
 	}	
 	
 	@Test
@@ -27,23 +32,23 @@ public class ResponderTest {
 		HashMap<String, String> request = new HashMap<String, String>();
 		request.put("Type", "GET");
 		request.put("URI", "/");
-		assertEquals(responder.respond(request, writer), responder.TWO_HUNDRED);
+		assertEquals(responder.respond(request, writer), twoHundred);
 	}
 	
 	@Test
-	public void testPostResponse() {
+	public void testPostResponse() throws IOException {
 		HashMap<String, String> request = new HashMap<String, String>();
 		request.put("Type", "POST");
 		request.put("URI", "/form");
-		assertEquals(responder.respond(request, writer), responder.TWO_HUNDRED);
+		assertEquals(responder.respond(request, writer), twoHundred);
 	}
 	
 	@Test
-	public void testPutResponse() {
+	public void testPutResponse() throws IOException {
 		HashMap<String, String> request = new HashMap<String, String>();
 		request.put("Type", "PUT");
 		request.put("URI", "/form");
-		assertEquals(responder.respond(request, writer), responder.TWO_HUNDRED);
+		assertEquals(responder.respond(request, writer), twoHundred);
 	}
 	
 	@Test
@@ -51,7 +56,7 @@ public class ResponderTest {
 		HashMap<String, String> request = new HashMap<String, String>();
 		request.put("Type", "GET");
 		request.put("URI", "/foo");
-		assertEquals(responder.respond(request, writer), responder.FOUR_OH_FOUR);
+		assertEquals(responder.respond(request, writer), fourOhFour);
 	}
 }
 

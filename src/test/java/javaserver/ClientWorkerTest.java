@@ -15,6 +15,7 @@ import org.junit.Test;
 import junit.framework.TestCase;
 
 public class ClientWorkerTest extends TestCase {
+	private String TWO_HUNDRED = "HTTP/1.1 200 OK";
 	Socket testClientSocket; 
 	ClientWorker testClientWorker;
 	BufferedReader mockGetReader;
@@ -23,7 +24,6 @@ public class ClientWorkerTest extends TestCase {
 
 	@Before
 	public void setUp() throws Exception {
-		this.testClientSocket = new Socket();
 		this.requestBuilder = new RequestBuilder();
 		this.responder = new Responder();
 		MockReader mockReader = new MockReader(stubGetRequestReader());
@@ -34,20 +34,20 @@ public class ClientWorkerTest extends TestCase {
 	@Test
 	public void testRun() throws IOException {
 	  testClientWorker.run();
-	  assertEquals(responder.TWO_HUNDRED, testClientWorker.writer.latestResponse);
+	  assertEquals(TWO_HUNDRED, testClientWorker.writer.latestResponse);
 	}
 
 
 	private BufferedReader stubGetRequestReader() {
-			String getRequest = "GET / HTTP/1.1\r\n";
-			InputStream stubInputStreamWithGet = new ByteArrayInputStream(getRequest.getBytes());
-			InputStreamReader inputReader = new InputStreamReader(stubInputStreamWithGet);
-			return new BufferedReader(inputReader);
+		String getRequest = "GET / HTTP/1.1\r\n";
+		InputStream stubInputStreamWithGet = new ByteArrayInputStream(getRequest.getBytes());
+		InputStreamReader inputReader = new InputStreamReader(stubInputStreamWithGet);
+		return new BufferedReader(inputReader);
 	}
 
 	private DataOutputStream mockOutputStream() {
-		  ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
-		  return new DataOutputStream(outputStream);
+		ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
+		return new DataOutputStream(outputStream);
 	}
 }
 
