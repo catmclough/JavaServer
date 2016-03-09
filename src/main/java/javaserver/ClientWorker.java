@@ -2,22 +2,23 @@ package javaserver;
 
 import java.io.IOException;
 import java.net.Socket;
+import java.util.HashMap;
 
 public class ClientWorker implements Runnable {
 	private Reader reader;
 	public SocketWriter writer;
 	private Responder responder;
-	private RequestParser parser;
+	private RequestBuilder requestBuilder;
 	
-	public ClientWorker(Socket clientSocket, Reader reader, RequestParser parser, Responder responder, SocketWriter writer) {
+	public ClientWorker(Socket clientSocket, Reader reader, RequestBuilder requestBuilder, Responder responder, SocketWriter writer) {
 		this.reader = reader;
-		this.parser = parser;
+		this.requestBuilder = requestBuilder;
 		this.responder = responder;
 		this.writer = writer;
 	}
 	
 	public void run() {
-		String request = getRequest();
+		HashMap<String, String> request = requestBuilder.buildRequest(getRequest());
 		respond(request);
 		try {
 			writer.closeOutputStream();
@@ -30,8 +31,8 @@ public class ClientWorker implements Runnable {
 		return reader.readFromSocket();
 	}
 	
-	private void respond(String request) {
-		responder.respond(parser.getRequestType(request), parser.getRequestURI(request), writer);
+	private void respond(HashMap<String, String> request) {
+		responder.respond(request, writer);
 	}
 }
 

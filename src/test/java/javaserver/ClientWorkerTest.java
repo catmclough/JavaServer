@@ -18,17 +18,17 @@ public class ClientWorkerTest extends TestCase {
 	Socket testClientSocket; 
 	ClientWorker testClientWorker;
 	BufferedReader mockGetReader;
-	private RequestParser parser;
+	private RequestBuilder requestBuilder;
 	private Responder responder;
 
 	@Before
 	public void setUp() throws Exception {
 		this.testClientSocket = new Socket();
-		this.parser = new RequestParser();
+		this.requestBuilder = new RequestBuilder();
 		this.responder = new Responder();
 		MockReader mockReader = new MockReader(stubGetRequestReader());
 		MockSocketWriter mockWriter = new MockSocketWriter(mockOutputStream());
-		this.testClientWorker = new ClientWorker(testClientSocket, mockReader, parser, responder, mockWriter);
+		this.testClientWorker = new ClientWorker(testClientSocket, mockReader, requestBuilder, responder, mockWriter);
 	}
 
 	@Test

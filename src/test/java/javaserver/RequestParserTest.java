@@ -7,23 +7,23 @@ import org.junit.Test;
 
 public class RequestParserTest {
 	String mockRequest = "POST /users/123 HTTP/1.1\r\n";
-	RequestParser testParser;
+	RequestBuilder testRequestBuilder;
 	
 	String mockRequestType = "POST";
 	String mockRequestURI = "/users/123";
 	
 	@Before
 	public void setUp() {
-		this.testParser = new RequestParser();
+		this.testRequestBuilder = new RequestBuilder();
 	}
 	
 	@Test
 	public void testGetRequestType() {
-		assertEquals(testParser.getRequestType(mockRequest), mockRequestType);
+		assertEquals(testRequestBuilder.getRequestType(mockRequest), mockRequestType);
 	}
 
 	@Test
 	public void testGetRequestURI() {
-		assertEquals(testParser.getRequestURI(mockRequest), mockRequestURI);
+		assertEquals(testRequestBuilder.getRequestURI(mockRequest), mockRequestURI);
 	}
 }

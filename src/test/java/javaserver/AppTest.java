@@ -50,8 +50,8 @@ public class AppTest extends TestCase{
 class MockServer extends Server {
 	public boolean isRunning;
 
-	MockServer(ServerFactory factory, ServerSocket socket, RequestParser parser, Responder responder) {
-		super(factory, socket, parser, responder);
+	MockServer(ServerFactory factory, ServerSocket socket, RequestBuilder requestBuilder, Responder responder) {
+		super(factory, socket, requestBuilder, responder);
 	}
 
 	@Override

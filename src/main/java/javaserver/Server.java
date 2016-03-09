@@ -10,14 +10,14 @@ public class Server {
 	public ClientWorker clientWorker;
 	private ServerSocket serverSocket;
 	public Reader reader;
-	public RequestParser parser;
+	public RequestBuilder requestBuilder;
 	public Responder responder;
 	public SocketWriter writer;
 
-	Server(ServerFactory serverFactory, ServerSocket serverSocket, RequestParser parser, Responder responder) {
+	Server(ServerFactory serverFactory, ServerSocket serverSocket, RequestBuilder requestBuilder, Responder responder) {
 		this.serverFactory = serverFactory;
 		this.serverSocket = serverSocket;
-		this.parser = parser;
+		this.requestBuilder = requestBuilder;
 		this.responder = responder;
 	}
 
@@ -25,11 +25,11 @@ public class Server {
 		clientSocket = null;
 		acceptClient();
 		setReaderAndWriter();
-		clientWorker = serverFactory.createClientWorker(clientSocket, reader, parser, responder, writer);
+		clientWorker = serverFactory.createClientWorker(clientSocket, reader, requestBuilder, responder, writer);
 		startNewThread(clientWorker);
 	}
 
-	public void acceptClient() throws IOException {
+	public void acceptClient() throws IOException { 
 		this.clientSocket = serverSocket.accept();
 	}
 
