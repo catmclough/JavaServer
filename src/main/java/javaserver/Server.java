@@ -27,7 +27,7 @@ public class Server {
 		openNewThread();
 	}
 
-	private void acceptClient() throws IOException { 
+	private void acceptClient() throws IOException {
 		this.clientSocket = serverSocket.accept();
 	}
 
@@ -35,7 +35,7 @@ public class Server {
 		this.reader = serverFactory.createReader(clientSocket);
 		this.writer = serverFactory.createSocketWriter(clientSocket);
 	}
-	
+
 	private void openNewThread() {
 		clientWorker = serverFactory.createClientWorker(reader, requestBuilder, responder, writer);
 		Thread t = createNewThread(clientWorker);
@@ -45,7 +45,7 @@ public class Server {
 	private Thread createNewThread(ClientWorker clientWorker) {
 		return new Thread(clientWorker);
 	}
-	
+
 	private void startThread(Thread thread) {
 		thread.run();
 	}

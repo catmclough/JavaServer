@@ -13,6 +13,7 @@ public class AppTest extends TestCase{
 	private ServerFactory factory;
 	private ServerSocket socket;
 	private RequestBuilder requestBuilder;
+	private ResponseBuilder responseBuilder;
 	private Responder responder;
 	private MockServer mockServer;
 	static int defaultPort = 5000;
@@ -23,7 +24,8 @@ public class AppTest extends TestCase{
 		this.testApp = new App();
 		this.socket = new ServerSocket();
 		this.requestBuilder = new RequestBuilder();
-		this.responder = new Responder();
+		this.responseBuilder = new ResponseBuilder();
+		this.responder = new Responder(responseBuilder);
 		this.mockServer = new MockServer(factory, socket, requestBuilder, responder);
 	}
 

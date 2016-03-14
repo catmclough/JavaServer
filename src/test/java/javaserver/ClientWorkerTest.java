@@ -16,16 +16,18 @@ import junit.framework.TestCase;
 
 public class ClientWorkerTest extends TestCase {
 	private String TWO_HUNDRED = "HTTP/1.1 200 OK";
-	Socket testClientSocket; 
+	Socket testClientSocket;
 	ClientWorker testClientWorker;
 	BufferedReader mockGetReader;
 	private RequestBuilder requestBuilder;
+	private ResponseBuilder responseBuilder;
 	private Responder responder;
 
 	@Before
 	public void setUp() throws Exception {
 		this.requestBuilder = new RequestBuilder();
-		this.responder = new Responder();
+		this.responseBuilder = new ResponseBuilder();
+		this.responder = new Responder(responseBuilder);
 		MockReader mockReader = new MockReader(stubGetRequestReader());
 		MockSocketWriter mockWriter = new MockSocketWriter(mockOutputStream());
 		this.testClientWorker = new ClientWorker(mockReader, requestBuilder, responder, mockWriter);
@@ -34,7 +36,7 @@ public class ClientWorkerTest extends TestCase {
 	@Test
 	public void testRun() throws IOException {
 	  testClientWorker.run();
-	  assertEquals(TWO_HUNDRED, testClientWorker.writer.latestResponse);
+	  assert(testClientWorker.writer.latestResponse.contains(TWO_HUNDRED));
 	}
 
 
@@ -67,3 +69,4 @@ class MockSocketWriter extends SocketWriter {
 		 this.latestResponse = response;
 	 }
 }
+
