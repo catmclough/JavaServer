@@ -1,9 +1,0 @@
-javaserver/Reader.class
-javaserver/ClientWorker.class
-javaserver/App.class
-javaserver/ServerFactory.class
-javaserver/ResponseBuilder.class
-javaserver/SocketWriter.class
-javaserver/Responder.class
-javaserver/RequestBuilder.class
-javaserver/Server.class
