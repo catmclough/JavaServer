@@ -15,6 +15,7 @@ public class SocketWriter {
 	public void respond(String response) throws IOException {
 		writingMechanism.writeBytes(response);
 		this.latestResponse = response;
+		System.out.println(response);
 	}
 
 	public void closeOutputStream() {

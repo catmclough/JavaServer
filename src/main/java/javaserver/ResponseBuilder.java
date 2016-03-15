@@ -1,5 +1,6 @@
 package javaserver;
 
+import java.io.UnsupportedEncodingException;
 import java.util.Arrays;
 import java.util.HashMap;
 
@@ -42,6 +43,7 @@ public class ResponseBuilder {
 	private void setResponseParts(HashMap<String, String> request) {
 		this.responseParts.put("Response Code", getResponseCode(request));
 		this.responseParts.put("Header", getResponseHeader(request));
+		this.responseParts.put("Body", getResponseBody(request));
 	}
 
 	private String getResponseCode(HashMap<String, String> request) {
@@ -62,5 +64,27 @@ public class ResponseBuilder {
 			header += "\r\n";
 		}
 		return header;
+	}
+	
+	private String getResponseBody(HashMap<String, String> request) {
+		String body = "";
+		if (request.get("URI").contains("/parameters?")) {
+			String params = request.get("URI").split("/parameters?.")[1];
+			params = params.replace("=", " = ");
+			String[] allParams = params.split("&");
+			for (int i=0; i<allParams.length; i++) {
+				body += decode(allParams[i]) + "\r\n";
+			}
+		}
+		return body;
+	}
+	
+	private String decode(String parameter) {
+		try {
+			parameter = java.net.URLDecoder.decode(parameter, "UTF-8");
+		} catch (UnsupportedEncodingException e) {
+			System.out.println("ResponseBuilder could not decode one or more of the request's parameters");
+		}
+		return parameter;
 	}
 }
