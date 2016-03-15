@@ -34,6 +34,12 @@ public class ResponseBuilderTest {
 		request.clear();
 	}
 	
+	//TODO:
+		//Test Response Has Response Code
+		//Test Response Has Header Line
+		//Test Response Has Blank Line
+		//Test Response Has Body Line
+	
 	@Test
 	public void testGetRootResponseCode() throws IOException {
 		request.put("Type", "GET");
@@ -81,13 +87,13 @@ public class ResponseBuilderTest {
 		testResponseBuilder.getResponse(request);
 		assertEquals(testResponseBuilder.responseParts.get("Response Code"), twoHundred);
 	}
-
+	
 	@Test
 	public void testMethodOptionsHeader() throws IOException {
 		request.put("Type", "GET");
 		request.put("URI", "/method_options");
 		testResponseBuilder.getResponse(request);
-		String methodOptionsHeader = "\r\nAllow: GET,HEAD,POST,OPTIONS,PUT\r\n";
+		String methodOptionsHeader = "Allow: GET,HEAD,POST,OPTIONS,PUT";
 		assertEquals(testResponseBuilder.responseParts.get("Header"), methodOptionsHeader);
 	}
 	
@@ -105,11 +111,11 @@ public class ResponseBuilderTest {
 	}
 	
 	@Test
-	public void testCodedParamsGetsNoResponseCode() {
+	public void testCodedParamsGets200Response() {
 		request.put("Type", "GET"); 
 		request.put("URI", codedURI);
-		
 		testResponseBuilder.getResponse(request);
-		assertTrue(testResponseBuilder.responseParts.get("Response Code").isEmpty());
+		assertEquals(testResponseBuilder.responseParts.get("Response Code"), twoHundred);
 	}
+
 }

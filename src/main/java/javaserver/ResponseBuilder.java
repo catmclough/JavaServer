@@ -35,8 +35,10 @@ public class ResponseBuilder {
 
 	public String getResponse(HashMap<String, String> request) {
 		setResponseParts(request);
-		String response = responseParts.get("Response Code");
-		response += responseParts.get("Header");
+		String response = responseParts.get("Response Code") + System.lineSeparator();
+		response += responseParts.get("Header") + System.lineSeparator();
+		response += System.lineSeparator();
+		response += responseParts.get("Body") + System.lineSeparator();
 		return response;
 	}
 
@@ -47,33 +49,46 @@ public class ResponseBuilder {
 	}
 
 	private String getResponseCode(HashMap<String, String> request) {
-		String[] methodOptions = okRequests.get(request.get("URI"));
-		String requestType = request.get("Type");
-		if (methodOptions != null && (Arrays.asList(methodOptions).contains(requestType))) {
+		if (isOK(request)) {
 			return responseCodes.get("200");
 		} else {
 			return responseCodes.get("404");
 		}
 	}
+		
+	private boolean isOK(HashMap<String, String> request) {
+		String[] methodOptions = okRequests.get(request.get("URI"));
+		String requestType = request.get("Type");
+		if (methodOptions != null && (Arrays.asList(methodOptions).contains(requestType))) {
+			return true;
+		} else if (hasVariableParams(request.get("URI"))) {
+			return true;
+		} else {
+			return false;
+		}
+	}
+	
+	private boolean hasVariableParams(String URI) {
+		return URI.contains("/parameters?");
+	}
 
 	private String getResponseHeader(HashMap<String, String> request) {
-		String header = "";
+		String header = new String();
 		if (request.get("URI").equals("/method_options")) {
-			header += "\r\nAllow: ";
+			header += "Allow: ";
 			header += String.join(",", okRequests.get("/method_options"));
-			header += "\r\n";
 		}
 		return header;
 	}
 	
 	private String getResponseBody(HashMap<String, String> request) {
-		String body = "";
-		if (request.get("URI").contains("/parameters?")) {
+		String body = new String();
+		if (hasVariableParams(request.get("URI"))) {
 			String params = request.get("URI").split("/parameters?.")[1];
 			params = params.replace("=", " = ");
 			String[] allParams = params.split("&");
 			for (int i=0; i<allParams.length; i++) {
-				body += decode(allParams[i]) + "\r\n";
+				body += decode(allParams[i]) + System.lineSeparator();
 			}
 		}
 		return body;
