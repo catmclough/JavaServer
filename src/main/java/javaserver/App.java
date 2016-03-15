@@ -10,11 +10,16 @@ public class App {
 	public static void main(String[] args) throws IOException {
 		ServerFactory serverFactory = new ServerFactory();
 		setUpServer(serverFactory);
+		configureRoutes();
 		runServer(server);
 	}
 
 	public static void setUpServer(ServerFactory serverFactory) throws IOException {
 		server = serverFactory.createServer(PORT);
+	}
+
+	public static void configureRoutes() {
+		Routes.setUp();
 	}
 
 	public static void runServer(Server server) throws IOException {

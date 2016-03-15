@@ -12,20 +12,17 @@ public class ResponderTest {
 	ResponseBuilder responseBuilder;
 	SocketWriter writer;
 	Responder responder;
-	String twoHundred;
-	String threeOhTwo;
-	String fourOhFour;
-	String allowedMethodOptions;
 
+	String twoHundred = HTTPStatusCodes.TWO_HUNDRED;
+	
 	@Before
 	public void setUp() {
+		App.configureRoutes();
 		this.responseBuilder = new ResponseBuilder();
 		this.responder = new Responder(responseBuilder);
     	ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
 		DataOutputStream dataOutputStream = new DataOutputStream(outputStream);
 		this.writer = new SocketWriter(dataOutputStream);
-
-		twoHundred = responseBuilder.responseCodes.get("200");
 	}
 	
 	@Test

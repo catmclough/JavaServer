@@ -14,19 +14,18 @@ public class ResponseBuilderTest {
 	SocketWriter writer;
 	Responder responder;
 	
-	String twoHundred;
-	String fourOhFour;
-	String allowedMethodOptions;
+	String twoHundred = HTTPStatusCodes.TWO_HUNDRED;
+	String fourOhFour = HTTPStatusCodes.FOUR_OH_FOUR;
 	
 	HashMap<String, String> request;
 
 	String codedURI = "/parameters?variable_1=Operators%20%3C%2C%20%3E%2C%20%3D%2C%20!%3D%3B%20%2B%2C%20-%2C%20*%2C%20%26%2C%20%40%2C%20%23%2C%20%24%2C%20%5B%2C%20%5D%3A%20%22is%20that%20all%22%3F&variable_2=stuff";
+
 	@Before
 	public void setUp() {
+		App.configureRoutes();
 		request = new HashMap<String, String>();
 		testResponseBuilder = new ResponseBuilder();
-		twoHundred = testResponseBuilder.responseCodes.get("200");
-		fourOhFour = testResponseBuilder.responseCodes.get("404");
 	}
 	
 	@After
@@ -45,7 +44,7 @@ public class ResponseBuilderTest {
 		request.put("Type", "GET");
 		request.put("URI", "/");
 		testResponseBuilder.getResponse(request);
-		assertEquals(testResponseBuilder.responseParts.get("Response Code"), twoHundred);
+		assertEquals(testResponseBuilder.response.get("Response Code"), twoHundred);
 	}
 
 	@Test
@@ -53,7 +52,7 @@ public class ResponseBuilderTest {
 		request.put("Type", "GET");
 		request.put("URI", "/form");
 		testResponseBuilder.getResponse(request);
-		assertEquals(testResponseBuilder.responseParts.get("Response Code"), twoHundred);
+		assertEquals(testResponseBuilder.response.get("Response Code"), twoHundred);
 	}
 
 	@Test
@@ -61,7 +60,7 @@ public class ResponseBuilderTest {
 		request.put("Type", "POST");
 		request.put("URI", "/form");
 		testResponseBuilder.getResponse(request);
-		assertEquals(testResponseBuilder.responseParts.get("Response Code"), twoHundred);
+		assertEquals(testResponseBuilder.response.get("Response Code"), twoHundred);
 	}
 
 	@Test
@@ -69,7 +68,7 @@ public class ResponseBuilderTest {
 		request.put("Type", "PUT");
 		request.put("URI", "/form");
 		testResponseBuilder.getResponse(request);
-		assertEquals(testResponseBuilder.responseParts.get("Response Code"), twoHundred);
+		assertEquals(testResponseBuilder.response.get("Response Code"), twoHundred);
 	}
 
 	@Test
@@ -77,7 +76,7 @@ public class ResponseBuilderTest {
 		request.put("Type", "GET");
 		request.put("URI", "/foo");
 		testResponseBuilder.getResponse(request);
-		assertEquals(testResponseBuilder.responseParts.get("Response Code"), fourOhFour);
+		assertEquals(testResponseBuilder.response.get("Response Code"), fourOhFour);
 	}
 	
 	@Test
@@ -85,7 +84,7 @@ public class ResponseBuilderTest {
 		request.put("Type", "GET");
 		request.put("URI", "/method_options");
 		testResponseBuilder.getResponse(request);
-		assertEquals(testResponseBuilder.responseParts.get("Response Code"), twoHundred);
+		assertEquals(testResponseBuilder.response.get("Response Code"), twoHundred);
 	}
 	
 	@Test
@@ -94,7 +93,7 @@ public class ResponseBuilderTest {
 		request.put("URI", "/method_options");
 		testResponseBuilder.getResponse(request);
 		String methodOptionsHeader = "Allow: GET,HEAD,POST,OPTIONS,PUT";
-		assertEquals(testResponseBuilder.responseParts.get("Header"), methodOptionsHeader);
+		assertEquals(testResponseBuilder.response.get("Header"), methodOptionsHeader);
 	}
 	
 	@Test
@@ -105,7 +104,7 @@ public class ResponseBuilderTest {
 		request.put("URI", codedURI);
 		
 		testResponseBuilder.getResponse(request);
-		String responseBody = testResponseBuilder.responseParts.get("Body");
+		String responseBody = testResponseBuilder.response.get("Body");
 		assertTrue(responseBody.contains(decodedParamOne));
 		assertTrue(responseBody.contains(decodedParamTwo));
 	}
@@ -115,7 +114,7 @@ public class ResponseBuilderTest {
 		request.put("Type", "GET"); 
 		request.put("URI", codedURI);
 		testResponseBuilder.getResponse(request);
-		assertEquals(testResponseBuilder.responseParts.get("Response Code"), twoHundred);
+		assertEquals(testResponseBuilder.response.get("Response Code"), twoHundred);
 	}
 
 }

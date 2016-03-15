@@ -15,7 +15,6 @@ import org.junit.Test;
 import junit.framework.TestCase;
 
 public class ClientWorkerTest extends TestCase {
-	private String TWO_HUNDRED = "HTTP/1.1 200 OK";
 	Socket testClientSocket;
 	ClientWorker testClientWorker;
 	BufferedReader mockGetReader;
@@ -25,6 +24,7 @@ public class ClientWorkerTest extends TestCase {
 
 	@Before
 	public void setUp() throws Exception {
+		App.configureRoutes();
 		this.requestBuilder = new RequestBuilder();
 		this.responseBuilder = new ResponseBuilder();
 		this.responder = new Responder(responseBuilder);
@@ -36,7 +36,7 @@ public class ClientWorkerTest extends TestCase {
 	@Test
 	public void testRun() throws IOException {
 	  testClientWorker.run();
-	  assert(testClientWorker.writer.latestResponse.contains(TWO_HUNDRED));
+	  assert(testClientWorker.writer.latestResponse.contains(HTTPStatusCodes.TWO_HUNDRED));
 	}
 
 

@@ -38,10 +38,15 @@ public class AppTest extends TestCase{
 		assertEquals(defaultPort, App.PORT);
 	}
 
-	public void testSetsUpSerer() throws IOException {
+	public void testSetsUpServer() throws IOException {
 		assertNull(App.server);
 		App.setUpServer(new ServerFactory());
 		assertNotNull(App.server);
+	}
+	
+	public void testConfiguresRoutes() {
+		App.configureRoutes();
+		assertNotNull(Routes.routeOptions.get("/"));
 	}
 
 	public void testRunsServer() throws IOException {

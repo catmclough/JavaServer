@@ -1,89 +1,53 @@
 package javaserver;
 
 import java.io.UnsupportedEncodingException;
-import java.util.Arrays;
 import java.util.HashMap;
 
 public class ResponseBuilder {
-	private String[] OK_ROOT_REQUESTS = {"GET"};
-	private String[] OK_FORM_REQUESTS = {"GET", "POST", "PUT"};
-	private String[] OK_METHOD_OPTIONS = {"GET", "HEAD", "POST", "OPTIONS", "PUT"};
-
-	protected HashMap<String, String> responseParts;
-	protected HashMap<String, String> responseCodes;
-	protected HashMap<String, String[]> okRequests;
+	private HashMap<String, String> request;
+	
+	protected HashMap<String, String> response;
 
 	ResponseBuilder() {
-		this.responseParts = new HashMap<String, String>();
-		this.okRequests = new HashMap<String, String[]>();
-		setOKRequests();
-
-		this.responseCodes = new HashMap<String, String>();
-		setResponseCodes();
-	}
-
-	private void setOKRequests() {
-		okRequests.put("/", OK_ROOT_REQUESTS);
-		okRequests.put("/form", OK_FORM_REQUESTS);
-		okRequests.put("/method_options", OK_METHOD_OPTIONS);
-	}
-
-	private void setResponseCodes() {
-		responseCodes.put("200", "HTTP/1.1 200 OK");
-		responseCodes.put("404", "HTTP/1.1 404 Not Found");
+		this.response = new HashMap<String, String>();
 	}
 
 	public String getResponse(HashMap<String, String> request) {
-		setResponseParts(request);
-		String response = responseParts.get("Response Code") + System.lineSeparator();
-		response += responseParts.get("Header") + System.lineSeparator();
-		response += System.lineSeparator();
-		response += responseParts.get("Body") + System.lineSeparator();
-		return response;
+		this.request = request;
+		setResponseParts();
+		String output = response.get("Response Code") + System.lineSeparator();
+		output += response.get("Header") + System.lineSeparator();
+		output += System.lineSeparator();
+		output += response.get("Body") + System.lineSeparator();
+		return output;
 	}
 
-	private void setResponseParts(HashMap<String, String> request) {
-		this.responseParts.put("Response Code", getResponseCode(request));
-		this.responseParts.put("Header", getResponseHeader(request));
-		this.responseParts.put("Body", getResponseBody(request));
+	private void setResponseParts() {
+		response.put("Response Code", getResponseCode(request));
+		response.put("Header", getResponseHeader(request));
+		response.put("Body", getResponseBody(request));
 	}
 
 	private String getResponseCode(HashMap<String, String> request) {
-		if (isOK(request)) {
-			return responseCodes.get("200");
+		if (Routes.isOK(request)) {
+			return HTTPStatusCodes.TWO_HUNDRED;
 		} else {
-			return responseCodes.get("404");
+			return HTTPStatusCodes.FOUR_OH_FOUR;
 		}
-	}
-		
-	private boolean isOK(HashMap<String, String> request) {
-		String[] methodOptions = okRequests.get(request.get("URI"));
-		String requestType = request.get("Type");
-		if (methodOptions != null && (Arrays.asList(methodOptions).contains(requestType))) {
-			return true;
-		} else if (hasVariableParams(request.get("URI"))) {
-			return true;
-		} else {
-			return false;
-		}
-	}
-	
-	private boolean hasVariableParams(String URI) {
-		return URI.contains("/parameters?");
 	}
 
 	private String getResponseHeader(HashMap<String, String> request) {
 		String header = new String();
 		if (request.get("URI").equals("/method_options")) {
 			header += "Allow: ";
-			header += String.join(",", okRequests.get("/method_options"));
+			header += String.join(",", Routes.getOptions(request));
 		}
 		return header;
 	}
 	
 	private String getResponseBody(HashMap<String, String> request) {
 		String body = new String();
-		if (hasVariableParams(request.get("URI"))) {
+		if (Routes.hasVariableParams(request.get("URI"))) {
 			String params = request.get("URI").split("/parameters?.")[1];
 			params = params.replace("=", " = ");
 			String[] allParams = params.split("&");

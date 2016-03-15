@@ -1,9 +1,11 @@
 javaserver/Reader.class
 javaserver/ClientWorker.class
+javaserver/HTTPStatusCodes.class
 javaserver/App.class
 javaserver/ServerFactory.class
 javaserver/ResponseBuilder.class
 javaserver/SocketWriter.class
 javaserver/Responder.class
 javaserver/RequestBuilder.class
+javaserver/Routes.class
 javaserver/Server.class
