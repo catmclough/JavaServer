@@ -5,6 +5,8 @@ import java.io.IOException;
 
 public class Reader {
 	private BufferedReader readingMechanism;
+	private int minRequestLength = 5;
+	private char lastCharOfRequest = (char) -1;
 
 	Reader(BufferedReader readingMechanism) {
 		this.readingMechanism = readingMechanism;
@@ -13,9 +15,9 @@ public class Reader {
 	public String readFromSocket() throws IOException {
 		char nextChar;
 		String fullRequest = "";
-		while (readingMechanism.ready() || fullRequest.length() < 5) {
+		while (readingMechanism.ready() || fullRequest.length() < minRequestLength) {
 			nextChar = read();
-			if (nextChar != -1) {
+			if (nextChar != lastCharOfRequest) {
 				fullRequest += nextChar;
 			} else {
 				break;

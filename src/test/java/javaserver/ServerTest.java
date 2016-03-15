@@ -22,14 +22,14 @@ public class ServerTest extends TestCase {
 	public void setUp() throws Exception {
 		mockedServerFactory = new MockServerFactory();
 		mockedServerSocket = new MockServerSocket(defaultPort);
-		testServer = new Server(mockedServerFactory, mockedServerSocket, new RequestBuilder(), new Responder());
+		testServer = new Server(mockedServerFactory, mockedServerSocket, new RequestBuilder(), new Responder(new ResponseBuilder()));
 	}
-	
+
 	@After
 	public void tearDown() throws IOException {
 		testServer.shutDown();
 	}
-		
+
 	@Test
 	public void testAcceptsClient() throws IOException {
 		testServer.run();
@@ -42,14 +42,14 @@ public class ServerTest extends TestCase {
 		testServer.run();
 		assertNotNull("Reader was not properly created", testServer.reader);
 	}
-	
+
 	@Test
 	public void testSetsWriter() throws IOException {
 		assertNull("Writer should be null before accepting a client", testServer.writer);
 		testServer.run();
 		assertNotNull("Writer was not properly created", testServer.writer);
 	}
-	
+
 	@Test
 	public void testCreatesMultipleThreads() throws IOException {
 		testServer.run();
@@ -57,13 +57,13 @@ public class ServerTest extends TestCase {
 		testServer.run();
 		assertEquals(mockedServerFactory.getNumThreads(), 3);
 	}
-	
+
 	@Test
 	public void testStartsThread() throws IOException {
 		testServer.run();
 		assertEquals(true, mockedServerFactory.mockedWorker.threadStarted);
 	}
-	
+
 	class MockServerSocket extends ServerSocket {
 		private int port;
 
@@ -82,18 +82,18 @@ public class ServerTest extends TestCase {
 	class MockServerFactory extends ServerFactory {
 		public MockClientWorker mockedWorker;
 		private int threadsCreated;
-		
+
 		MockServerFactory() {
 			super();
 		}
-		
+
 		@Override
 		public ClientWorker createClientWorker(Reader reader, RequestBuilder requestBuilder, Responder responder, SocketWriter writer) {
 			this.threadsCreated++;
 			this.mockedWorker = new MockClientWorker(reader, requestBuilder, responder, writer);
 			return mockedWorker;
 		}
-		
+
 		public int getNumThreads() {
 			return this.threadsCreated;
 		}
@@ -101,15 +101,15 @@ public class ServerTest extends TestCase {
 
 	class MockClientWorker extends ClientWorker {
 		public boolean threadStarted;
-		
+
 		MockClientWorker(Reader reader, RequestBuilder requestBuilder, Responder responder, SocketWriter writer) {
 			super(reader, requestBuilder, responder, writer);
 		}
-		
+
 		@Override
 		public void run(){
 			this.threadStarted = true;
 		}
-		
 	}
 }
+

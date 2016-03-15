@@ -17,8 +17,12 @@ public class SocketWriter {
 		this.latestResponse = response;
 	}
 
-	public void closeOutputStream() throws IOException {
-		this.writingMechanism.close();
+	public void closeOutputStream() {
+		try {
+			this.writingMechanism.close();
+		} catch (IOException e) {
+			System.out.println("SocketWriter was unable to close output stream");
+		}
 		this.isOutputStreamOpen = false;
 	}
 }

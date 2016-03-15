@@ -23,7 +23,7 @@ public class App {
 			server.run();
 		}
 	}
-	
+
 	public static void close() {
 		isOn = false;
 	}
