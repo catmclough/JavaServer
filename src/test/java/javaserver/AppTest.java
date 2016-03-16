@@ -17,7 +17,7 @@ public class AppTest extends TestCase{
 	public void setUp() throws IOException {
 		this.testApp = new App();
 		this.socket = new ServerSocket();
-		this.mockServer = new MockServer(new ServerFactory(), socket);
+		this.mockServer = new MockServer(socket);
 	}
 
 	public void testDefaultPort() {
@@ -48,8 +48,8 @@ public class AppTest extends TestCase{
 class MockServer extends Server {
 	public boolean isRunning;
 
-	MockServer(ServerFactory factory, ServerSocket socket) {
-		super(factory, socket);
+	MockServer(ServerSocket socket) {
+		super(new ServerFactory(), socket);
 	}
 
 	@Override

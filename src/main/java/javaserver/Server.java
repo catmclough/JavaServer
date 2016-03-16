@@ -24,6 +24,10 @@ public class Server {
 		openNewThread();
 	}
 
+	public void shutDown() throws IOException {
+		serverSocket.close();
+	}
+
 	private void acceptClient() throws IOException {
 		this.clientSocket = serverSocket.accept();
 	}
@@ -39,16 +43,11 @@ public class Server {
 		startThread(t);
 	}
 
-	private Thread createNewThread(ClientWorker clientWorker) {
+	protected Thread createNewThread(ClientWorker clientWorker) {
 		return new Thread(clientWorker);
 	}
 
-	private void startThread(Thread thread) {
+	protected void startThread(Thread thread) {
 		thread.run();
-	}
-
-	public void shutDown() throws IOException {
-		clientSocket.close();
-		serverSocket.close();
 	}
 }

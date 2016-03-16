@@ -29,7 +29,7 @@ public class ResponderTest {
 		Request request = new Request("GET", "/");
 
 		assertNull(writer.latestResponse);
-		testResponder.respond(request, writer);
+		testResponder.respond(request, new ServerFactory(), writer);
 		assertNotNull(writer.latestResponse);
 	}
 }

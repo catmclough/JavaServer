@@ -63,6 +63,17 @@ public class ServerTest extends TestCase {
 		testServer.run();
 		assertEquals(true, mockedServerFactory.mockedWorker.threadStarted);
 	}
+	
+	@Test
+	public void testServerCanBeShutDown() {
+		boolean caughtError = false;
+		try {
+			testServer.shutDown();
+		} catch (IOException e) {
+			caughtError = true;
+		}
+		assertFalse("Server's ServerSocket failed to close", caughtError);
+	}
 
 	class MockServerSocket extends ServerSocket {
 		private int port;
@@ -90,7 +101,7 @@ public class ServerTest extends TestCase {
 		@Override
 		public ClientWorker createClientWorker(Reader reader, SocketWriter writer) {
 			this.threadsCreated++;
-			this.mockedWorker = new MockClientWorker(reader, new Responder(), writer);
+			this.mockedWorker = new MockClientWorker(reader, writer);
 			return mockedWorker;
 		}
 
@@ -102,8 +113,8 @@ public class ServerTest extends TestCase {
 	class MockClientWorker extends ClientWorker {
 		public boolean threadStarted;
 
-		MockClientWorker(Reader reader, Responder responder, SocketWriter writer) {
-			super(reader, responder, writer);
+		MockClientWorker(Reader reader, SocketWriter writer) {
+			super(new ServerFactory(), reader, new Responder(), writer);
 		}
 
 		@Override

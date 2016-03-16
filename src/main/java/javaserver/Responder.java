@@ -4,8 +4,10 @@ import java.io.IOException;
 
 public class Responder {
 	Request request;
+	ServerFactory serverFactory;
 
-	public void respond(Request request, SocketWriter writer) throws IOException {
+	public void respond(Request request, ServerFactory serverFactory, SocketWriter writer) throws IOException {
+		this.serverFactory = serverFactory;
 		this.request = request;
 		Response response = getResponse();
 		String formattedResponse = response.getFormattedResponse();
@@ -13,7 +15,7 @@ public class Responder {
 	}
 
 	private Response getResponse() {
-		ResponseBuilder responseBuilder = ServerFactory.createResponseBuilder(request);
+		ResponseBuilder responseBuilder = serverFactory.createResponseBuilder(request);
 		return responseBuilder.createResponse();
 	}
 }
