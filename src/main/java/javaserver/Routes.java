@@ -1,6 +1,5 @@
 package javaserver;
 
-import java.util.Arrays;
 import java.util.HashMap;
 
 public class Routes {
@@ -22,20 +21,6 @@ public class Routes {
 		return routeOptions.get(route);
 	}
 
-	public static boolean isOK(Request request) {
-		String[] options = getOptions(request);
-		String requestType = request.getMethod();
-		if (options != null && (Arrays.asList(options).contains(requestType))) {
-			return true;
-		} else if (hasVariableParams(request.getURI())) {
-			return true;
-		} else {
-			return false;
-		}
-	}
 	
-	public static boolean hasVariableParams(String URI) {
-		return URI.contains("/parameters?");
-	}
 }
 

@@ -26,10 +26,10 @@ public class ServerFactory {
 		return new SocketWriter(output);
 	}
 
-	public ClientWorker createClientWorker(Reader reader, Responder responder, SocketWriter writer) {		
+	public ClientWorker createClientWorker(Reader reader, Responder responder, SocketWriter writer) {
 		return new ClientWorker(reader, responder, writer);
 	}
-	
+
 	public static ResponseBuilder createResponseBuilder(Request request) {
 		return new ResponseBuilder(request);
 	}

@@ -12,23 +12,23 @@ public class Response {
 	public String getResponseCode() {
 		return responseCode;
 	}
-	
+
 	public void setHeader(String header) {
 		this.header = header;
 	}
-	
+
 	public String getHeader() {
 		return header;
 	}
-	
+
 	public void setBody(String body) {
 		this.body = body;
 	}
-	
+
 	public String getBody() {
 		return body;
 	}
-	
+
 	public String getFormattedResponse() {
 		String output = getResponseCode() + System.lineSeparator();
 		output += getHeader() + System.lineSeparator();

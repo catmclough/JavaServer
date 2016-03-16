@@ -8,7 +8,7 @@ public class RequestParser {
 	public static String getRequestURI(String rawRequest) {
 		return splitRequest(rawRequest)[1];
 	}
-	
+
 	private static String[] splitRequest(String rawRequest) {
 		return rawRequest.split(" ");
 	}

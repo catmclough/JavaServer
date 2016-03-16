@@ -4,11 +4,11 @@ import java.io.UnsupportedEncodingException;
 
 public class ResponseBuilder {
 	private Request request;
-	
+
 	ResponseBuilder(Request request) {
 		this.request = request;
 	}
-	
+
 	public Response createResponse() {
 		Response response = new Response();
 		response.setResponseCode(getResponseCode());
@@ -18,7 +18,7 @@ public class ResponseBuilder {
 	}
 
 	private String getResponseCode() {
-		if (Routes.isOK(request)) {
+		if (request.isOK()) {
 			return HTTPStatusCodes.TWO_HUNDRED;
 		} else {
 			return HTTPStatusCodes.FOUR_OH_FOUR;
@@ -33,18 +33,22 @@ public class ResponseBuilder {
 		}
 		return header;
 	}
-	
+
 	private String getResponseBody() {
 		String body = new String();
-		if (Routes.hasVariableParams(request.getURI())) {
-			String params = request.getURI().split("/parameters?.")[1];
-			params = params.replace("=", " = ");
-			String[] allParams = params.split("&");
-			for (int i=0; i<allParams.length; i++) {
+		if (request.hasVariableParams()) {
+			String[] allParams = separateParameters();
+			for (int i = 0; i < allParams.length; i++) {
 				body += decode(allParams[i]) + System.lineSeparator();
 			}
 		}
 		return body;
+	}
+
+	private String[] separateParameters() {
+		String params = request.getURI().split("/parameters?.")[1];
+		params = params.replace("=", " = ");
+		return params.split("&");
 	}
 	
 	private String decode(String parameter) {
