@@ -10,14 +10,12 @@ public class Server {
 	public ClientWorker clientWorker;
 	private ServerSocket serverSocket;
 	public Reader reader;
-	public RequestBuilder requestBuilder;
 	public Responder responder;
 	public SocketWriter writer;
 
-	Server(ServerFactory serverFactory, ServerSocket serverSocket, RequestBuilder requestBuilder, Responder responder) {
+	Server(ServerFactory serverFactory, ServerSocket serverSocket, Responder responder) {
 		this.serverFactory = serverFactory;
 		this.serverSocket = serverSocket;
-		this.requestBuilder = requestBuilder;
 		this.responder = responder;
 	}
 
@@ -37,7 +35,7 @@ public class Server {
 	}
 
 	private void openNewThread() {
-		clientWorker = serverFactory.createClientWorker(reader, requestBuilder, responder, writer);
+		clientWorker = serverFactory.createClientWorker(reader, responder, writer);
 		Thread t = createNewThread(clientWorker);
 		startThread(t);
 	}

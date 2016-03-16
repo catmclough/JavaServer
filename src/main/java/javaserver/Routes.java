@@ -4,9 +4,9 @@ import java.util.Arrays;
 import java.util.HashMap;
 
 public class Routes {
-	private static String[] OK_ROOT_REQUESTS = {"GET"};
-	private static String[] OK_FORM_REQUESTS = {"GET", "POST", "PUT"};
-	private static String[] OK_METHOD_OPTIONS = {"GET", "HEAD", "POST", "OPTIONS", "PUT"};
+	private static final String[] OK_ROOT_REQUESTS = {"GET"};
+	private static final String[] OK_FORM_REQUESTS = {"GET", "POST", "PUT"};
+	private static final String[] OK_METHOD_OPTIONS = {"GET", "HEAD", "POST", "OPTIONS", "PUT"};
 
 	public static HashMap<String, String[]> routeOptions;
 
@@ -17,17 +17,17 @@ public class Routes {
 		routeOptions.put("/method_options", OK_METHOD_OPTIONS);
 	}
 
-	public static String[] getOptions(HashMap<String, String> request) {
-		String route = request.get("URI");
+	public static String[] getOptions(Request request) {
+		String route = request.getURI();
 		return routeOptions.get(route);
 	}
 
-	public static boolean isOK(HashMap<String, String> request) {
+	public static boolean isOK(Request request) {
 		String[] options = getOptions(request);
-		String requestType = request.get("Type");
+		String requestType = request.getMethod();
 		if (options != null && (Arrays.asList(options).contains(requestType))) {
 			return true;
-		} else if (hasVariableParams(request.get("URI"))) {
+		} else if (hasVariableParams(request.getURI())) {
 			return true;
 		} else {
 			return false;

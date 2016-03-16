@@ -1,10 +1,10 @@
 javaserver/MockReader.class
+javaserver/RequestParserTest.class
 javaserver/MockServer.class
 javaserver/ReaderTest.class
 javaserver/ServerTest$MockServerFactory.class
 javaserver/ServerTest.class
 javaserver/AppTest.class
-javaserver/RequestBuilderTest.class
 javaserver/ServerTest$MockServerSocket.class
 javaserver/ServerTest$MockClientWorker.class
 javaserver/MockSocketWriter.class

@@ -12,8 +12,6 @@ public class AppTest extends TestCase{
 	App testApp;
 	private ServerFactory factory;
 	private ServerSocket socket;
-	private RequestBuilder requestBuilder;
-	private ResponseBuilder responseBuilder;
 	private Responder responder;
 	private MockServer mockServer;
 	static int defaultPort = 5000;
@@ -23,10 +21,8 @@ public class AppTest extends TestCase{
 		this.factory = new ServerFactory();
 		this.testApp = new App();
 		this.socket = new ServerSocket();
-		this.requestBuilder = new RequestBuilder();
-		this.responseBuilder = new ResponseBuilder();
-		this.responder = new Responder(responseBuilder);
-		this.mockServer = new MockServer(factory, socket, requestBuilder, responder);
+		this.responder = new Responder();
+		this.mockServer = new MockServer(factory, socket, responder);
 	}
 
 	@After
@@ -58,8 +54,8 @@ public class AppTest extends TestCase{
 class MockServer extends Server {
 	public boolean isRunning;
 
-	MockServer(ServerFactory factory, ServerSocket socket, RequestBuilder requestBuilder, Responder responder) {
-		super(factory, socket, requestBuilder, responder);
+	MockServer(ServerFactory factory, ServerSocket socket, Responder responder) {
+		super(factory, socket, responder);
 	}
 
 	@Override

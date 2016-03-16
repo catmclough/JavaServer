@@ -1,34 +1,23 @@
 package javaserver;
 
 import java.io.UnsupportedEncodingException;
-import java.util.HashMap;
 
 public class ResponseBuilder {
-	private HashMap<String, String> request;
+	private Request request;
 	
-	protected HashMap<String, String> response;
-
-	ResponseBuilder() {
-		this.response = new HashMap<String, String>();
-	}
-
-	public String getResponse(HashMap<String, String> request) {
+	ResponseBuilder(Request request) {
 		this.request = request;
-		setResponseParts();
-		String output = response.get("Response Code") + System.lineSeparator();
-		output += response.get("Header") + System.lineSeparator();
-		output += System.lineSeparator();
-		output += response.get("Body") + System.lineSeparator();
-		return output;
+	}
+	
+	public Response createResponse() {
+		Response response = new Response();
+		response.setResponseCode(getResponseCode());
+		response.setHeader(getResponseHeader());
+		response.setBody(getResponseBody());
+		return response;
 	}
 
-	private void setResponseParts() {
-		response.put("Response Code", getResponseCode(request));
-		response.put("Header", getResponseHeader(request));
-		response.put("Body", getResponseBody(request));
-	}
-
-	private String getResponseCode(HashMap<String, String> request) {
+	private String getResponseCode() {
 		if (Routes.isOK(request)) {
 			return HTTPStatusCodes.TWO_HUNDRED;
 		} else {
@@ -36,19 +25,19 @@ public class ResponseBuilder {
 		}
 	}
 
-	private String getResponseHeader(HashMap<String, String> request) {
+	private String getResponseHeader() {
 		String header = new String();
-		if (request.get("URI").equals("/method_options")) {
+		if (request.getURI().equals("/method_options")) {
 			header += "Allow: ";
 			header += String.join(",", Routes.getOptions(request));
 		}
 		return header;
 	}
 	
-	private String getResponseBody(HashMap<String, String> request) {
+	private String getResponseBody() {
 		String body = new String();
-		if (Routes.hasVariableParams(request.get("URI"))) {
-			String params = request.get("URI").split("/parameters?.")[1];
+		if (Routes.hasVariableParams(request.getURI())) {
+			String params = request.getURI().split("/parameters?.")[1];
 			params = params.replace("=", " = ");
 			String[] allParams = params.split("&");
 			for (int i=0; i<allParams.length; i++) {
