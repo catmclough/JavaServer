@@ -63,4 +63,3 @@ class MockSocketWriter extends SocketWriter {
 		 this.latestResponse = response;
 	 }
 }
-

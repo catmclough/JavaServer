@@ -28,7 +28,7 @@ public class AppTest extends TestCase{
 		App.setUpServer();
 		assertNotNull(App.server);
 	}
-	
+
 	public void testRouteConfigurations() throws IOException {
 		App.configureRoutes();
 		assertFalse(Routes.routeOptions.isEmpty());
@@ -38,7 +38,7 @@ public class AppTest extends TestCase{
 		App.runServer(mockServer);
 		assertTrue(mockServer.isRunning);
 	}
-	
+
 	public void testAppCanShutDownServer() throws IOException {
 		App.runServer(mockServer);
 		assertFalse(App.isOn);
@@ -58,4 +58,3 @@ class MockServer extends Server {
 		App.close();
 	}
 }
-

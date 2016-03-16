@@ -11,7 +11,7 @@ public class ResponderTest {
 	Responder testResponseBuilder;
 	SocketWriter writer;
 	Responder responder;
-	
+
 	String codedURI = "/parameters?variable_1=Operators%20%3C%2C%20%3E%2C%20%3D%2C%20!%3D%3B%20%2B%2C%20-%2C%20*%2C%20%26%2C%20%40%2C%20%23%2C%20%24%2C%20%5B%2C%20%5D%3A%20%22is%20that%20all%22%3F&variable_2=stuff";
 
 	Request getRoot = new Request("GET", "/");
@@ -21,7 +21,7 @@ public class ResponderTest {
 	Request getBogusRoute = new Request("GET", "/foo");
 	Request getMethodOptions = new Request("GET", "/method_options");
 	Request getCodedParams = new Request("GET", codedURI);
-	
+
 	String twoHundred = HTTPStatusCodes.TWO_HUNDRED;
 	String fourOhFour = HTTPStatusCodes.FOUR_OH_FOUR;
 
@@ -86,14 +86,14 @@ public class ResponderTest {
 		Response response = responder.getResponse();
 		assertEquals(response.getResponseCode(), fourOhFour);
 	}
-	
+
 	@Test
 	public void testMethodOptionsResponseCode() {
 		Responder responder = new Responder(getMethodOptions);
 		Response response = responder.getResponse();
 		assertEquals(response.getResponseCode(), twoHundred);
 	}
-	
+
 	@Test
 	public void testMethodOptionsHeader() throws IOException {
 		Responder responder = new Responder(getMethodOptions);
@@ -101,12 +101,12 @@ public class ResponderTest {
 		String methodOptionsHeader = "Allow: GET,HEAD,POST,OPTIONS,PUT";
 		assertEquals(response.getHeader(), methodOptionsHeader);
 	}
-	
+
 	@Test
 	public void testDecodedParamsInResponseBody() {
 		String decodedParamOne = "variable_1 = Operators <, >, =, !=; +, -, *, &, @, #, $, [, ]: \"is that all\"?";
 		String decodedParamTwo = "variable_2 = stuff";
-		
+
 		Responder responder = new Responder(getCodedParams);
 		Response response = responder.getResponse();
 		String responseBody = response.getBody();
@@ -114,13 +114,11 @@ public class ResponderTest {
 		assertTrue(responseBody.contains(decodedParamOne));
 		assertTrue(responseBody.contains(decodedParamTwo));
 	}
-	
+
 	@Test
 	public void testCodedParamsGets200Response() {
 		Responder responder = new Responder(getCodedParams);
 		Response response = responder.getResponse();
 		assertEquals(response.getResponseCode(), twoHundred);
 	}
-	
 }
-

@@ -19,7 +19,5 @@ public class Routes {
 	public static String[] getOptions(String route) {
 		return routeOptions.get(route);
 	}
-
-	
 }
 

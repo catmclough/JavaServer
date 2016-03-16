@@ -5,11 +5,11 @@ import java.io.UnsupportedEncodingException;
 public class Responder {
 	private Request request;
 	protected Response response;
-	
+
 	Responder(Request request) {
 		this.request = request;
 	}
-	
+
 	public Response getResponse() {
 		this.response = new Response();
 		setResponseData();
@@ -55,7 +55,7 @@ public class Responder {
 		params = params.replace("=", " = ");
 		return params.split("&");
 	}
-	
+
 	private String decode(String parameter) {
 		try {
 			String encoding = "UTF-8";

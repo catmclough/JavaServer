@@ -18,7 +18,7 @@ public class Request {
 	public String getURI() {
 		return URI;
 	}
-	
+
 	public boolean isOK() {
 		String requestType = getMethod();
 		if (routeOptions() != null && (Arrays.asList(routeOptions()).contains(requestType))) {
@@ -29,7 +29,7 @@ public class Request {
 			return false;
 		}
 	}
-	
+
 	public String[] routeOptions() {
 		return Routes.getOptions(URI);
 	}

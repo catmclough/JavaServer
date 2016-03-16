@@ -30,4 +30,3 @@ public class Reader {
 		return (char) readingMechanism.read();
 	}
 }
-

@@ -18,7 +18,7 @@ public class App {
 		ServerFactory serverFactory = new ServerFactory();
 		server = serverFactory.createServer(PORT);
 	}
-	
+
 	protected static void configureRoutes() {
 		Routes.configure();
 	}
@@ -34,4 +34,3 @@ public class App {
 		isOn = false;
 	}
 }
-
