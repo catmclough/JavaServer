@@ -62,10 +62,10 @@
     <property name="ftp.nonProxyHosts" value="local|*.local|169.254/16|*.169.254/16"/>
     <property name="sun.cpu.isalist" value=""/>
   </properties>
-  <testcase classname="javaserver.ServerTest" name="testAcceptsClient" time="0.016"/>
-  <testcase classname="javaserver.ServerTest" name="testSetsReader" time="0.001"/>
+  <testcase classname="javaserver.ServerTest" name="testAcceptsClient" time="0.014"/>
+  <testcase classname="javaserver.ServerTest" name="testSetsReader" time="0.003"/>
   <testcase classname="javaserver.ServerTest" name="testSetsWriter" time="0.002"/>
   <testcase classname="javaserver.ServerTest" name="testCreatesMultipleThreads" time="0.002"/>
-  <testcase classname="javaserver.ServerTest" name="testStartsThread" time="0.001"/>
-  <testcase classname="javaserver.ServerTest" name="testServerCanBeShutDown" time="0.001"/>
+  <testcase classname="javaserver.ServerTest" name="testStartsThread" time="0.002"/>
+  <testcase classname="javaserver.ServerTest" name="testServerCanBeShutDown" time="0"/>
 </testsuite>
