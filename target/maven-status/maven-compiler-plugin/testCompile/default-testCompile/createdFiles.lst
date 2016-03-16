@@ -11,4 +11,3 @@ javaserver/MockSocketWriter.class
 javaserver/ClientWorkerTest.class
 javaserver/ResponderTest.class
 javaserver/SocketWriterTest.class
-javaserver/ResponseBuilderTest.class

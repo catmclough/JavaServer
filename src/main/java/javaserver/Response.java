@@ -29,7 +29,7 @@ public class Response {
 		return body;
 	}
 
-	public String getFormattedResponse() {
+	public String formatResponse() {
 		String output = getResponseCode() + System.lineSeparator();
 		output += getHeader() + System.lineSeparator();
 		output += System.lineSeparator();

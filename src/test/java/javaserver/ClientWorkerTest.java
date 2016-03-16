@@ -22,16 +22,15 @@ public class ClientWorkerTest extends TestCase {
 	@Before
 	public void setUp() throws Exception {
 		App.configureRoutes();
-		Responder responder = new Responder();
 		MockReader mockReader = new MockReader(stubGetRequestReader());
 		MockSocketWriter mockWriter = new MockSocketWriter(mockOutputStream());
-		this.testClientWorker = new ClientWorker(new ServerFactory(), mockReader, responder, mockWriter);
+		this.testClientWorker = new ClientWorker(new ServerFactory(), mockReader, mockWriter);
 	}
 
 	@Test
 	public void testRun() throws IOException {
 	  testClientWorker.run();
-	  assert(testClientWorker.writer.latestResponse.contains(HTTPStatusCodes.TWO_HUNDRED));
+	  assertTrue(testClientWorker.writer.latestResponse.contains(HTTPStatusCodes.TWO_HUNDRED));
 	}
 
 

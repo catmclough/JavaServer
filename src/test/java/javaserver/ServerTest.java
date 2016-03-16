@@ -114,7 +114,7 @@ public class ServerTest extends TestCase {
 		public boolean threadStarted;
 
 		MockClientWorker(Reader reader, SocketWriter writer) {
-			super(new ServerFactory(), reader, new Responder(), writer);
+			super(new ServerFactory(), reader, writer);
 		}
 
 		@Override

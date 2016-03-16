@@ -27,11 +27,11 @@ public class ServerFactory {
 	}
 
 	public ClientWorker createClientWorker(Reader reader, SocketWriter writer) {
-		return new ClientWorker(this, reader, new Responder(), writer);
+		return new ClientWorker(this, reader, writer);
 	}
 
-	public ResponseBuilder createResponseBuilder(Request request) {
-		return new ResponseBuilder(request);
+	public Responder createResponseBuilder(Request request) {
+		return new Responder(request);
 	}
 }
 
