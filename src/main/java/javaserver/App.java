@@ -3,33 +3,34 @@ package javaserver;
 import java.io.IOException;
 
 public class App {
-	static int PORT = 5000;
-	static Server server;
-	private static boolean isOn = false;
+	protected static final int PORT = 5000;
+	protected static Server server;
+
+	protected static boolean isOn = false;
 
 	public static void main(String[] args) throws IOException {
-		ServerFactory serverFactory = new ServerFactory();
-		setUpServer(serverFactory);
+		setUpServer();
 		configureRoutes();
 		runServer(server);
 	}
 
-	public static void setUpServer(ServerFactory serverFactory) throws IOException {
+	protected static void setUpServer() throws IOException {
+		ServerFactory serverFactory = new ServerFactory();
 		server = serverFactory.createServer(PORT);
 	}
-
-	public static void configureRoutes() {
-		Routes.setUp();
+	
+	protected static void configureRoutes() {
+		Routes.configure();
 	}
 
-	public static void runServer(Server server) throws IOException {
+	protected static void runServer(Server server) throws IOException {
 		isOn = true;
 		while (isOn) {
 			server.run();
 		}
 	}
 
-	public static void close() {
+	protected static void close() {
 		isOn = false;
 	}
 }

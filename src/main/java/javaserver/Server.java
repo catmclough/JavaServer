@@ -13,10 +13,9 @@ public class Server {
 	public Responder responder;
 	public SocketWriter writer;
 
-	Server(ServerFactory serverFactory, ServerSocket serverSocket, Responder responder) {
+	Server(ServerFactory serverFactory, ServerSocket serverSocket) {
 		this.serverFactory = serverFactory;
 		this.serverSocket = serverSocket;
-		this.responder = responder;
 	}
 
 	public void run() throws IOException {
@@ -35,7 +34,7 @@ public class Server {
 	}
 
 	private void openNewThread() {
-		clientWorker = serverFactory.createClientWorker(reader, responder, writer);
+		clientWorker = serverFactory.createClientWorker(reader, writer);
 		Thread t = createNewThread(clientWorker);
 		startThread(t);
 	}

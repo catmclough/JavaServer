@@ -10,8 +10,7 @@ import java.net.Socket;
 
 public class ServerFactory {
 	public Server createServer(int port) throws IOException {
-		Server server = new Server(this, new ServerSocket(port), new Responder());
-		return server;
+		return new Server(this, new ServerSocket(port));
 	}
 
 	public Reader createReader(Socket clientSocket) throws IOException {
@@ -26,8 +25,8 @@ public class ServerFactory {
 		return new SocketWriter(output);
 	}
 
-	public ClientWorker createClientWorker(Reader reader, Responder responder, SocketWriter writer) {
-		return new ClientWorker(reader, responder, writer);
+	public ClientWorker createClientWorker(Reader reader, SocketWriter writer) {
+		return new ClientWorker(reader, new Responder(), writer);
 	}
 
 	public static ResponseBuilder createResponseBuilder(Request request) {

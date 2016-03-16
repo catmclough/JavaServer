@@ -22,7 +22,7 @@ public class ServerTest extends TestCase {
 	public void setUp() throws Exception {
 		mockedServerFactory = new MockServerFactory();
 		mockedServerSocket = new MockServerSocket(defaultPort);
-		testServer = new Server(mockedServerFactory, mockedServerSocket, new Responder());
+		testServer = new Server(mockedServerFactory, mockedServerSocket);
 	}
 
 	@After
@@ -88,9 +88,9 @@ public class ServerTest extends TestCase {
 		}
 
 		@Override
-		public ClientWorker createClientWorker(Reader reader, Responder responder, SocketWriter writer) {
+		public ClientWorker createClientWorker(Reader reader, SocketWriter writer) {
 			this.threadsCreated++;
-			this.mockedWorker = new MockClientWorker(reader, responder, writer);
+			this.mockedWorker = new MockClientWorker(reader, new Responder(), writer);
 			return mockedWorker;
 		}
 

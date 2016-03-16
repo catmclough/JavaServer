@@ -29,7 +29,7 @@ public class ResponseBuilder {
 		String header = new String();
 		if (request.getURI().equals("/method_options")) {
 			header += "Allow: ";
-			header += String.join(",", Routes.getOptions(request));
+			header += String.join(",", request.routeOptions());
 		}
 		return header;
 	}

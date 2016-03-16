@@ -9,15 +9,14 @@ public class Routes {
 
 	public static HashMap<String, String[]> routeOptions;
 
-	public static void setUp() {
+	public static void configure() {
 		routeOptions = new HashMap<String, String[]>();
 		routeOptions.put("/", OK_ROOT_REQUESTS);
 		routeOptions.put("/form", OK_FORM_REQUESTS);
 		routeOptions.put("/method_options", OK_METHOD_OPTIONS);
 	}
 
-	public static String[] getOptions(Request request) {
-		String route = request.getURI();
+	public static String[] getOptions(String route) {
 		return routeOptions.get(route);
 	}
 

@@ -20,15 +20,18 @@ public class Request {
 	}
 	
 	public boolean isOK() {
-		String[] options = Routes.getOptions(this);
 		String requestType = getMethod();
-		if (options != null && (Arrays.asList(options).contains(requestType))) {
+		if (routeOptions() != null && (Arrays.asList(routeOptions()).contains(requestType))) {
 			return true;
 		} else if (this.hasVariableParams()) {
 			return true;
 		} else {
 			return false;
 		}
+	}
+	
+	public String[] routeOptions() {
+		return Routes.getOptions(URI);
 	}
 
 	public boolean hasVariableParams() {
