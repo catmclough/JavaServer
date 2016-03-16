@@ -44,7 +44,7 @@ public class ResponseBuilderTest {
 		request.put("Type", "GET");
 		request.put("URI", "/");
 		testResponseBuilder.getResponse(request);
-		assertEquals(testResponseBuilder.response.get("Response Code"), twoHundred);
+		assertEquals(testResponseBuilder.response.getResponseCode(), twoHundred);
 	}
 
 	@Test
@@ -52,7 +52,7 @@ public class ResponseBuilderTest {
 		request.put("Type", "GET");
 		request.put("URI", "/form");
 		testResponseBuilder.getResponse(request);
-		assertEquals(testResponseBuilder.response.get("Response Code"), twoHundred);
+		assertEquals(testResponseBuilder.response.getResponseCode(), twoHundred);
 	}
 
 	@Test
@@ -60,7 +60,7 @@ public class ResponseBuilderTest {
 		request.put("Type", "POST");
 		request.put("URI", "/form");
 		testResponseBuilder.getResponse(request);
-		assertEquals(testResponseBuilder.response.get("Response Code"), twoHundred);
+		assertEquals(testResponseBuilder.response.getResponseCode(), twoHundred);
 	}
 
 	@Test
@@ -68,7 +68,7 @@ public class ResponseBuilderTest {
 		request.put("Type", "PUT");
 		request.put("URI", "/form");
 		testResponseBuilder.getResponse(request);
-		assertEquals(testResponseBuilder.response.get("Response Code"), twoHundred);
+		assertEquals(testResponseBuilder.response.getResponseCode(), twoHundred);
 	}
 
 	@Test
@@ -76,7 +76,7 @@ public class ResponseBuilderTest {
 		request.put("Type", "GET");
 		request.put("URI", "/foo");
 		testResponseBuilder.getResponse(request);
-		assertEquals(testResponseBuilder.response.get("Response Code"), fourOhFour);
+		assertEquals(testResponseBuilder.response.getResponseCode(), fourOhFour);
 	}
 	
 	@Test
@@ -84,7 +84,7 @@ public class ResponseBuilderTest {
 		request.put("Type", "GET");
 		request.put("URI", "/method_options");
 		testResponseBuilder.getResponse(request);
-		assertEquals(testResponseBuilder.response.get("Response Code"), twoHundred);
+		assertEquals(testResponseBuilder.response.getResponseCode(), twoHundred);
 	}
 	
 	@Test
@@ -93,7 +93,7 @@ public class ResponseBuilderTest {
 		request.put("URI", "/method_options");
 		testResponseBuilder.getResponse(request);
 		String methodOptionsHeader = "Allow: GET,HEAD,POST,OPTIONS,PUT";
-		assertEquals(testResponseBuilder.response.get("Header"), methodOptionsHeader);
+		assertEquals(testResponseBuilder.response.getHeader(), methodOptionsHeader);
 	}
 	
 	@Test
@@ -104,7 +104,7 @@ public class ResponseBuilderTest {
 		request.put("URI", codedURI);
 		
 		testResponseBuilder.getResponse(request);
-		String responseBody = testResponseBuilder.response.get("Body");
+		String responseBody = testResponseBuilder.response.getBody();
 		assertTrue(responseBody.contains(decodedParamOne));
 		assertTrue(responseBody.contains(decodedParamTwo));
 	}
@@ -114,7 +114,7 @@ public class ResponseBuilderTest {
 		request.put("Type", "GET"); 
 		request.put("URI", codedURI);
 		testResponseBuilder.getResponse(request);
-		assertEquals(testResponseBuilder.response.get("Response Code"), twoHundred);
+		assertEquals(testResponseBuilder.response.getResponseCode(), twoHundred);
 	}
 
 }

@@ -6,26 +6,26 @@ import java.util.HashMap;
 public class ResponseBuilder {
 	private HashMap<String, String> request;
 	
-	protected HashMap<String, String> response;
+	protected Response response;
 
 	ResponseBuilder() {
-		this.response = new HashMap<String, String>();
+		this.response = new Response();
 	}
 
 	public String getResponse(HashMap<String, String> request) {
 		this.request = request;
 		setResponseParts();
-		String output = response.get("Response Code") + System.lineSeparator();
-		output += response.get("Header") + System.lineSeparator();
+		String output = response.getResponseCode() + System.lineSeparator();
+		output += response.getHeader() + System.lineSeparator();
 		output += System.lineSeparator();
-		output += response.get("Body") + System.lineSeparator();
+		output += response.getBody() + System.lineSeparator();
 		return output;
 	}
 
 	private void setResponseParts() {
-		response.put("Response Code", getResponseCode(request));
-		response.put("Header", getResponseHeader(request));
-		response.put("Body", getResponseBody(request));
+		response.setResponseCode(getResponseCode(request));
+		response.setHeader(getResponseHeader(request));
+		response.setBody(getResponseBody(request));
 	}
 
 	private String getResponseCode(HashMap<String, String> request) {
