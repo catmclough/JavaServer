@@ -1,24 +1,21 @@
 package javaserver;
 
 import java.io.IOException;
-import java.util.HashMap;
 
 public class ClientWorker implements Runnable {
 	private Reader reader;
 	public SocketWriter writer;
 	private Responder responder;
-	private RequestBuilder requestBuilder;
 
-	public ClientWorker(Reader reader, RequestBuilder requestBuilder, Responder responder, SocketWriter writer) {
+	public ClientWorker(Reader reader, Responder responder, SocketWriter writer) {
 		this.reader = reader;
-		this.requestBuilder = requestBuilder;
 		this.responder = responder;
 		this.writer = writer;
 	}
 
 	public void run() {
 		String rawRequest = getRequest();
-		HashMap<String, String> request = requestBuilder.getRequestObject(rawRequest);
+		Request request = new Request(RequestParser.getRequestMethod(rawRequest), RequestParser.getRequestURI(rawRequest));
 		respond(request);
 		writer.closeOutputStream();
 	}
@@ -33,7 +30,7 @@ public class ClientWorker implements Runnable {
 		return request;
 	}
 
-	private void respond(HashMap<String, String> request) {
+	private void respond(Request request) {
 		try {
 			responder.respond(request, writer);
 		} catch (IOException e) {

@@ -1,19 +1,19 @@
 package javaserver;
 
 import java.io.IOException;
-import java.util.HashMap;
 
 public class Responder {
-	RequestBuilder requestBuilder;
-	ResponseBuilder responseBuilder;
-
-	Responder(ResponseBuilder responseBuilder) {
-		this.responseBuilder = responseBuilder;
+	Request request;
+	
+	public void respond(Request request, SocketWriter writer) throws IOException {
+		this.request = request;
+		Response response = getResponse();
+		String formattedResponse = response.getFormattedResponse();
+		writer.respond(formattedResponse);
 	}
-
-	public String respond(HashMap<String, String> request, SocketWriter writer) throws IOException {
-		String response = responseBuilder.getResponse(request);
-		writer.respond(response);
-		return response;
+	
+	private Response getResponse() {
+		ResponseBuilder responseBuilder = ServerFactory.createResponseBuilder(request);
+		return responseBuilder.createResponse();
 	}
 }

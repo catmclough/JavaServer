@@ -5,9 +5,6 @@ public class Response {
 	private String header;
 	private String body;
 
-	Response() {
-	}
-	
 	public void setResponseCode(String responseCode) {
 		this.responseCode = responseCode;
 	}
@@ -30,5 +27,13 @@ public class Response {
 	
 	public String getBody() {
 		return body;
+	}
+	
+	public String getFormattedResponse() {
+		String output = getResponseCode() + System.lineSeparator();
+		output += getHeader() + System.lineSeparator();
+		output += System.lineSeparator();
+		output += getBody() + System.lineSeparator();
+		return output;
 	}
 }
