@@ -24,4 +24,12 @@ public class Request {
 	public boolean hasVariableParams() {
 		return URI.contains("?");
 	}
+	
+	public boolean isRedirect() {
+		return URI.contains("redirect");
+	}
+
+	public String redirectLocation() {
+		return "http://localhost:5000/";
+	}
 }
