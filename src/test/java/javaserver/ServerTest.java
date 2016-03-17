@@ -56,7 +56,7 @@ public class ServerTest extends TestCase {
 		testServer.run();
 		assertTrue(mockThreadManager.getOpenedThreads() > 0);
 	}
-	
+
 
 	@Test
 	public void testCanCreateMultipleThreads() throws IOException {
