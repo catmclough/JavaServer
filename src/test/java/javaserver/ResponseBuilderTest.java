@@ -19,9 +19,11 @@ public class ResponseBuilderTest {
 	Request acceptableRequest =  new Request("GET", "/form");
 	Request unacceptableRequest = new Request("GET", "/foo");
 	Request requestWithOptions = new Request("GET", "/method_options");
+	Request redirectRequest = new Request("GET", "/redirect");
 	
 	String methodOptionsHeader = "Allow: GET,HEAD,POST,OPTIONS,PUT";
 	String twoHundred = HTTPStatusCode.TWO_HUNDRED.getStatusLine();
+	String threeOhTwo = HTTPStatusCode.THREE_OH_TWO.getStatusLine();
 	String fourOhFour= HTTPStatusCode.FOUR_OH_FOUR.getStatusLine();
 
 
@@ -56,6 +58,13 @@ public class ResponseBuilderTest {
 		ResponseBuilder responder = new ResponseBuilder(acceptableRequest);
 		Response response = responder.getResponse();
 		assertEquals(response.getResponseCode(), twoHundred);
+	}
+
+	@Test
+	public void testThreeOhTwoResponseCode() throws IOException {
+		ResponseBuilder responder = new ResponseBuilder(redirectRequest);
+		Response response = responder.getResponse();
+		assertEquals(response.getResponseCode(), threeOhTwo);
 	}
 
 	@Test

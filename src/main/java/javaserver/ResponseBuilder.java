@@ -25,7 +25,11 @@ public class ResponseBuilder {
 	private String getStatusLine() {
 		HTTPStatusCode responseCode;
 		if (isSupported(request)) {
-			responseCode = HTTPStatusCode.TWO_HUNDRED;
+			if (request.getURI().contains("redirect")) {
+				responseCode = HTTPStatusCode.THREE_OH_TWO;
+			} else {
+				responseCode = HTTPStatusCode.TWO_HUNDRED;
+			}
 		} else {
 			responseCode = HTTPStatusCode.FOUR_OH_FOUR;
 		}
