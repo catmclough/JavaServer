@@ -20,12 +20,15 @@ public class ResponseBuilderTest {
 	Request unacceptableRequest = new Request("GET", "/foo");
 	Request requestWithOptions = new Request("GET", "/method_options");
 	Request redirectRequest = new Request("GET", "/redirect");
+	Request acceptableFileRequest = new Request("GET", "/file1");
+	Request unallowedRequest = new Request("POST", "/file1");
 
 	String methodOptionsHeader = "Allow: GET,HEAD,POST,OPTIONS,PUT";
 	String redirectHeader = "Location: http://localhost:5000/";
 	String twoHundred = HTTPStatusCode.TWO_HUNDRED.getStatusLine();
 	String threeOhTwo = HTTPStatusCode.THREE_OH_TWO.getStatusLine();
 	String fourOhFour= HTTPStatusCode.FOUR_OH_FOUR.getStatusLine();
+	String fourOhFive= HTTPStatusCode.FOUR_OH_FIVE.getStatusLine();
 
 	@Before
 	public void setUp() {
@@ -61,6 +64,13 @@ public class ResponseBuilderTest {
 	}
 
 	@Test
+	public void testAcceptableFileRequest() throws IOException {
+		ResponseBuilder responder = new ResponseBuilder(acceptableFileRequest);
+		Response response = responder.getResponse();
+		assertEquals(response.getResponseCode(), twoHundred);
+	}
+
+	@Test
 	public void testThreeOhTwoResponseCode() throws IOException {
 		ResponseBuilder responder = new ResponseBuilder(redirectRequest);
 		Response response = responder.getResponse();
@@ -72,6 +82,13 @@ public class ResponseBuilderTest {
 		ResponseBuilder responder = new ResponseBuilder(unacceptableRequest);
 		Response response = responder.getResponse();
 		assertEquals(response.getResponseCode(), fourOhFour);
+	}
+
+	@Test
+	public void testMethodNotAllowedResponseCode() throws IOException {
+		ResponseBuilder responder = new ResponseBuilder(unallowedRequest);
+		Response response = responder.getResponse();
+		assertEquals(response.getResponseCode(), fourOhFive);
 	}
 
 	@Test

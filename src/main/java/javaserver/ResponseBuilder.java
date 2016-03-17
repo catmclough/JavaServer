@@ -30,6 +30,8 @@ public class ResponseBuilder {
 			} else {
 				responseCode = HTTPStatusCode.TWO_HUNDRED;
 			}
+		} else if (methodIsNotAllowed(request)) {
+			responseCode = HTTPStatusCode.FOUR_OH_FIVE;
 		} else {
 			responseCode = HTTPStatusCode.FOUR_OH_FOUR;
 		}
@@ -41,6 +43,15 @@ public class ResponseBuilder {
 		if (request.routeOptions() != null && (Arrays.asList(request.routeOptions()).contains(requestType))) {
 			return true;
 		} else if (request.hasVariableParams()) {
+			return true;
+		} else {
+			return false;
+		}
+	}
+
+	private boolean methodIsNotAllowed(Request request) {
+		String requestType = request.getMethod();
+		if (request.isFileRequest() && !(Arrays.asList(request.routeOptions()).contains(requestType))) {
 			return true;
 		} else {
 			return false;
