@@ -5,7 +5,7 @@ import java.io.IOException;
 public class ClientWorker implements Runnable {
 	private Reader reader;
 	public SocketWriter writer;
-	private Responder responder;
+	private ResponseBuilder responder;
 
 	public ClientWorker(Reader reader, SocketWriter writer) {
 		this.reader = reader;
@@ -15,7 +15,7 @@ public class ClientWorker implements Runnable {
 	public void run() {
 		String rawRequest = getRequest();
 		Request request = new Request(RequestParser.getRequestMethod(rawRequest), RequestParser.getRequestURI(rawRequest));
-		this.responder = new Responder(request);
+		this.responder = new ResponseBuilder(request);
 		respond(request);
 	}
 

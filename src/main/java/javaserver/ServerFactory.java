@@ -30,8 +30,8 @@ public class ServerFactory {
 		return new ClientWorker(reader, writer);
 	}
 
-	public Responder createResponseBuilder(Request request) {
-		return new Responder(request);
+	public ResponseBuilder createResponseBuilder(Request request) {
+		return new ResponseBuilder(request);
 	}
 }
 

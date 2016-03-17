@@ -7,10 +7,11 @@ import java.io.IOException;
 import org.junit.Before;
 import org.junit.Test;
 
-public class ResponderTest {
-	Responder testResponseBuilder;
+public class ResponseBuilderTest {
+	ResponseBuilder testResponseBuilder;
 	SocketWriter writer;
-	Responder responder;
+	ResponseBuilder responder;
+	RequestParser requestParser;
 
 	String codedURI = "/parameters?variable_1=Operators%20%3C%2C%20%3E%2C%20%3D%2C%20!%3D%3B%20%2B%2C%20-%2C%20*%2C%20%26%2C%20%40%2C%20%23%2C%20%24%2C%20%5B%2C%20%5D%3A%20%22is%20that%20all%22%3F&variable_2=stuff";
 
@@ -33,70 +34,70 @@ public class ResponderTest {
 
 	@Test
 	public void testCreatesReponseWithResponseCode() {
-		Responder responder = new Responder(getRoot);
+		ResponseBuilder responder = new ResponseBuilder(getRoot);
 		Response response = responder.getResponse();
 		assertNotNull(response.getResponseCode());
 	}
 
 	@Test
 	public void testCreatesReponseWithHeader() {
-		Responder responder = new Responder(getMethodOptions);
+		ResponseBuilder responder = new ResponseBuilder(getMethodOptions);
 		Response response = responder.getResponse();
 		assertNotNull(response.getHeader());
 	}
 
 	@Test
 	public void testCreatesReponseWithBody() {
-		Responder responder = new Responder(getCodedParams);
+		ResponseBuilder responder = new ResponseBuilder(getCodedParams);
 		Response response = responder.getResponse();
 		assertNotNull(response.getBody());
 	}
 
 	@Test
 	public void testGetRootResponseCode() throws IOException {
-		Responder responder = new Responder(getRoot);
+		ResponseBuilder responder = new ResponseBuilder(getRoot);
 		Response response = responder.getResponse();
 		assertEquals(response.getResponseCode(), twoHundred);
 	}
 
 	@Test
 	public void testGetFormResponseCode() throws IOException {
-		Responder responder = new Responder(getForm);
+		ResponseBuilder responder = new ResponseBuilder(getForm);
 		Response response = responder.getResponse();
 		assertEquals(response.getResponseCode(), twoHundred);
 	}
 
 	@Test
 	public void testPostFormResponseCode() throws IOException {
-		Responder responder = new Responder(postForm);
+		ResponseBuilder responder = new ResponseBuilder(postForm);
 		Response response = responder.getResponse();
 		assertEquals(response.getResponseCode(), twoHundred);
 	}
 
 	@Test
 	public void testPutFormResponseCode() throws IOException {
-		Responder responder = new Responder(putForm);
+		ResponseBuilder responder = new ResponseBuilder(putForm);
 		Response response = responder.getResponse();
 		assertEquals(response.getResponseCode(), twoHundred);
 	}
 
 	@Test
 	public void testFourOhFourResponseCode() throws IOException {
-		Responder responder = new Responder(getBogusRoute);
+		ResponseBuilder responder = new ResponseBuilder(getBogusRoute);
 		Response response = responder.getResponse();
 		assertEquals(response.getResponseCode(), fourOhFour);
 	}
 
 	@Test
 	public void testMethodOptionsResponseCode() {
-		Responder responder = new Responder(getMethodOptions);
+		ResponseBuilder responder = new ResponseBuilder(getMethodOptions);
 		Response response = responder.getResponse();
 		assertEquals(response.getResponseCode(), twoHundred);
 	}
 
 	@Test
 	public void testMethodOptionsHeader() throws IOException {
-		Responder responder = new Responder(getMethodOptions);
+		ResponseBuilder responder = new ResponseBuilder(getMethodOptions);
 		Response response = responder.getResponse();
 		String methodOptionsHeader = "Allow: GET,HEAD,POST,OPTIONS,PUT";
 		assertEquals(response.getHeader(), methodOptionsHeader);
@@ -107,7 +108,7 @@ public class ResponderTest {
 		String decodedParamOne = "variable_1 = Operators <, >, =, !=; +, -, *, &, @, #, $, [, ]: \"is that all\"?";
 		String decodedParamTwo = "variable_2 = stuff";
 
-		Responder responder = new Responder(getCodedParams);
+		ResponseBuilder responder = new ResponseBuilder(getCodedParams);
 		Response response = responder.getResponse();
 		String responseBody = response.getBody();
 
@@ -117,7 +118,7 @@ public class ResponderTest {
 
 	@Test
 	public void testCodedParamsGets200Response() {
-		Responder responder = new Responder(getCodedParams);
+		ResponseBuilder responder = new ResponseBuilder(getCodedParams);
 		Response response = responder.getResponse();
 		assertEquals(response.getResponseCode(), twoHundred);
 	}

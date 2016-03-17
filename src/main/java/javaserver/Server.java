@@ -10,7 +10,7 @@ public class Server {
 	public ClientWorker clientWorker;
 	private ServerSocket serverSocket;
 	public Reader reader;
-	public Responder responder;
+	public ResponseBuilder responder;
 	public SocketWriter writer;
 
 	Server(ServerFactory serverFactory, ServerSocket serverSocket) {

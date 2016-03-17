@@ -1,16 +1,16 @@
 package javaserver;
 
 public class Response {
-	private String responseCode;
+	private String statusLine;
 	private String header;
 	private String body;
 
-	public void setResponseCode(String responseCode) {
-		this.responseCode = responseCode;
+	public void setStatusLine(String statusLine) {
+		this.statusLine = statusLine;
 	}
 
 	public String getResponseCode() {
-		return responseCode;
+		return statusLine;
 	}
 
 	public void setHeader(String header) {

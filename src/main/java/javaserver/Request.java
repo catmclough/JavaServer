@@ -1,7 +1,5 @@
 package javaserver;
 
-import java.util.Arrays;
-
 public class Request {
 	String method;
 	String URI;
@@ -19,22 +17,11 @@ public class Request {
 		return URI;
 	}
 
-	public boolean isOK() {
-		String requestType = getMethod();
-		if (routeOptions() != null && (Arrays.asList(routeOptions()).contains(requestType))) {
-			return true;
-		} else if (this.hasVariableParams()) {
-			return true;
-		} else {
-			return false;
-		}
-	}
-
 	public String[] routeOptions() {
 		return Routes.getOptions(URI);
 	}
 
 	public boolean hasVariableParams() {
-		return URI.contains("/parameters?");
+		return URI.contains("?");
 	}
 }
