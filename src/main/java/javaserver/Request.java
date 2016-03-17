@@ -1,5 +1,7 @@
 package javaserver;
 
+import java.util.Arrays;
+
 public class Request {
 	String method;
 	String URI;
@@ -32,4 +34,9 @@ public class Request {
 	public String redirectLocation() {
 		return "http://localhost:5000/";
 	}
+	
+	public boolean isFileRequest() {
+		return Arrays.asList(Routes.FILES).contains(this.URI);
+	}
 }
+
