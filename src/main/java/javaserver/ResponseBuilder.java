@@ -25,13 +25,17 @@ public class ResponseBuilder {
 	private String getStatusLine() {
 		HTTPStatusCode responseCode;
 		if (isSupported(request)) {
-			responseCode = HTTPStatusCode.TWO_HUNDRED;
+			if (request.isRedirect()) {
+				responseCode = HTTPStatusCode.THREE_OH_TWO;
+			} else {
+				responseCode = HTTPStatusCode.TWO_HUNDRED;
+			}
 		} else {
 			responseCode = HTTPStatusCode.FOUR_OH_FOUR;
 		}
 		return responseCode.getStatusLine();
 	}
-	
+
 	private boolean isSupported(Request request) {
 		String requestType = request.getMethod();
 		if (request.routeOptions() != null && (Arrays.asList(request.routeOptions()).contains(requestType))) {
@@ -48,6 +52,9 @@ public class ResponseBuilder {
 		if (request.getURI().equals("/method_options")) {
 			header += "Allow: ";
 			header += String.join(",", request.routeOptions());
+		} else if (request.getURI().equals("/redirect")) {
+		  header += "Location: ";
+		  header += request.redirectLocation();
 		}
 		return header;
 	}

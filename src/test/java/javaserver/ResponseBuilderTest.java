@@ -19,11 +19,13 @@ public class ResponseBuilderTest {
 	Request acceptableRequest =  new Request("GET", "/form");
 	Request unacceptableRequest = new Request("GET", "/foo");
 	Request requestWithOptions = new Request("GET", "/method_options");
-	
-	String methodOptionsHeader = "Allow: GET,HEAD,POST,OPTIONS,PUT";
-	String twoHundred = HTTPStatusCode.TWO_HUNDRED.getStatusLine();
-	String fourOhFour= HTTPStatusCode.FOUR_OH_FOUR.getStatusLine();
+	Request redirectRequest = new Request("GET", "/redirect");
 
+	String methodOptionsHeader = "Allow: GET,HEAD,POST,OPTIONS,PUT";
+	String redirectHeader = "Location: http://localhost:5000/";
+	String twoHundred = HTTPStatusCode.TWO_HUNDRED.getStatusLine();
+	String threeOhTwo = HTTPStatusCode.THREE_OH_TWO.getStatusLine();
+	String fourOhFour= HTTPStatusCode.FOUR_OH_FOUR.getStatusLine();
 
 	@Before
 	public void setUp() {
@@ -59,6 +61,13 @@ public class ResponseBuilderTest {
 	}
 
 	@Test
+	public void testThreeOhTwoResponseCode() throws IOException {
+		ResponseBuilder responder = new ResponseBuilder(redirectRequest);
+		Response response = responder.getResponse();
+		assertEquals(response.getResponseCode(), threeOhTwo);
+	}
+
+	@Test
 	public void testFourOhFourResponseCode() throws IOException {
 		ResponseBuilder responder = new ResponseBuilder(unacceptableRequest);
 		Response response = responder.getResponse();
@@ -73,6 +82,13 @@ public class ResponseBuilderTest {
 	}
 
 	@Test
+	public void testRedirectHeader() throws IOException {
+		ResponseBuilder responder = new ResponseBuilder(redirectRequest);
+		Response response = responder.getResponse();
+		assertEquals(response.getHeader(), redirectHeader);
+	}
+
+	@Test
 	public void testDecodedParamsInResponseBody() {
 		String decodedParamOne = "variable_1 = Operators <, >, =, !=; +, -, *, &, @, #, $, [, ]: \"is that all\"?";
 		String decodedParamTwo = "variable_2 = stuff";
@@ -83,12 +99,5 @@ public class ResponseBuilderTest {
 
 		assertTrue(responseBody.contains(decodedParamOne));
 		assertTrue(responseBody.contains(decodedParamTwo));
-	}
-
-	@Test
-	public void testCodedParamsGets200Response() {
-		ResponseBuilder responder = new ResponseBuilder(requestWithCodedParams);
-		Response response = responder.getResponse();
-		assertEquals(response.getResponseCode(), twoHundred);
 	}
 }
