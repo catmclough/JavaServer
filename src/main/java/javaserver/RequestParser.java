@@ -3,6 +3,7 @@ package javaserver;
 import java.io.UnsupportedEncodingException;
 
 public class RequestParser {
+
 	public static String getRequestMethod(String rawRequest) {
 		return splitRequest(rawRequest)[0];
 	}
@@ -20,7 +21,6 @@ public class RequestParser {
 		params = params.replace("=", " = ");
 		return params.split("&");
 	}
-	
 	
 	public static String decodeParameters(String parameterLine) {
 		try {

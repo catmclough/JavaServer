@@ -7,7 +7,7 @@ public class ClientWorker implements Runnable {
 	public SocketWriter writer;
 	private ResponseBuilder responder;
 
-	public ClientWorker(Reader reader, SocketWriter writer) {
+	ClientWorker(Reader reader, SocketWriter writer) {
 		this.reader = reader;
 		this.writer = writer;
 	}

@@ -1,27 +1,31 @@
 package javaserver;
 
+import java.io.BufferedReader;
+import java.io.DataOutputStream;
 import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.OutputStream;
 import java.net.ServerSocket;
 import java.net.Socket;
 
 public class Server {
-	public ServerFactory serverFactory;
 	public Socket clientSocket;
 	public ClientWorker clientWorker;
 	private ServerSocket serverSocket;
+	private ThreadManager threadManager;
 	public Reader reader;
 	public ResponseBuilder responder;
 	public SocketWriter writer;
 
-	Server(ServerFactory serverFactory, ServerSocket serverSocket) {
-		this.serverFactory = serverFactory;
+	Server(ServerSocket serverSocket, ThreadManager threadManager) {
 		this.serverSocket = serverSocket;
+		this.threadManager = threadManager;
 	}
 
 	public void run() throws IOException {
 		acceptClient();
 		setReaderAndWriter();
-		openNewThread();
+		threadManager.openNewThread(this.reader, this.writer);
 	}
 
 	public void shutDown() throws IOException {
@@ -33,21 +37,12 @@ public class Server {
 	}
 
 	private void setReaderAndWriter() throws IOException {
-		this.reader = serverFactory.createReader(clientSocket);
-		this.writer = serverFactory.createSocketWriter(clientSocket);
+		InputStreamReader input = new InputStreamReader(clientSocket.getInputStream());
+		BufferedReader readingMechanism = new BufferedReader(input);
+		this.reader = new Reader(readingMechanism);
+		OutputStream outputStream = clientSocket.getOutputStream();
+		DataOutputStream output = new DataOutputStream(outputStream);
+		this.writer = new SocketWriter(output);
 	}
 
-	private void openNewThread() {
-		clientWorker = serverFactory.createClientWorker(reader, writer);
-		Thread t = createNewThread(clientWorker);
-		startThread(t);
-	}
-
-	protected Thread createNewThread(ClientWorker clientWorker) {
-		return new Thread(clientWorker);
-	}
-
-	protected void startThread(Thread thread) {
-		thread.run();
-	}
 }

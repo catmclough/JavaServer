@@ -49,7 +49,7 @@ class MockServer extends Server {
 	public boolean isRunning;
 
 	MockServer(ServerSocket socket) {
-		super(new ServerFactory(), socket);
+		super(socket, new ThreadManager());
 	}
 
 	@Override

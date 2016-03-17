@@ -1,6 +1,7 @@
 package javaserver;
 
 import java.io.IOException;
+import java.net.ServerSocket;
 
 public class App {
 	protected static final int PORT = 5000;
@@ -15,8 +16,7 @@ public class App {
 	}
 
 	protected static void setUpServer() throws IOException {
-		ServerFactory serverFactory = new ServerFactory();
-		server = serverFactory.createServer(PORT);
+		server = new Server(new ServerSocket(PORT), new ThreadManager());
 	}
 
 	protected static void configureRoutes() {

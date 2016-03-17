@@ -22,9 +22,9 @@ public class ClientWorkerTest extends TestCase {
 	@Before
 	public void setUp() throws Exception {
 		App.configureRoutes();
-		MockReader mockReader = new MockReader(stubGetRequestReader());
+		Reader reader = new Reader(stubGetRequestReader());
 		MockSocketWriter mockWriter = new MockSocketWriter(mockOutputStream());
-		this.testClientWorker = new ClientWorker(mockReader, mockWriter);
+		this.testClientWorker = new ClientWorker(reader, mockWriter);
 	}
 
 	@Test
@@ -45,12 +45,6 @@ public class ClientWorkerTest extends TestCase {
 	private DataOutputStream mockOutputStream() {
 		ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
 		return new DataOutputStream(outputStream);
-	}
-}
-
-class MockReader extends Reader {
-	MockReader(BufferedReader mockBufferedReader) {
-		super(mockBufferedReader);
 	}
 }
 
