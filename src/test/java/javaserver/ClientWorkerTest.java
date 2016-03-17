@@ -15,28 +15,23 @@ import org.junit.Test;
 import junit.framework.TestCase;
 
 public class ClientWorkerTest extends TestCase {
-	private String TWO_HUNDRED = "HTTP/1.1 200 OK";
 	Socket testClientSocket;
 	ClientWorker testClientWorker;
 	BufferedReader mockGetReader;
-	private RequestBuilder requestBuilder;
-	private ResponseBuilder responseBuilder;
-	private Responder responder;
 
 	@Before
 	public void setUp() throws Exception {
-		this.requestBuilder = new RequestBuilder();
-		this.responseBuilder = new ResponseBuilder();
-		this.responder = new Responder(responseBuilder);
-		MockReader mockReader = new MockReader(stubGetRequestReader());
+		App.configureRoutes();
+		Reader reader = new Reader(stubGetRequestReader());
 		MockSocketWriter mockWriter = new MockSocketWriter(mockOutputStream());
-		this.testClientWorker = new ClientWorker(mockReader, requestBuilder, responder, mockWriter);
+		this.testClientWorker = new ClientWorker(reader, mockWriter);
 	}
 
 	@Test
 	public void testRun() throws IOException {
 	  testClientWorker.run();
-	  assert(testClientWorker.writer.latestResponse.contains(TWO_HUNDRED));
+	  String twoHundredResponse = HTTPStatusCode.TWO_HUNDRED.getStatusLine();
+	  assertTrue(testClientWorker.writer.latestResponse.contains(twoHundredResponse));
 	}
 
 
@@ -53,12 +48,6 @@ public class ClientWorkerTest extends TestCase {
 	}
 }
 
-class MockReader extends Reader {
-	MockReader(BufferedReader mockBufferedReader) {
-		super(mockBufferedReader);
-	}
-}
-
 class MockSocketWriter extends SocketWriter {
 	 MockSocketWriter(DataOutputStream mockOutputStream) {
 		 super(mockOutputStream);
@@ -69,4 +58,3 @@ class MockSocketWriter extends SocketWriter {
 		 this.latestResponse = response;
 	 }
 }
-

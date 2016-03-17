@@ -1,31 +1,36 @@
 package javaserver;
 
 import java.io.IOException;
+import java.net.ServerSocket;
 
 public class App {
-	static int PORT = 5000;
-	static Server server;
-	private static boolean isOn = false;
+	protected static final int PORT = 5000;
+	protected static Server server;
+
+	protected static boolean isOn = false;
 
 	public static void main(String[] args) throws IOException {
-		ServerFactory serverFactory = new ServerFactory();
-		setUpServer(serverFactory);
+		setUpServer();
+		configureRoutes();
 		runServer(server);
 	}
 
-	public static void setUpServer(ServerFactory serverFactory) throws IOException {
-		server = serverFactory.createServer(PORT);
+	protected static void setUpServer() throws IOException {
+		server = new Server(new ServerSocket(PORT), new ThreadManager());
 	}
 
-	public static void runServer(Server server) throws IOException {
+	protected static void configureRoutes() {
+		Routes.configure();
+	}
+
+	protected static void runServer(Server server) throws IOException {
 		isOn = true;
 		while (isOn) {
 			server.run();
 		}
 	}
 
-	public static void close() {
+	protected static void close() {
 		isOn = false;
 	}
 }
-

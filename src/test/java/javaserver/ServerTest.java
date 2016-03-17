@@ -1,5 +1,6 @@
 package javaserver;
 
+import java.io.DataOutputStream;
 import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
@@ -11,18 +12,18 @@ import org.junit.Test;
 import junit.framework.TestCase;
 
 public class ServerTest extends TestCase {
-	private MockServerFactory mockedServerFactory;
 	private Server testServer;
 	private ServerSocket mockedServerSocket;
+	private MockThreadManager mockThreadManager;
 	Socket mockedClientSocket;
 
 	int defaultPort = 6000;
 
 	@Before
 	public void setUp() throws Exception {
-		mockedServerFactory = new MockServerFactory();
 		mockedServerSocket = new MockServerSocket(defaultPort);
-		testServer = new Server(mockedServerFactory, mockedServerSocket, new RequestBuilder(), new Responder(new ResponseBuilder()));
+		mockThreadManager = new MockThreadManager();
+		testServer = new Server(mockedServerSocket, mockThreadManager);
 	}
 
 	@After
@@ -51,17 +52,29 @@ public class ServerTest extends TestCase {
 	}
 
 	@Test
-	public void testCreatesMultipleThreads() throws IOException {
+	public void testOpensNewThread() throws IOException {
+		testServer.run();
+		assertTrue(mockThreadManager.getOpenedThreads() > 0);
+	}
+	
+
+	@Test
+	public void testCanCreateMultipleThreads() throws IOException {
 		testServer.run();
 		testServer.run();
 		testServer.run();
-		assertEquals(mockedServerFactory.getNumThreads(), 3);
+		assertEquals(mockThreadManager.getOpenedThreads(), 3);
 	}
 
 	@Test
-	public void testStartsThread() throws IOException {
-		testServer.run();
-		assertEquals(true, mockedServerFactory.mockedWorker.threadStarted);
+	public void testServerCanBeShutDown() {
+		boolean caughtError = false;
+		try {
+			testServer.shutDown();
+		} catch (IOException e) {
+			caughtError = true;
+		}
+		assertFalse("Server's ServerSocket failed to close", caughtError);
 	}
 
 	class MockServerSocket extends ServerSocket {
@@ -78,38 +91,32 @@ public class ServerTest extends TestCase {
 		  return mockedClientSocket;
 		}
 	}
+	
+	class MockSocketWriter extends SocketWriter {
+		MockSocketWriter(DataOutputStream mockOutputStream) {
+		 	super(mockOutputStream);
+	 	}
 
-	class MockServerFactory extends ServerFactory {
-		public MockClientWorker mockedWorker;
-		private int threadsCreated;
-
-		MockServerFactory() {
-			super();
-		}
-
-		@Override
-		public ClientWorker createClientWorker(Reader reader, RequestBuilder requestBuilder, Responder responder, SocketWriter writer) {
-			this.threadsCreated++;
-			this.mockedWorker = new MockClientWorker(reader, requestBuilder, responder, writer);
-			return mockedWorker;
-		}
-
-		public int getNumThreads() {
-			return this.threadsCreated;
-		}
+	 	@Override
+	 	public void respond(String response) {
+	 		this.latestResponse = response;
+	 	}
 	}
 
-	class MockClientWorker extends ClientWorker {
-		public boolean threadStarted;
+	class MockThreadManager extends ThreadManager {
+		int openedThreads = 0;
 
-		MockClientWorker(Reader reader, RequestBuilder requestBuilder, Responder responder, SocketWriter writer) {
-			super(reader, requestBuilder, responder, writer);
+		MockThreadManager() {
+			super();
 		}
-
+		
 		@Override
-		public void run(){
-			this.threadStarted = true;
+		public void openNewThread(Reader reader, SocketWriter writer) {
+			openedThreads++;
+		}
+		
+		public int getOpenedThreads() {
+			return this.openedThreads;
 		}
 	}
 }
-

@@ -1,30 +1,35 @@
 package javaserver;
 
+import java.io.BufferedReader;
+import java.io.DataOutputStream;
 import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.OutputStream;
 import java.net.ServerSocket;
 import java.net.Socket;
 
 public class Server {
-	public ServerFactory serverFactory;
 	public Socket clientSocket;
 	public ClientWorker clientWorker;
 	private ServerSocket serverSocket;
+	private ThreadManager threadManager;
 	public Reader reader;
-	public RequestBuilder requestBuilder;
-	public Responder responder;
+	public ResponseBuilder responder;
 	public SocketWriter writer;
 
-	Server(ServerFactory serverFactory, ServerSocket serverSocket, RequestBuilder requestBuilder, Responder responder) {
-		this.serverFactory = serverFactory;
+	Server(ServerSocket serverSocket, ThreadManager threadManager) {
 		this.serverSocket = serverSocket;
-		this.requestBuilder = requestBuilder;
-		this.responder = responder;
+		this.threadManager = threadManager;
 	}
 
 	public void run() throws IOException {
 		acceptClient();
 		setReaderAndWriter();
-		openNewThread();
+		threadManager.openNewThread(this.reader, this.writer);
+	}
+
+	public void shutDown() throws IOException {
+		serverSocket.close();
 	}
 
 	private void acceptClient() throws IOException {
@@ -32,26 +37,12 @@ public class Server {
 	}
 
 	private void setReaderAndWriter() throws IOException {
-		this.reader = serverFactory.createReader(clientSocket);
-		this.writer = serverFactory.createSocketWriter(clientSocket);
+		InputStreamReader input = new InputStreamReader(clientSocket.getInputStream());
+		BufferedReader readingMechanism = new BufferedReader(input);
+		this.reader = new Reader(readingMechanism);
+		OutputStream outputStream = clientSocket.getOutputStream();
+		DataOutputStream output = new DataOutputStream(outputStream);
+		this.writer = new SocketWriter(output);
 	}
 
-	private void openNewThread() {
-		clientWorker = serverFactory.createClientWorker(reader, requestBuilder, responder, writer);
-		Thread t = createNewThread(clientWorker);
-		startThread(t);
-	}
-
-	private Thread createNewThread(ClientWorker clientWorker) {
-		return new Thread(clientWorker);
-	}
-
-	private void startThread(Thread thread) {
-		thread.run();
-	}
-
-	public void shutDown() throws IOException {
-		clientSocket.close();
-		serverSocket.close();
-	}
 }

@@ -37,4 +37,3 @@ public class SocketWriterTest {
 		assertFalse(testWriter.isOutputStreamOpen);
 	}
 }
-

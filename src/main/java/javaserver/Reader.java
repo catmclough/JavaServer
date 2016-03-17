@@ -5,7 +5,7 @@ import java.io.IOException;
 
 public class Reader {
 	private BufferedReader readingMechanism;
-	private int minRequestLength = 5;
+	private int minRequestLength = 1;
 	private char lastCharOfRequest = (char) -1;
 
 	Reader(BufferedReader readingMechanism) {
@@ -30,4 +30,3 @@ public class Reader {
 		return (char) readingMechanism.read();
 	}
 }
-
