@@ -1,32 +1,24 @@
 package javaserver;
 
 import java.io.IOException;
-import java.util.HashMap;
 
 public class ClientWorker implements Runnable {
 	private Reader reader;
 	public SocketWriter writer;
-	private Responder responder;
-	private RequestBuilder requestBuilder;
-	
-	public ClientWorker(Reader reader, RequestBuilder requestBuilder, Responder responder, SocketWriter writer) {
+	private ResponseBuilder responder;
+
+	ClientWorker(Reader reader, SocketWriter writer) {
 		this.reader = reader;
-		this.requestBuilder = requestBuilder;
-		this.responder = responder;
 		this.writer = writer;
 	}
-	
+
 	public void run() {
 		String rawRequest = getRequest();
-		HashMap<String, String> request = requestBuilder.buildRequest(rawRequest);
+		Request request = new Request(RequestParser.getRequestMethod(rawRequest), RequestParser.getRequestURI(rawRequest));
+		this.responder = new ResponseBuilder(request);
 		respond(request);
-		try {
-			writer.closeOutputStream();
-		} catch (IOException e) {
-			System.out.println("Unable to close Writer's OutputStream");;
-		}
 	}
-	
+
 	private String getRequest() {
 		String request = "";
 		try {
@@ -36,9 +28,13 @@ public class ClientWorker implements Runnable {
 		}
 		return request;
 	}
-	
-	private void respond(HashMap<String, String> request) {
-		responder.respond(request, writer);
+
+	private void respond(Request request) {
+		try {
+			Response response = responder.getResponse();
+			writer.respond(response.formatResponse());
+		} catch (IOException e) {
+			System.out.println("ClientWorker unable to get response from Responder or write Response with SocketWriter");
+		}
 	}
 }
-

@@ -24,4 +24,3 @@ public class ReaderTest {
 		assertEquals("Simple request line was not properly read", testReader.readFromSocket(), exampleRequestMessage);
 	}
 }
-

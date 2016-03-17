@@ -15,10 +15,15 @@ public class SocketWriter {
 	public void respond(String response) throws IOException {
 		writingMechanism.writeBytes(response);
 		this.latestResponse = response;
+		closeOutputStream();
 	}
 
-	public void closeOutputStream() throws IOException {
-		this.writingMechanism.close();
+	public void closeOutputStream() {
+		try {
+			this.writingMechanism.close();
+		} catch (IOException e) {
+			System.out.println("SocketWriter was unable to close output stream");
+		}
 		this.isOutputStreamOpen = false;
 	}
 }
