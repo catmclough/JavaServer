@@ -15,14 +15,12 @@ public class ResponseBuilderTest {
 
 	String codedURI = "/parameters?variable_1=Operators%20%3C%2C%20%3E%2C%20%3D%2C%20!%3D%3B%20%2B%2C%20-%2C%20*%2C%20%26%2C%20%40%2C%20%23%2C%20%24%2C%20%5B%2C%20%5D%3A%20%22is%20that%20all%22%3F&variable_2=stuff";
 
-	Request getRoot = new Request("GET", "/");
-	Request getForm = new Request("GET", "/form");
-	Request postForm = new Request("POST", "/form");
-	Request putForm = new Request("PUT", "/form");
-	Request getBogusRoute = new Request("GET", "/foo");
-	Request getMethodOptions = new Request("GET", "/method_options");
-	Request getCodedParams = new Request("GET", codedURI);
-
+	Request requestWithCodedParams = new Request("GET", codedURI);
+	Request acceptableRequest =  new Request("GET", "/form");
+	Request unacceptableRequest = new Request("GET", "/foo");
+	Request requestWithOptions = new Request("GET", "/method_options");
+	
+	String methodOptionsHeader = "Allow: GET,HEAD,POST,OPTIONS,PUT";
 	String twoHundred = HTTPStatusCode.TWO_HUNDRED.getStatusLine();
 	String fourOhFour= HTTPStatusCode.FOUR_OH_FOUR.getStatusLine();
 
@@ -33,73 +31,44 @@ public class ResponseBuilderTest {
 	}
 
 	@Test
-	public void testCreatesReponseWithResponseCode() {
-		ResponseBuilder responder = new ResponseBuilder(getRoot);
+	public void testCreatesResponseWithResponseCode() {
+		ResponseBuilder responder = new ResponseBuilder(acceptableRequest);
 		Response response = responder.getResponse();
 		assertNotNull(response.getResponseCode());
 	}
 
 	@Test
-	public void testCreatesReponseWithHeader() {
-		ResponseBuilder responder = new ResponseBuilder(getMethodOptions);
+	public void testCreatesResponseWithHeader() {
+		ResponseBuilder responder = new ResponseBuilder(acceptableRequest);
 		Response response = responder.getResponse();
 		assertNotNull(response.getHeader());
 	}
 
 	@Test
-	public void testCreatesReponseWithBody() {
-		ResponseBuilder responder = new ResponseBuilder(getCodedParams);
+	public void testCreatesResponseWithBody() {
+		ResponseBuilder responder = new ResponseBuilder(acceptableRequest);
 		Response response = responder.getResponse();
 		assertNotNull(response.getBody());
 	}
 
 	@Test
-	public void testGetRootResponseCode() throws IOException {
-		ResponseBuilder responder = new ResponseBuilder(getRoot);
-		Response response = responder.getResponse();
-		assertEquals(response.getResponseCode(), twoHundred);
-	}
-
-	@Test
-	public void testGetFormResponseCode() throws IOException {
-		ResponseBuilder responder = new ResponseBuilder(getForm);
-		Response response = responder.getResponse();
-		assertEquals(response.getResponseCode(), twoHundred);
-	}
-
-	@Test
-	public void testPostFormResponseCode() throws IOException {
-		ResponseBuilder responder = new ResponseBuilder(postForm);
-		Response response = responder.getResponse();
-		assertEquals(response.getResponseCode(), twoHundred);
-	}
-
-	@Test
-	public void testPutFormResponseCode() throws IOException {
-		ResponseBuilder responder = new ResponseBuilder(putForm);
+	public void testTwoHundredResponseCode() throws IOException {
+		ResponseBuilder responder = new ResponseBuilder(acceptableRequest);
 		Response response = responder.getResponse();
 		assertEquals(response.getResponseCode(), twoHundred);
 	}
 
 	@Test
 	public void testFourOhFourResponseCode() throws IOException {
-		ResponseBuilder responder = new ResponseBuilder(getBogusRoute);
+		ResponseBuilder responder = new ResponseBuilder(unacceptableRequest);
 		Response response = responder.getResponse();
 		assertEquals(response.getResponseCode(), fourOhFour);
 	}
 
 	@Test
-	public void testMethodOptionsResponseCode() {
-		ResponseBuilder responder = new ResponseBuilder(getMethodOptions);
+	public void testOptionsHeader() throws IOException {
+		ResponseBuilder responder = new ResponseBuilder(requestWithOptions);
 		Response response = responder.getResponse();
-		assertEquals(response.getResponseCode(), twoHundred);
-	}
-
-	@Test
-	public void testMethodOptionsHeader() throws IOException {
-		ResponseBuilder responder = new ResponseBuilder(getMethodOptions);
-		Response response = responder.getResponse();
-		String methodOptionsHeader = "Allow: GET,HEAD,POST,OPTIONS,PUT";
 		assertEquals(response.getHeader(), methodOptionsHeader);
 	}
 
@@ -108,7 +77,7 @@ public class ResponseBuilderTest {
 		String decodedParamOne = "variable_1 = Operators <, >, =, !=; +, -, *, &, @, #, $, [, ]: \"is that all\"?";
 		String decodedParamTwo = "variable_2 = stuff";
 
-		ResponseBuilder responder = new ResponseBuilder(getCodedParams);
+		ResponseBuilder responder = new ResponseBuilder(requestWithCodedParams);
 		Response response = responder.getResponse();
 		String responseBody = response.getBody();
 
@@ -118,7 +87,7 @@ public class ResponseBuilderTest {
 
 	@Test
 	public void testCodedParamsGets200Response() {
-		ResponseBuilder responder = new ResponseBuilder(getCodedParams);
+		ResponseBuilder responder = new ResponseBuilder(requestWithCodedParams);
 		Response response = responder.getResponse();
 		assertEquals(response.getResponseCode(), twoHundred);
 	}
