@@ -17,17 +17,19 @@ public class Responder {
 	}
 
 	private void setResponseData() {
-		response.setResponseCode(getResponseCode());
+		response.setResponseCode(getStatusLine());
 		response.setHeader(getResponseHeader());
 		response.setBody(getResponseBody());
 	}
 
-	private String getResponseCode() {
+	private String getStatusLine() {
+		HTTPStatusCode responseCode;
 		if (request.isOK()) {
-			return HTTPStatusCodes.TWO_HUNDRED;
+			responseCode = HTTPStatusCode.TWO_HUNDRED;
 		} else {
-			return HTTPStatusCodes.FOUR_OH_FOUR;
+			responseCode = HTTPStatusCode.FOUR_OH_FOUR;
 		}
+		return responseCode.getStatusLine();
 	}
 
 	private String getResponseHeader() {

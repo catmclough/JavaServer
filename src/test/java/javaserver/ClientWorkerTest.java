@@ -24,13 +24,14 @@ public class ClientWorkerTest extends TestCase {
 		App.configureRoutes();
 		MockReader mockReader = new MockReader(stubGetRequestReader());
 		MockSocketWriter mockWriter = new MockSocketWriter(mockOutputStream());
-		this.testClientWorker = new ClientWorker(new ServerFactory(), mockReader, mockWriter);
+		this.testClientWorker = new ClientWorker(mockReader, mockWriter);
 	}
 
 	@Test
 	public void testRun() throws IOException {
 	  testClientWorker.run();
-	  assertTrue(testClientWorker.writer.latestResponse.contains(HTTPStatusCodes.TWO_HUNDRED));
+	  String twoHundredResponse = HTTPStatusCode.TWO_HUNDRED.getStatusLine();
+	  assertTrue(testClientWorker.writer.latestResponse.contains(twoHundredResponse));
 	}
 
 

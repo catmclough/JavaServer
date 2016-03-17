@@ -27,7 +27,7 @@ public class ServerFactory {
 	}
 
 	public ClientWorker createClientWorker(Reader reader, SocketWriter writer) {
-		return new ClientWorker(this, reader, writer);
+		return new ClientWorker(reader, writer);
 	}
 
 	public Responder createResponseBuilder(Request request) {

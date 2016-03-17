@@ -22,8 +22,8 @@ public class ResponderTest {
 	Request getMethodOptions = new Request("GET", "/method_options");
 	Request getCodedParams = new Request("GET", codedURI);
 
-	String twoHundred = HTTPStatusCodes.TWO_HUNDRED;
-	String fourOhFour = HTTPStatusCodes.FOUR_OH_FOUR;
+	String twoHundred = HTTPStatusCode.TWO_HUNDRED.getStatusLine();
+	String fourOhFour= HTTPStatusCode.FOUR_OH_FOUR.getStatusLine();
 
 
 	@Before

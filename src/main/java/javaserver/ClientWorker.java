@@ -3,13 +3,11 @@ package javaserver;
 import java.io.IOException;
 
 public class ClientWorker implements Runnable {
-	ServerFactory serverFactory;
 	private Reader reader;
 	public SocketWriter writer;
 	private Responder responder;
 
-	public ClientWorker(ServerFactory serverFactory, Reader reader, SocketWriter writer) {
-		this.serverFactory = serverFactory;
+	public ClientWorker(Reader reader, SocketWriter writer) {
 		this.reader = reader;
 		this.writer = writer;
 	}
