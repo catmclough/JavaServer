@@ -22,7 +22,7 @@ public class RequestParser {
 		params = params.replace("=", " = ");
 		return params.split("&");
 	}
-	
+
 	public static String decodeParameters(String parameterLine) {
 		try {
 			String encoding = "UTF-8";
@@ -32,11 +32,11 @@ public class RequestParser {
 		}
 		return parameterLine;
 	}
-	
+
 	public static boolean hasVariableParams(Request request) {
 		return request.getURI().contains("?");
 	}
-	
+
 	public static boolean isRedirect(Request request) {
 		return request.getURI().contains("redirect");
 	}

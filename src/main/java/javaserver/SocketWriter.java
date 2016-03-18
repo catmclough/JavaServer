@@ -27,4 +27,3 @@ public class SocketWriter {
 		this.isOutputStreamOpen = false;
 	}
 }
-
