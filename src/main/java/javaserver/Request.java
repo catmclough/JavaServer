@@ -1,7 +1,5 @@
 package javaserver;
 
-import java.util.Arrays;
-
 public class Request {
 	private String method;
 	private String URI;
@@ -20,13 +18,8 @@ public class Request {
 		return URI;
 	}
 
-
 	public String redirectLocation() {
 		return this.defaultRedirectLocation;
-	}
-	
-	public boolean isFileRequest() {
-		return Arrays.asList(Routes.FILES).contains(this.URI);
 	}
 }
 

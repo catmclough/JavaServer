@@ -51,7 +51,7 @@ public class ResponseBuilder {
 
 	private boolean isNotAllowed(Request request) {
 		String requestType = request.getMethod();
-		if (request.isFileRequest() && !(Arrays.asList(getRouteOptions()).contains(requestType))) {
+		if (RequestParser.isFileRequest(request) && !(Arrays.asList(getRouteOptions()).contains(requestType))) {
 			return true;
 		} else {
 			return false;

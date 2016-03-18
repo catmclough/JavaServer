@@ -1,6 +1,7 @@
 package javaserver;
 
 import java.io.UnsupportedEncodingException;
+import java.util.Arrays;
 
 public class RequestParser {
 
@@ -32,7 +33,6 @@ public class RequestParser {
 		return parameterLine;
 	}
 	
-	
 	public static boolean hasVariableParams(Request request) {
 		return request.getURI().contains("?");
 	}
@@ -41,4 +41,7 @@ public class RequestParser {
 		return request.getURI().contains("redirect");
 	}
 
+	public static boolean isFileRequest(Request request) {
+		return Arrays.asList(Routes.FILES).contains(request.getURI());
+	}
 }
