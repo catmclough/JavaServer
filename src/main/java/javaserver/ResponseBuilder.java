@@ -1,13 +1,13 @@
 package javaserver;
 
-import java.util.Arrays;
-
 public class ResponseBuilder {
-	private Request request;
-	protected Response response;
+	private RequestHandler requestHandler;
+	private String defaultRedirectLocation = "http://localhost:5000/";
 
-	ResponseBuilder(Request request) {
-		this.request = request;
+	protected Response response;
+	
+	ResponseBuilder(RequestHandler requestHandler) {
+		this.requestHandler = requestHandler;
 	}
 
 	public Response getResponse() {
@@ -24,13 +24,13 @@ public class ResponseBuilder {
 
 	private String getStatusLine() {
 		HTTPStatusCode responseCode;
-		if (requestIsSupported()) {
-			if (RequestParser.isRedirect(request)) {
+		if (requestHandler.requestIsSupported()) {
+			if (requestHandler.isValidRedirectRequest()) {
 				responseCode = HTTPStatusCode.THREE_OH_TWO;
 			} else {
 				responseCode = HTTPStatusCode.TWO_HUNDRED;
 			}
-		} else if (isNotAllowed(request)) {
+		} else if (requestHandler.isNotAllowed()) {
 			responseCode = HTTPStatusCode.FOUR_OH_FIVE;
 		} else {
 			responseCode = HTTPStatusCode.FOUR_OH_FOUR;
@@ -38,48 +38,24 @@ public class ResponseBuilder {
 		return responseCode.getStatusLine();
 	}
 
-	private boolean requestIsSupported() {
-		String requestType = request.getMethod();
-		if (getRouteOptions() != null && (Arrays.asList(getRouteOptions()).contains(requestType))) {
-			return true;
-		} else if (RequestParser.hasVariableParams(request)) {
-			return true;
-		} else {
-			return false;
-		}
-	}
-
-	private boolean isNotAllowed(Request request) {
-		String requestType = request.getMethod();
-		if (RequestParser.isFileRequest(request) && !(Arrays.asList(getRouteOptions()).contains(requestType))) {
-			return true;
-		} else {
-			return false;
-		}
-	}
-
 	private String getResponseHeader() {
 		String header = new String();
-		if (request.getURI().equals("/method_options")) {
+		if (requestHandler.isValidOptionRequest()) {
 			header += "Allow: ";
-			header += String.join(",", getRouteOptions());
-		} else if (request.getURI().equals("/redirect")) {
+			header += String.join(",", requestHandler.getRouteOptions());
+		} else if (requestHandler.isValidRedirectRequest()) {
 		  header += "Location: ";
-		  header += request.redirectLocation();
+		  header += defaultRedirectLocation;
 		}
 		return header;
 	}
 
-	public String[] getRouteOptions() {
-		return Routes.getOptions(request.getURI());
-	}
-
 	private String getResponseBody() {
 		String body = new String();
-		if (RequestParser.hasVariableParams(request)) {
-			String[] allParams = RequestParser.separateParameters(request.getURI());
+		if (requestHandler.hasParameters()) {
+			String[] allParams = requestHandler.separateParameters();
 			for (int i = 0; i < allParams.length; i++) {
-				body += RequestParser.decodeParameters(allParams[i]) + System.lineSeparator();
+				body += requestHandler.decodeParameters(allParams[i]) + System.lineSeparator();
 			}
 		}
 		return body;
