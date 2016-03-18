@@ -30,7 +30,7 @@ public class Routes {
 
 	public static String[] getOptions(String route) {
 		if (supportedRouteRequests.get(route) != null) {
-			return supportedRouteRequests.get(route); 
+			return supportedRouteRequests.get(route);
 		} else if (foundRouteRequests.get(route) != null) {
 			return foundRouteRequests.get(route);
 		} else {

@@ -22,4 +22,3 @@ public class Request {
 		return this.defaultRedirectLocation;
 	}
 }
-

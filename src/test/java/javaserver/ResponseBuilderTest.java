@@ -33,7 +33,7 @@ public class ResponseBuilderTest {
 	public void setUp() {
 		App.configureRoutes();
 	}
-	
+
 	@Test
 	public void testRespondsWith200() {
 		for (String route : Routes.supportedRouteRequests.keySet()) {
