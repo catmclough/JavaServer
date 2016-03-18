@@ -7,24 +7,34 @@ public class Routes {
 
 	private static final String[] SUPPORTED_ROOT_REQUESTS = {"GET"};
 	private static final String[] SUPPORTED_FORM_REQUESTS = {"GET", "POST", "PUT"};
-	private static final String[] SUPPORTED_REDIRECT_REQUESTS = {"GET"};
 	private static final String[] SUPPORTED_METHOD_OPTIONS = {"GET", "HEAD", "POST", "OPTIONS", "PUT"};
 	private static final String[] SUPPORTED_FILE_REQUESTS = {"GET"};
 
-	public static HashMap<String, String[]> routeOptions;
+	private static final String[] FOUND_REDIRECT_REQUESTS = {"GET"};
+
+	public static HashMap<String, String[]> supportedRouteRequests;
+	public static HashMap<String, String[]> foundRouteRequests;
 
 	public static void configure() {
-		routeOptions = new HashMap<String, String[]>();
-		routeOptions.put("/", SUPPORTED_ROOT_REQUESTS);
-		routeOptions.put("/form", SUPPORTED_FORM_REQUESTS);
-		routeOptions.put("/method_options", SUPPORTED_METHOD_OPTIONS);
-		routeOptions.put("/redirect", SUPPORTED_REDIRECT_REQUESTS);
+		supportedRouteRequests = new HashMap<String, String[]>();
+		supportedRouteRequests.put("/", SUPPORTED_ROOT_REQUESTS);
+		supportedRouteRequests.put("/form", SUPPORTED_FORM_REQUESTS);
+		supportedRouteRequests.put("/method_options", SUPPORTED_METHOD_OPTIONS);
 		for (String fileRoute : FILES) {
-			routeOptions.put(fileRoute, SUPPORTED_FILE_REQUESTS);
+			supportedRouteRequests.put(fileRoute, SUPPORTED_FILE_REQUESTS);
 		}
+
+		foundRouteRequests = new HashMap<String, String[]>();
+		foundRouteRequests.put("/redirect", FOUND_REDIRECT_REQUESTS);
 	}
 
 	public static String[] getOptions(String route) {
-		return routeOptions.get(route);
+		if (supportedRouteRequests.get(route) != null) {
+			return supportedRouteRequests.get(route); 
+		} else if (foundRouteRequests.get(route) != null) {
+			return foundRouteRequests.get(route);
+		} else {
+			return null;
+		}
 	}
 }

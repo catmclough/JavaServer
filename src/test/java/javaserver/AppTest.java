@@ -31,7 +31,7 @@ public class AppTest extends TestCase{
 
 	public void testRouteConfigurations() throws IOException {
 		App.configureRoutes();
-		assertFalse(Routes.routeOptions.isEmpty());
+		assertFalse(Routes.supportedRouteRequests.isEmpty());
 	}
 
 	public void testRunsServer() throws IOException {
