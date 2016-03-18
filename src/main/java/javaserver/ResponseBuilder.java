@@ -24,13 +24,13 @@ public class ResponseBuilder {
 
 	private String getStatusLine() {
 		HTTPStatusCode responseCode;
-		if (isSupported(request)) {
-			if (request.isRedirect()) {
+		if (requestIsSupported()) {
+			if (RequestParser.isRedirect(request)) {
 				responseCode = HTTPStatusCode.THREE_OH_TWO;
 			} else {
 				responseCode = HTTPStatusCode.TWO_HUNDRED;
 			}
-		} else if (methodIsNotAllowed(request)) {
+		} else if (isNotAllowed(request)) {
 			responseCode = HTTPStatusCode.FOUR_OH_FIVE;
 		} else {
 			responseCode = HTTPStatusCode.FOUR_OH_FOUR;
@@ -38,20 +38,20 @@ public class ResponseBuilder {
 		return responseCode.getStatusLine();
 	}
 
-	private boolean isSupported(Request request) {
+	private boolean requestIsSupported() {
 		String requestType = request.getMethod();
-		if (request.routeOptions() != null && (Arrays.asList(request.routeOptions()).contains(requestType))) {
+		if (getRouteOptions() != null && (Arrays.asList(getRouteOptions()).contains(requestType))) {
 			return true;
-		} else if (request.hasVariableParams()) {
+		} else if (RequestParser.hasVariableParams(request)) {
 			return true;
 		} else {
 			return false;
 		}
 	}
 
-	private boolean methodIsNotAllowed(Request request) {
+	private boolean isNotAllowed(Request request) {
 		String requestType = request.getMethod();
-		if (request.isFileRequest() && !(Arrays.asList(request.routeOptions()).contains(requestType))) {
+		if (request.isFileRequest() && !(Arrays.asList(getRouteOptions()).contains(requestType))) {
 			return true;
 		} else {
 			return false;
@@ -62,7 +62,7 @@ public class ResponseBuilder {
 		String header = new String();
 		if (request.getURI().equals("/method_options")) {
 			header += "Allow: ";
-			header += String.join(",", request.routeOptions());
+			header += String.join(",", getRouteOptions());
 		} else if (request.getURI().equals("/redirect")) {
 		  header += "Location: ";
 		  header += request.redirectLocation();
@@ -70,9 +70,13 @@ public class ResponseBuilder {
 		return header;
 	}
 
+	public String[] getRouteOptions() {
+		return Routes.getOptions(request.getURI());
+	}
+
 	private String getResponseBody() {
 		String body = new String();
-		if (request.hasVariableParams()) {
+		if (RequestParser.hasVariableParams(request)) {
 			String[] allParams = RequestParser.separateParameters(request.getURI());
 			for (int i = 0; i < allParams.length; i++) {
 				body += RequestParser.decodeParameters(allParams[i]) + System.lineSeparator();

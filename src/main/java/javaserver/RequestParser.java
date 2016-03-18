@@ -31,4 +31,14 @@ public class RequestParser {
 		}
 		return parameterLine;
 	}
+	
+	
+	public static boolean hasVariableParams(Request request) {
+		return request.getURI().contains("?");
+	}
+	
+	public static boolean isRedirect(Request request) {
+		return request.getURI().contains("redirect");
+	}
+
 }

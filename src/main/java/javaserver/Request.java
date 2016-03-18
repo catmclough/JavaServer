@@ -3,8 +3,9 @@ package javaserver;
 import java.util.Arrays;
 
 public class Request {
-	String method;
-	String URI;
+	private String method;
+	private String URI;
+	private String defaultRedirectLocation = "http://localhost:5000/";
 
 	Request(String method, String URI) {
 		this.method = method;
@@ -19,20 +20,9 @@ public class Request {
 		return URI;
 	}
 
-	public String[] routeOptions() {
-		return Routes.getOptions(URI);
-	}
-
-	public boolean hasVariableParams() {
-		return URI.contains("?");
-	}
-	
-	public boolean isRedirect() {
-		return URI.contains("redirect");
-	}
 
 	public String redirectLocation() {
-		return "http://localhost:5000/";
+		return this.defaultRedirectLocation;
 	}
 	
 	public boolean isFileRequest() {
