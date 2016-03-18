@@ -15,11 +15,11 @@ public class ResponseBuilderTest {
 
 	String codedURI = "/parameters?variable_1=Operators%20%3C%2C%20%3E%2C%20%3D%2C%20!%3D%3B%20%2B%2C%20-%2C%20*%2C%20%26%2C%20%40%2C%20%23%2C%20%24%2C%20%5B%2C%20%5D%3A%20%22is%20that%20all%22%3F&variable_2=stuff";
 
-	Request requestWithCodedParams = new Request("GET", codedURI);
-	Request unacceptableRequest = new Request("GET", "/foo");
+	Request unsuppportedRequest = new Request("GET", "/foo");
 	Request requestWithOptions = new Request("GET", "/method_options");
 	Request redirectRequest = new Request("GET", "/redirect");
 	Request unallowedRequest = new Request("POST", "/file1");
+	Request requestWithCodedParams = new Request("GET", codedURI);
 
 	String methodOptionsHeader = "Allow: GET,HEAD,POST,OPTIONS,PUT";
 	String redirectHeader = "Location: http://localhost:5000/";
@@ -39,7 +39,8 @@ public class ResponseBuilderTest {
 		for (String route : Routes.supportedRouteRequests.keySet()) {
 			for (String requestMethod : Routes.supportedRouteRequests.get(route)) {
 				Request supportedRequest = new Request(requestMethod, route);
-				ResponseBuilder responder  = new ResponseBuilder(supportedRequest);
+				RequestHandler requestHandler = new RequestHandler(supportedRequest);
+				ResponseBuilder responder  = new ResponseBuilder(requestHandler);
 				Response response = responder.getResponse();
 				assertEquals(response.getResponseCode(), twoHundred);
 			}
@@ -51,7 +52,8 @@ public class ResponseBuilderTest {
 		for (String route : Routes.foundRouteRequests.keySet()) {
 			for (String requestMethod : Routes.foundRouteRequests.get(route)) {
 				Request foundRequest = new Request(requestMethod, route);
-				ResponseBuilder responder  = new ResponseBuilder(foundRequest);
+				RequestHandler requestHandler = new RequestHandler(foundRequest);
+				ResponseBuilder responder  = new ResponseBuilder(requestHandler);
 				Response response = responder.getResponse();
 				assertEquals(response.getResponseCode(), threeOhTwo);
 			}
@@ -60,28 +62,32 @@ public class ResponseBuilderTest {
 
 	@Test
 	public void testFourOhFourResponseCode() throws IOException {
-		ResponseBuilder responder = new ResponseBuilder(unacceptableRequest);
+		RequestHandler requestHandler = new RequestHandler(unsuppportedRequest);
+		ResponseBuilder responder  = new ResponseBuilder(requestHandler);
 		Response response = responder.getResponse();
 		assertEquals(response.getResponseCode(), fourOhFour);
 	}
 
 	@Test
 	public void testMethodNotAllowedResponseCode() throws IOException {
-		ResponseBuilder responder = new ResponseBuilder(unallowedRequest);
+		RequestHandler requestHandler = new RequestHandler(unallowedRequest);
+		ResponseBuilder responder  = new ResponseBuilder(requestHandler);
 		Response response = responder.getResponse();
 		assertEquals(response.getResponseCode(), fourOhFive);
 	}
 
 	@Test
 	public void testOptionsHeader() throws IOException {
-		ResponseBuilder responder = new ResponseBuilder(requestWithOptions);
+		RequestHandler requestHandler = new RequestHandler(requestWithOptions);
+		ResponseBuilder responder  = new ResponseBuilder(requestHandler);
 		Response response = responder.getResponse();
 		assertEquals(response.getHeader(), methodOptionsHeader);
 	}
 
 	@Test
 	public void testRedirectHeader() throws IOException {
-		ResponseBuilder responder = new ResponseBuilder(redirectRequest);
+		RequestHandler requestHandler = new RequestHandler(redirectRequest);
+		ResponseBuilder responder  = new ResponseBuilder(requestHandler);
 		Response response = responder.getResponse();
 		assertEquals(response.getHeader(), redirectHeader);
 	}
@@ -91,7 +97,8 @@ public class ResponseBuilderTest {
 		String decodedParamOne = "variable_1 = Operators <, >, =, !=; +, -, *, &, @, #, $, [, ]: \"is that all\"?";
 		String decodedParamTwo = "variable_2 = stuff";
 
-		ResponseBuilder responder = new ResponseBuilder(requestWithCodedParams);
+		RequestHandler requestHandler = new RequestHandler(requestWithCodedParams);
+		ResponseBuilder responder  = new ResponseBuilder(requestHandler);
 		Response response = responder.getResponse();
 		String responseBody = response.getBody();
 

@@ -15,7 +15,8 @@ public class ClientWorker implements Runnable {
 	public void run() {
 		String rawRequest = getRequest();
 		Request request = new Request(RequestParser.getRequestMethod(rawRequest), RequestParser.getRequestURI(rawRequest));
-		this.responder = new ResponseBuilder(request);
+		RequestHandler requestHandler = new RequestHandler(request);
+		this.responder = new ResponseBuilder(requestHandler);
 		respond(request);
 	}
 
