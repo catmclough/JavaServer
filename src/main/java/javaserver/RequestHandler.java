@@ -11,13 +11,17 @@ public class RequestHandler {
 	}
 	
 	public boolean requestIsSupported() {
-		return getRouteOptions() != null && (isAcceptableRequest() || hasValidParameters());
+		return (getRouteOptions() != null && (isAcceptableRequest()) || isGetWithValidParams());
 	}
 
 	private boolean isAcceptableRequest() {
 		return (Arrays.asList(getRouteOptions()).contains(request.getMethod()));
 	}
 
+	public boolean isGetWithValidParams() {
+		return request.getMethod().equals("GET") && request.getURI().contains("/parameters?");
+	}
+	
 	public String[] getRouteOptions() {
 		return Routes.getOptions(request.getURI());
 	}
@@ -33,20 +37,7 @@ public class RequestHandler {
 	}
 
 	public boolean isNotAllowed() {
-		if (isFileRequest() && !(isAcceptableRequest())) {
-			return true;
-		} else {
-			return false;
-		}
-	}
-
-	public boolean hasParameters() {
-		return request.getURI().contains("?");
-	}
-	
-	private boolean hasValidParameters() {
-		//TODO: how do I tell if parameters are valid?
-		return hasParameters();
+		return (isFileRequest() && !(isAcceptableRequest()));
 	}
 
 	public boolean isFileRequest() {

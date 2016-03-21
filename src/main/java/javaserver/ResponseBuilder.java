@@ -52,7 +52,7 @@ public class ResponseBuilder {
 
 	private String getResponseBody() {
 		String body = new String();
-		if (requestHandler.hasParameters()) {
+		if (requestHandler.isGetWithValidParams()) {
 			String[] allParams = requestHandler.separateParameters();
 			for (int i = 0; i < allParams.length; i++) {
 				body += requestHandler.decodeParameters(allParams[i]) + System.lineSeparator();
