@@ -11,7 +11,11 @@ public class RequestHandler {
 	}
 	
 	public boolean requestIsSupported() {
-		return getRouteOptions() != null && ((Arrays.asList(getRouteOptions()).contains(request.getMethod())) || hasValidParameters());
+		return getRouteOptions() != null && (isAcceptableRequest() || hasValidParameters());
+	}
+
+	private boolean isAcceptableRequest() {
+		return (Arrays.asList(getRouteOptions()).contains(request.getMethod()));
 	}
 
 	public String[] getRouteOptions() {
@@ -29,8 +33,7 @@ public class RequestHandler {
 	}
 
 	public boolean isNotAllowed() {
-		String requestType = request.getMethod();
-		if (isFileRequest() && !(Arrays.asList(getRouteOptions()).contains(requestType))) {
+		if (isFileRequest() && !(isAcceptableRequest())) {
 			return true;
 		} else {
 			return false;
@@ -46,6 +49,10 @@ public class RequestHandler {
 		return hasParameters();
 	}
 
+	public boolean isFileRequest() {
+		return Arrays.asList(Routes.FILES).contains(request.getURI());
+	}
+
 	public String decodeParameters(String parameterLine) {
 		try {
 			String encoding = "UTF-8";
@@ -54,10 +61,6 @@ public class RequestHandler {
 			System.out.println("ResponseBuilder could not decode one or more of the request's parameters");
 		}
 		return parameterLine;
-	}
-
-	public boolean isFileRequest() {
-		return Arrays.asList(Routes.FILES).contains(request.getURI());
 	}
 
 	public String[] separateParameters() {
