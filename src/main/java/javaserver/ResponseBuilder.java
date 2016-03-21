@@ -30,10 +30,10 @@ public class ResponseBuilder {
 			} else {
 				responseCode = HTTPStatusCode.TWO_HUNDRED;
 			}
-		} else if (requestHandler.isNotAllowed()) {
+		} else if (requestHandler.methodIsNotAllowed()) {
 			responseCode = HTTPStatusCode.FOUR_OH_FIVE;
 		} else {
-			responseCode = HTTPStatusCode.FOUR_OH_FOUR;
+		responseCode = HTTPStatusCode.FOUR_OH_FOUR;
 		}
 		return responseCode.getStatusLine();
 	}
@@ -52,7 +52,9 @@ public class ResponseBuilder {
 
 	private String getResponseBody() {
 		String body = new String();
-		if (requestHandler.isGetWithValidParams()) {
+		if (requestHandler.isGetRoot()) {
+			body += Routes.getPublicFileNames();
+		} else if (requestHandler.isGetWithValidParams()) {
 			String[] allParams = requestHandler.separateParameters();
 			for (int i = 0; i < allParams.length; i++) {
 				body += requestHandler.decodeParameters(allParams[i]) + System.lineSeparator();
@@ -60,4 +62,5 @@ public class ResponseBuilder {
 		}
 		return body;
 	}
+	
 }

@@ -5,25 +5,42 @@ import java.util.Arrays;
 
 public class RequestHandler {
 	private Request request;
+	private String requestMethod;
+	private String requestURI;
 	
 	RequestHandler(Request request) {
 		this.request = request;
+		this.requestMethod = request.getMethod();
+		this.requestURI = request.getURI();
 	}
 	
 	public boolean requestIsSupported() {
-		return (getRouteOptions() != null && (isAcceptableRequest()) || isGetWithValidParams());
+		return (routeExists(requestURI) && (isAcceptableRequest(requestMethod, requestURI)) || isAcceptableRequestWithParams());
 	}
 
-	private boolean isAcceptableRequest() {
-		return (Arrays.asList(getRouteOptions()).contains(request.getMethod()));
+	private boolean routeExists(String route) {
+		return Routes.getOptions(route) != null;
 	}
 
-	public boolean isGetWithValidParams() {
-		return request.getMethod().equals("GET") && request.getURI().contains("/parameters?");
+	private boolean isAcceptableRequest(String method, String route) {
+		return (Arrays.asList(Routes.getOptions(route)).contains(method));
+	}
+
+	public boolean isGetRoot() {
+		return request.getMethod().equals("GET") && request.getURI().equals("/");
+	}
+
+	private boolean isAcceptableRequestWithParams() {
+		String routeWithoutParams = getRouteWithoutParams(requestMethod);
+		return routeExists(routeWithoutParams) && isAcceptableRequest(requestMethod, routeWithoutParams);
 	}
 	
-	public String[] getRouteOptions() {
-		return Routes.getOptions(request.getURI());
+	private String getRouteWithoutParams(String query) {
+		String route = query;
+		if (query.contains("?"))
+			route = query.split(".*?.")[0];
+		System.out.println(query);
+		return route;
 	}
 
 	public boolean isValidRedirectRequest() {
@@ -36,8 +53,8 @@ public class RequestHandler {
 		return path.equals("/method_options");
 	}
 
-	public boolean isNotAllowed() {
-		return (isFileRequest() && !(isAcceptableRequest()));
+	public boolean methodIsNotAllowed() {
+		return (isFileRequest() && !(isAcceptableRequest(requestMethod, requestURI)));
 	}
 
 	public boolean isFileRequest() {
