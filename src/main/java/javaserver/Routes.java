@@ -4,8 +4,6 @@ import java.io.File;
 import java.util.HashMap;
 
 public class Routes {
-	public static final String[] FILES = {"/file1", "/text-file.txt"};
-
 	private static final String[] SUPPORTED_ROOT_REQUESTS = {"GET"};
 	private static final String[] SUPPORTED_FORM_REQUESTS = {"GET", "POST", "PUT"};
 	private static final String[] SUPPORTED_PARAMETERS_REQUESTS = {"GET"};
@@ -19,16 +17,26 @@ public class Routes {
 
 	public static void configure() {
 		supportedRouteRequests = new HashMap<String, String[]>();
-		supportedRouteRequests.put("/", SUPPORTED_ROOT_REQUESTS);
-		supportedRouteRequests.put("/form", SUPPORTED_FORM_REQUESTS);
-		supportedRouteRequests.put("/parameters", SUPPORTED_PARAMETERS_REQUESTS);
-		supportedRouteRequests.put("/method_options", SUPPORTED_METHOD_OPTIONS);
-		for (String fileRoute : FILES) {
-			supportedRouteRequests.put(fileRoute, SUPPORTED_FILE_REQUESTS);
+		foundRouteRequests = new HashMap<String, String[]>();
+
+		addSupportedRoute("/", SUPPORTED_ROOT_REQUESTS);
+		addSupportedRoute("/form", SUPPORTED_FORM_REQUESTS);
+		addSupportedRoute("/parameters", SUPPORTED_PARAMETERS_REQUESTS);
+		addSupportedRoute("/method_options", SUPPORTED_METHOD_OPTIONS);
+
+		for (String file : getDirectoryListing("public")) {
+			addSupportedRoute("/" + file, SUPPORTED_FILE_REQUESTS);
 		}
 
-		foundRouteRequests = new HashMap<String, String[]>();
-		foundRouteRequests.put("/redirect", FOUND_REDIRECT_REQUESTS);
+		addFoundRoute("/redirect", FOUND_REDIRECT_REQUESTS);
+	}
+	
+	private static void addSupportedRoute(String route, String[] supportedMethods) {
+		supportedRouteRequests.put(route, supportedMethods);
+	}
+
+	private static void addFoundRoute(String route, String[] supportedMethods) {
+		foundRouteRequests.put(route, supportedMethods);
 	}
 
 	public static String[] getOptions(String route) {
@@ -50,8 +58,8 @@ public class Routes {
 		return listing;
 	}
 	
-	private static String[] getDirectoryListing(String fileName) {
-		File publicDirectory = new File(fileName);
-		return publicDirectory.list();
+	private static String[] getDirectoryListing(String directoryName) {
+		File directory = new File(directoryName);
+		return directory.list();
 	}
 }
