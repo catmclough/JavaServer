@@ -66,7 +66,7 @@ public class RequestHandler {
 	}
 
 	public boolean isFileRequest() {
-		return Arrays.asList(Routes.FILES).contains(request.getURI());
+		return Routes.getPublicFileNames().contains(request.getURI().substring(1));
 	}
 
 	public String[] getDecodedParameters() {
