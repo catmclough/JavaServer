@@ -1,13 +1,12 @@
 package javaserver;
 
-import java.io.UnsupportedEncodingException;
 import java.util.Arrays;
 
 public class RequestHandler {
 	private Request request;
 	private String requestMethod;
 	private String requestURI;
-	private String parameters;
+	private ParameterHandler paramHandler;
 	
 	RequestHandler(Request request) {
 		this.request = request;
@@ -16,42 +15,40 @@ public class RequestHandler {
 	}
 	
 	public boolean requestIsSupported() {
-		if (isAcceptableRequest(requestMethod, requestURI)) {
-			return true;
-		} else if (routeHasParams()) {
-			separateRouteFromParams(requestURI);
-			if (isAcceptableRequest(requestMethod, requestURI)) { 
-				System.out.println("here");
-				return true;
-			}
+		if (routeHasParams()) {
+			this.paramHandler = new ParameterHandler(request);
+			return isAcceptableRequestWithParams();
+		} else {
+			return isAcceptableRequest(requestMethod, requestURI); 
 		}
-		return false;
 	}
 
-	private boolean routeExists() {
-		return getRouteOptions() != null;
+	private boolean routeExists(String route) {
+		return getRouteOptions(route) != null;
 	}
 	
 	public String[] getRouteOptions() {
 		return Routes.getOptions(requestURI);
 	}
+	public String[] getRouteOptions(String route) {
+		return Routes.getOptions(route);
+	}
+
+	private boolean isAcceptableRequestWithParams() {
+		String simplifiedRoute = paramHandler.separateRoute(requestURI);
+		return isAcceptableRequest(requestMethod, simplifiedRoute);
+	}
 
 	private boolean isAcceptableRequest(String method, String route) {
-		return routeExists() && (Arrays.asList(getRouteOptions()).contains(method));
+		return routeExists(route) && (Arrays.asList(getRouteOptions(route)).contains(method));
 	}
 
 	public boolean routeHasParams() {
-		return requestURI.contains("?") || (this.parameters != null);
+		return requestURI.contains("?");
 	}
 	
-	public boolean isGetRoot() {
+	public boolean isDirectoryRequest() {
 		return request.getMethod().equals("GET") && request.getURI().equals("/");
-	}
-
-	private void separateRouteFromParams(String query) {
-		String[] routeParts = query.split("\\?", 2);
-		this.requestURI = routeParts[0];
-		this.parameters = routeParts[1];
 	}
 
 	public boolean isValidRedirectRequest() {
@@ -72,19 +69,11 @@ public class RequestHandler {
 		return Arrays.asList(Routes.FILES).contains(request.getURI());
 	}
 
-	public String decodeParameters(String parameterLine) {
-		try {
-			String encoding = "UTF-8";
-			parameterLine = java.net.URLDecoder.decode(parameterLine, encoding);
-		} catch (UnsupportedEncodingException e) {
-			System.out.println("ResponseBuilder could not decode one or more of the request's parameters");
+	public String[] getDecodedParameters() {
+		String[] allParams = paramHandler.splitParameters(requestURI);
+		for (int i = 0; i < allParams.length; i++) {
+			allParams[i] = paramHandler.decodeParameters(allParams[i]);
 		}
-		return parameterLine;
-	}
-
-	public String[] separateParameters() {
-		String params = request.getURI().split("/parameters?.")[1];
-		params = params.replace("=", " = ");
-		return params.split("&");
+		return allParams;
 	}
 }
