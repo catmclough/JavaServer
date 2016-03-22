@@ -55,9 +55,15 @@ public class ResponseBuilder {
 		if (requestHandler.isDirectoryRequest()) {
 			body += Routes.getPublicFileNames();
 		} else if (requestHandler.routeHasParams()) {
-			for (String decodedParameterVar : requestHandler.getDecodedParameters()) {
-				body += decodedParameterVar + System.lineSeparator();
-			}
+			body += decodedParameterBody();
+		}
+		return body;
+	}
+	
+	private String decodedParameterBody() {
+		String body = "";
+		for (String decodedParameterVar : requestHandler.getDecodedParameters()) {
+			body += decodedParameterVar + System.lineSeparator();
 		}
 		return body;
 	}
