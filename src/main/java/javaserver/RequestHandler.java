@@ -7,6 +7,7 @@ public class RequestHandler {
 	private Request request;
 	private String requestMethod;
 	private String requestURI;
+	private String parameters;
 	
 	RequestHandler(Request request) {
 		this.request = request;
@@ -15,32 +16,42 @@ public class RequestHandler {
 	}
 	
 	public boolean requestIsSupported() {
-		return (routeExists(requestURI) && (isAcceptableRequest(requestMethod, requestURI)) || isAcceptableRequestWithParams());
+		if (isAcceptableRequest(requestMethod, requestURI)) {
+			return true;
+		} else if (routeHasParams()) {
+			separateRouteFromParams(requestURI);
+			if (isAcceptableRequest(requestMethod, requestURI)) { 
+				System.out.println("here");
+				return true;
+			}
+		}
+		return false;
 	}
 
-	private boolean routeExists(String route) {
-		return Routes.getOptions(route) != null;
+	private boolean routeExists() {
+		return getRouteOptions() != null;
+	}
+	
+	public String[] getRouteOptions() {
+		return Routes.getOptions(requestURI);
 	}
 
 	private boolean isAcceptableRequest(String method, String route) {
-		return (Arrays.asList(Routes.getOptions(route)).contains(method));
+		return routeExists() && (Arrays.asList(getRouteOptions()).contains(method));
 	}
 
+	public boolean routeHasParams() {
+		return requestURI.contains("?") || (this.parameters != null);
+	}
+	
 	public boolean isGetRoot() {
 		return request.getMethod().equals("GET") && request.getURI().equals("/");
 	}
 
-	private boolean isAcceptableRequestWithParams() {
-		String routeWithoutParams = getRouteWithoutParams(requestMethod);
-		return routeExists(routeWithoutParams) && isAcceptableRequest(requestMethod, routeWithoutParams);
-	}
-	
-	private String getRouteWithoutParams(String query) {
-		String route = query;
-		if (query.contains("?"))
-			route = query.split(".*?.")[0];
-		System.out.println(query);
-		return route;
+	private void separateRouteFromParams(String query) {
+		String[] routeParts = query.split("\\?", 2);
+		this.requestURI = routeParts[0];
+		this.parameters = routeParts[1];
 	}
 
 	public boolean isValidRedirectRequest() {
