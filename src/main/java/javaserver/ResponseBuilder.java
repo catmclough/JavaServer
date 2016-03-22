@@ -1,13 +1,13 @@
 package javaserver;
 
-import java.util.Arrays;
-
 public class ResponseBuilder {
-	private Request request;
-	protected Response response;
+	private RequestHandler requestHandler;
+	private String defaultRedirectLocation = "http://localhost:5000/";
 
-	ResponseBuilder(Request request) {
-		this.request = request;
+	protected Response response;
+	
+	ResponseBuilder(RequestHandler requestHandler) {
+		this.requestHandler = requestHandler;
 	}
 
 	public Response getResponse() {
@@ -24,40 +24,38 @@ public class ResponseBuilder {
 
 	private String getStatusLine() {
 		HTTPStatusCode responseCode;
-		if (isSupported(request)) {
-			responseCode = HTTPStatusCode.TWO_HUNDRED;
+		if (requestHandler.requestIsSupported()) {
+			if (requestHandler.isValidRedirectRequest()) {
+				responseCode = HTTPStatusCode.THREE_OH_TWO;
+			} else {
+				responseCode = HTTPStatusCode.TWO_HUNDRED;
+			}
+		} else if (requestHandler.isNotAllowed()) {
+			responseCode = HTTPStatusCode.FOUR_OH_FIVE;
 		} else {
 			responseCode = HTTPStatusCode.FOUR_OH_FOUR;
 		}
 		return responseCode.getStatusLine();
 	}
-	
-	private boolean isSupported(Request request) {
-		String requestType = request.getMethod();
-		if (request.routeOptions() != null && (Arrays.asList(request.routeOptions()).contains(requestType))) {
-			return true;
-		} else if (request.hasVariableParams()) {
-			return true;
-		} else {
-			return false;
-		}
-	}
 
 	private String getResponseHeader() {
 		String header = new String();
-		if (request.getURI().equals("/method_options")) {
+		if (requestHandler.isValidOptionRequest()) {
 			header += "Allow: ";
-			header += String.join(",", request.routeOptions());
+			header += String.join(",", requestHandler.getRouteOptions());
+		} else if (requestHandler.isValidRedirectRequest()) {
+		  header += "Location: ";
+		  header += defaultRedirectLocation;
 		}
 		return header;
 	}
 
 	private String getResponseBody() {
 		String body = new String();
-		if (request.hasVariableParams()) {
-			String[] allParams = RequestParser.separateParameters(request.getURI());
+		if (requestHandler.isGetWithValidParams()) {
+			String[] allParams = requestHandler.separateParameters();
 			for (int i = 0; i < allParams.length; i++) {
-				body += RequestParser.decodeParameters(allParams[i]) + System.lineSeparator();
+				body += requestHandler.decodeParameters(allParams[i]) + System.lineSeparator();
 			}
 		}
 		return body;

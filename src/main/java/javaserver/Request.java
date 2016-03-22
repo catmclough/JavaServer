@@ -1,8 +1,8 @@
 package javaserver;
 
 public class Request {
-	String method;
-	String URI;
+	private String method;
+	private String URI;
 
 	Request(String method, String URI) {
 		this.method = method;
@@ -15,13 +15,5 @@ public class Request {
 
 	public String getURI() {
 		return URI;
-	}
-
-	public String[] routeOptions() {
-		return Routes.getOptions(URI);
-	}
-
-	public boolean hasVariableParams() {
-		return URI.contains("?");
 	}
 }

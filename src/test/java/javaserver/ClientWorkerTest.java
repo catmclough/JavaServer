@@ -34,7 +34,6 @@ public class ClientWorkerTest extends TestCase {
 	  assertTrue(testClientWorker.writer.latestResponse.contains(twoHundredResponse));
 	}
 
-
 	private BufferedReader stubGetRequestReader() {
 		String getRequest = "GET / HTTP/1.1\r\n";
 		InputStream stubInputStreamWithGet = new ByteArrayInputStream(getRequest.getBytes());

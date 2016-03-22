@@ -44,5 +44,4 @@ public class Server {
 		DataOutputStream output = new DataOutputStream(outputStream);
 		this.writer = new SocketWriter(output);
 	}
-
 }

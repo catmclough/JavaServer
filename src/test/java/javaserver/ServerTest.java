@@ -56,7 +56,7 @@ public class ServerTest extends TestCase {
 		testServer.run();
 		assertTrue(mockThreadManager.getOpenedThreads() > 0);
 	}
-	
+
 
 	@Test
 	public void testCanCreateMultipleThreads() throws IOException {
@@ -91,7 +91,7 @@ public class ServerTest extends TestCase {
 		  return mockedClientSocket;
 		}
 	}
-	
+
 	class MockSocketWriter extends SocketWriter {
 		MockSocketWriter(DataOutputStream mockOutputStream) {
 		 	super(mockOutputStream);
@@ -109,12 +109,12 @@ public class ServerTest extends TestCase {
 		MockThreadManager() {
 			super();
 		}
-		
+
 		@Override
 		public void openNewThread(Reader reader, SocketWriter writer) {
 			openedThreads++;
 		}
-		
+
 		public int getOpenedThreads() {
 			return this.openedThreads;
 		}
