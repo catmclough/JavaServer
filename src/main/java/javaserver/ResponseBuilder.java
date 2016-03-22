@@ -54,7 +54,7 @@ public class ResponseBuilder {
 		String body = new String();
 		if (requestHandler.isGetRoot()) {
 			body += Routes.getPublicFileNames();
-		} else if (requestHandler.isGetWithValidParams()) {
+		} else if (requestHandler.routeHasParams()) {
 			String[] allParams = requestHandler.separateParameters();
 			for (int i = 0; i < allParams.length; i++) {
 				body += requestHandler.decodeParameters(allParams[i]) + System.lineSeparator();
