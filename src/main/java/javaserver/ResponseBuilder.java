@@ -33,7 +33,7 @@ public class ResponseBuilder {
 		} else if (requestHandler.methodIsNotAllowed()) {
 			responseCode = HTTPStatusCode.FOUR_OH_FIVE;
 		} else {
-		responseCode = HTTPStatusCode.FOUR_OH_FOUR;
+			responseCode = HTTPStatusCode.FOUR_OH_FOUR;
 		}
 		return responseCode.getStatusLine();
 	}
@@ -52,15 +52,13 @@ public class ResponseBuilder {
 
 	private String getResponseBody() {
 		String body = new String();
-		if (requestHandler.isGetRoot()) {
+		if (requestHandler.isDirectoryRequest()) {
 			body += Routes.getPublicFileNames();
 		} else if (requestHandler.routeHasParams()) {
-			String[] allParams = requestHandler.separateParameters();
-			for (int i = 0; i < allParams.length; i++) {
-				body += requestHandler.decodeParameters(allParams[i]) + System.lineSeparator();
+			for (String decodedParameterVar : requestHandler.getDecodedParameters()) {
+				body += decodedParameterVar + System.lineSeparator();
 			}
 		}
 		return body;
 	}
-	
 }
