@@ -31,9 +31,13 @@ public class Response {
 
 	public String formatResponse() {
 		String output = getResponseCode() + System.lineSeparator();
-		output += getHeader() + System.lineSeparator();
+		if (getHeader() != null) {
+			output += getHeader() + System.lineSeparator();
+		}
 		output += System.lineSeparator();
-		output += getBody() + System.lineSeparator();
+		if (getBody() != null) {
+			output += getBody() + System.lineSeparator();
+		}
 		return output;
 	}
 }

@@ -2,6 +2,8 @@ package javaserver;
 
 import java.io.IOException;
 
+import javaserver.ResponseBuilders.ResponseBuilder;
+
 public class ClientWorker implements Runnable {
 	private Reader reader;
 	public SocketWriter writer;
@@ -15,8 +17,7 @@ public class ClientWorker implements Runnable {
 	public void run() {
 		String rawRequest = getRequest();
 		Request request = new Request(RequestParser.getRequestMethod(rawRequest), RequestParser.getRequestURI(rawRequest));
-		RequestHandler requestHandler = new RequestHandler(request);
-		this.responder = new ResponseBuilder(requestHandler);
+		this.responder = ResponseBuilderFactory.createResponder(request);
 		respond(request);
 	}
 

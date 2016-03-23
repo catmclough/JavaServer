@@ -16,4 +16,13 @@ public class Request {
 	public String getURI() {
 		return URI;
 	}
+	
+	public boolean hasParams() {
+		return URI.contains("?");
+	}
+	
+	public String getURIWithoutParams() {
+		String[] routeParts = URI.split("\\?", 2);
+		return routeParts[0];
+	}
 }

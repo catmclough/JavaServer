@@ -8,6 +8,8 @@ import java.io.OutputStream;
 import java.net.ServerSocket;
 import java.net.Socket;
 
+import javaserver.ResponseBuilders.ResponseBuilder;
+
 public class Server {
 	public Socket clientSocket;
 	public ClientWorker clientWorker;

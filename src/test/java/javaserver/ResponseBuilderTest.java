@@ -8,6 +8,8 @@ import java.io.IOException;
 import org.junit.Before;
 import org.junit.Test;
 
+import javaserver.ResponseBuilders.ResponseBuilder;
+
 public class ResponseBuilderTest {
 	ResponseBuilder testResponseBuilder;
 	SocketWriter writer;
@@ -31,30 +33,20 @@ public class ResponseBuilderTest {
 	
 	private Response createResponse(String requestMethod, String route) {
 		Request request = new Request(requestMethod, route);
-		RequestHandler requestHandler = new RequestHandler(request);
-		ResponseBuilder responder = new ResponseBuilder(requestHandler);
+		ResponseBuilder responder = ResponseBuilderFactory.createResponder(request);
 		return responder.getResponse();
 	}
 
 	@Test
 	public void testRespondsWith200() {
-		for (String route : Routes.supportedRouteRequests.keySet()) {
-			for (String requestMethod : Routes.supportedRouteRequests.get(route)) {
-				Response response = createResponse(requestMethod, route);
-				assertEquals(response.getResponseCode(), twoHundred);
-			}
-		}
-		
+		Response response = createResponse("GET", "/"); 
+		assertEquals(response.getResponseCode(), twoHundred);
 	} 
 
 	@Test
-	public void testRespondsWith302() {
-		for (String route : Routes.foundRouteRequests.keySet()) {
-			for (String requestMethod : Routes.foundRouteRequests.get(route)) {
-				Response response = createResponse(requestMethod, route);
-				assertEquals(response.getResponseCode(), threeOhTwo);
-			}
-		}
+	public void testRedirectRespondsWith302() {
+		Response response = createResponse("GET", "/redirect");
+		assertEquals(response.getResponseCode(), threeOhTwo);
 	}
 
 	@Test
@@ -64,11 +56,28 @@ public class ResponseBuilderTest {
 	}
 
 	@Test
+	public void testSimplePost() {
+		Response postFormResponse = createResponse("POST", "/form");
+		assertEquals(postFormResponse.getResponseCode(), twoHundred);
+	}
+
+	@Test
+	public void testSimplePut() {
+		Response postFormResponse = createResponse("PUT", "/form");
+		assertEquals(postFormResponse.getResponseCode(), twoHundred);
+	}
+
+	@Test
 	public void testMethodNotAllowedResponseCode() throws IOException {
 		Response unallowedRequestResponse = createResponse("POST", "/file1");
 		assertEquals(unallowedRequestResponse.getResponseCode(), fourOhFive);
 	}
 
+	@Test
+	public void testOptionsResponseCode() throws IOException {
+		Response optionsResponse = createResponse("GET", "/method_options");
+		assertEquals(optionsResponse.getResponseCode(), twoHundred);
+	}
 	@Test
 	public void testOptionsHeader() throws IOException {
 		Response optionsResponse = createResponse("GET", "/method_options");
