@@ -1,6 +1,7 @@
 package javaserver.ResponseBuilders;
 
 import javaserver.RequestHandlers.DirectoryHandler;
+import javaserver.HTMLContent;
 import javaserver.HTTPStatusCode;
 import javaserver.Routes;
 
@@ -15,7 +16,7 @@ public class DirectoryResponseBuilder extends ResponseBuilder {
 	@Override
 	protected void setResponseData() {
 		response.setStatusLine(getStatusLine());
-		response.setBody(getPublicFileNames());
+		response.setBody(getHTMLDirectoryLinks());
 	}
 
 	@Override
@@ -29,12 +30,15 @@ public class DirectoryResponseBuilder extends ResponseBuilder {
 		return responseCode.getStatusLine();
 	}
 
-	private String getPublicFileNames() {
-		String listing = "";
+	private String getHTMLDirectoryLinks() {
+		String htmlOpen = "<!DOCTYPE html>\n<html>\n<head>\n</head>\n<body>\n";
+		String htmlClose = "</body>\n</html>";
+
+		return htmlOpen + HTMLContent.listOfLinks(getPublicFileNames()) + htmlClose;
+	}
+
+	private String[] getPublicFileNames() {
 		String[] publicFiles = Routes.getDirectoryListing("public");
-		for (String file: publicFiles) {
-			listing += file + System.lineSeparator();
-		}
-		return listing;
+		return publicFiles;
 	}
 }

@@ -116,13 +116,14 @@ public class ResponseBuilderTest {
 	}
 	
 	@Test
-	public void testDirectoryListing() {
+	public void testDirectoryLinks() {
 		Response getRootResponse = createResponse("GET", "/");
 		String responseBody = getRootResponse.getBody();
 
 		File publicDirectory = new File("public");
-		String[] fileNames = publicDirectory.list();
-		String fileList = String.join(System.lineSeparator(), fileNames);
-		assertTrue(responseBody.contains(fileList));
+		String[] publicFileNames = publicDirectory.list();
+
+		String listOfDirectoryLinks = HTMLContent.listOfLinks(publicFileNames);
+		assertTrue(responseBody.contains(listOfDirectoryLinks));	
 	}
 }
