@@ -31,10 +31,7 @@ public class DirectoryResponseBuilder extends ResponseBuilder {
 	}
 
 	private String getHTMLDirectoryLinks() {
-		String htmlOpen = "<!DOCTYPE html>\n<html>\n<head>\n</head>\n<body>\n";
-		String htmlClose = "</body>\n</html>";
-
-		return htmlOpen + HTMLContent.listOfLinks(getPublicFileNames()) + htmlClose;
+		return HTMLContent.openPageAndBody() + HTMLContent.listOfLinks(getPublicFileNames()) + HTMLContent.closeOfBodyAndPage();
 	}
 
 	private String[] getPublicFileNames() {
