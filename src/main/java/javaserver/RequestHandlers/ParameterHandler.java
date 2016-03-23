@@ -15,16 +15,13 @@ public class ParameterHandler extends RequestHandler {
 	}
 
 	@Override
-	public boolean requestIsSupported() {
-		return super.routeExists(separateRoute()) && (Arrays.asList(getRouteOptions(separateRoute())).contains(requestMethod));
+	protected void configureMethodOptions() {
+		addRoute("/parameters", new String[] {"GET"});
 	}
 
 	@Override
-	public String[] getRouteOptions(String uri) {
-		String[] supportedRequests = null;
-		if (uri.equals("/parameters")) 
-			supportedRequests = new String[] {"GET"};
-		return supportedRequests;
+	public boolean requestIsSupported() {
+		return super.routeExists(separateRoute()) && (Arrays.asList(getRouteOptions(separateRoute())).contains(requestMethod));
 	}
 
 	public String[] splitParameters() {
@@ -48,7 +45,7 @@ public class ParameterHandler extends RequestHandler {
 		return routeParts[0];
 	}
 
-	protected String separateParams() {
+	private String separateParams() {
 		String[] routeParts = requestURI.split("\\?", 2);
 		return routeParts[1];
 	}

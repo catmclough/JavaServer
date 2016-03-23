@@ -10,10 +10,7 @@ public class OptionHandler extends RequestHandler {
 	}
 	
 	@Override
-	public String[] getRouteOptions(String uri) {
-		String[] supportedRequests = null;
-		if (uri.equals("/method_options")) 
-			supportedRequests = new String[] {"GET", "HEAD", "POST", "OPTIONS", "PUT"};
-		return supportedRequests;
+	protected void configureMethodOptions() {
+		addRoute("/method_options", new String[] {"GET", "HEAD", "POST", "OPTIONS", "PUT"});
 	}
 }
