@@ -2,11 +2,11 @@ package javaserver;
 
 public class Request {
 	private String method;
-	private String URI;
+	private String uri;
 
-	Request(String method, String URI) {
+	Request(String method, String uri) {
 		this.method = method;
-		this.URI = URI;
+		this.uri = uri;
 	}
 
 	public String getMethod() {
@@ -14,15 +14,15 @@ public class Request {
 	}
 
 	public String getURI() {
-		return URI;
+		return uri;
 	}
 	
 	public boolean hasParams() {
-		return URI.contains("?");
+		return uri.contains("?");
 	}
 	
 	public String getURIWithoutParams() {
-		String[] routeParts = URI.split("\\?", 2);
+		String[] routeParts = uri.split("\\?", 2);
 		return routeParts[0];
 	}
 }
