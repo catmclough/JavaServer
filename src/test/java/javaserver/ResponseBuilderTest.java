@@ -78,6 +78,7 @@ public class ResponseBuilderTest {
 		Response optionsResponse = createResponse("GET", "/method_options");
 		assertEquals(optionsResponse.getResponseCode(), twoHundred);
 	}
+
 	@Test
 	public void testOptionsHeader() throws IOException {
 		Response optionsResponse = createResponse("GET", "/method_options");
