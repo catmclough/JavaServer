@@ -16,7 +16,7 @@ public class DirectoryResponseBuilder extends ResponseBuilder {
 	@Override
 	protected void setResponseData() {
 		response.setStatusLine(getStatusLine());
-		response.setBody(getHTMLDirectoryLinks());
+		response.setBody(getDirectoryLinksHTML());
 	}
 
 	@Override
@@ -30,8 +30,8 @@ public class DirectoryResponseBuilder extends ResponseBuilder {
 		return responseCode.getStatusLine();
 	}
 
-	private String getHTMLDirectoryLinks() {
-		return HTMLContent.openPageAndBody() + HTMLContent.listOfLinks(getPublicFileNames()) + HTMLContent.closeOfBodyAndPage();
+	private String getDirectoryLinksHTML() {
+		return HTMLContent.openHTMLAndBody() + HTMLContent.listOfLinks(getPublicFileNames()) + HTMLContent.closeBodyAndHTML();
 	}
 
 	private String[] getPublicFileNames() {

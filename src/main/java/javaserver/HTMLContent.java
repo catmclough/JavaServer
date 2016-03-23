@@ -1,7 +1,7 @@
 package javaserver;
 
 public class HTMLContent {
-	public static String openPageAndBody() {
+	public static String openHTMLAndBody() {
 		return  "<!DOCTYPE html>\n<html>\n<head>\n</head>\n<body>\n";
 	}
 
@@ -14,7 +14,7 @@ public class HTMLContent {
 		return unorderedList;
 	}
 	
-	public static String closeOfBodyAndPage() {
+	public static String closeBodyAndHTML() {
 		return "</body>\n</html>";
 	}
 }
