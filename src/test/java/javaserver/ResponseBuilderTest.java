@@ -116,6 +116,12 @@ public class ResponseBuilderTest {
 	}
 	
 	@Test
+	public void testHTMLHeader() {
+		Response getRootResponse = createResponse("GET", "/");
+		assertEquals(getRootResponse.getHeader(), "Content-Type: text/html;");
+	}
+
+	@Test
 	public void testDirectoryLinks() {
 		Response getRootResponse = createResponse("GET", "/");
 		String responseBody = getRootResponse.getBody();

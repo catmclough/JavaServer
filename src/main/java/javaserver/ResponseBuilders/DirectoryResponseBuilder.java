@@ -16,6 +16,7 @@ public class DirectoryResponseBuilder extends ResponseBuilder {
 	@Override
 	protected void setResponseData() {
 		response.setStatusLine(getStatusLine());
+		response.setHeader("Content-Type: text/html;");
 		response.setBody(getDirectoryLinksHTML());
 	}
 
@@ -31,7 +32,7 @@ public class DirectoryResponseBuilder extends ResponseBuilder {
 	}
 
 	private String getDirectoryLinksHTML() {
-		return HTMLContent.openHTMLAndBody() + HTMLContent.listOfLinks(getPublicFileNames()) + HTMLContent.closeBodyAndHTML();
+		return HTMLContent.openHTMLAndBody("Cat's Java Server") + HTMLContent.listOfLinks(getPublicFileNames()) + HTMLContent.closeBodyAndHTML();
 	}
 
 	private String[] getPublicFileNames() {

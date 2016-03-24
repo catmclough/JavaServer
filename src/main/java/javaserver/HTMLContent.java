@@ -1,8 +1,8 @@
 package javaserver;
 
 public class HTMLContent {
-	public static String openHTMLAndBody() {
-		return  "<!DOCTYPE html>\n<html>\n<head>\n</head>\n<body>\n";
+	public static String openHTMLAndBody(String pageTitle) {
+		return  "<!DOCTYPE html>\n<html>\n<head>\n<title>" + pageTitle + "</title>\n</head>\n<body>\n";
 	}
 
 	public static String listOfLinks(String[] list) {
