@@ -17,26 +17,43 @@ import junit.framework.TestCase;
 public class ClientWorkerTest extends TestCase {
 	Socket testClientSocket;
 	ClientWorker testClientWorker;
-	BufferedReader mockGetReader;
-
+	String simpleGet = "GET / HTTP/1.1\r\n";
+	String blankRequest = "";
+	
 	@Before
 	public void setUp() throws Exception {
 		App.configureRoutes();
-		Reader reader = new Reader(stubGetRequestReader());
-		MockSocketWriter mockWriter = new MockSocketWriter(mockOutputStream());
-		this.testClientWorker = new ClientWorker(reader, mockWriter);
+	    Reader reader = new Reader(stubRequestReader(simpleGet));
+	    MockSocketWriter mockWriter = new MockSocketWriter(mockOutputStream());
+	    testClientWorker = new ClientWorker(reader, mockWriter);
 	}
 
 	@Test
 	public void testRun() throws IOException {
 	  testClientWorker.run();
-	  String twoHundredResponse = HTTPStatusCode.TWO_HUNDRED.getStatusLine();
-	  assertTrue(testClientWorker.writer.latestResponse.contains(twoHundredResponse));
+
+	  String twoHundred = HTTPStatusCode.TWO_HUNDRED.getStatusLine();
+	  assertTrue(testClientWorker.writer.latestResponse.contains(twoHundred));
 	}
 
-	private BufferedReader stubGetRequestReader() {
-		String getRequest = "GET / HTTP/1.1\r\n";
-		InputStream stubInputStreamWithGet = new ByteArrayInputStream(getRequest.getBytes());
+	@Test
+	public void respondsToInvalidRequest() {
+		Request blankRequest = new Request("", "");
+		testClientWorker.respond(blankRequest);
+		String fourOhFour = HTTPStatusCode.FOUR_OH_FOUR.getStatusLine();
+		assertTrue(testClientWorker.writer.latestResponse.contains(fourOhFour));
+	}
+
+	@Test
+	public void respondsToUnSupportedRequest() {
+		Request unsupportedRequest = new Request("SPRINKLE", "/chocolate/sprinkles");
+		testClientWorker.respond(unsupportedRequest);
+		String fourOhFour = HTTPStatusCode.FOUR_OH_FOUR.getStatusLine();
+		assertTrue(testClientWorker.writer.latestResponse.contains(fourOhFour));
+	}
+
+	private BufferedReader stubRequestReader(String requestLine) {
+		InputStream stubInputStreamWithGet = new ByteArrayInputStream(requestLine.getBytes());
 		InputStreamReader inputReader = new InputStreamReader(stubInputStreamWithGet);
 		return new BufferedReader(inputReader);
 	}

@@ -16,7 +16,6 @@ public class RequestParser {
 		try {
 			return splitRequest(rawRequest)[1];
 		} catch (ArrayIndexOutOfBoundsException e) {
-			System.out.println("Invalid request. HTTP requests must have a method and URI.");
 			return "";
 		}
 	}

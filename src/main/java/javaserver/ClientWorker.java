@@ -26,17 +26,17 @@ public class ClientWorker implements Runnable {
 		try {
 			request = reader.readFromSocket();
 		} catch (IOException e) {
-			System.out.println("Unable to read request");
+			System.out.println("Unable to read from socket.");
 		}
 		return request;
 	}
 
-	private void respond(Request request) {
+	protected void respond(Request request) {
+		Response response = responder.getResponse();
 		try {
-			Response response = responder.getResponse();
 			writer.respond(response.formatResponse());
 		} catch (IOException e) {
-			System.out.println("ClientWorker unable to get response from Responder or write Response with SocketWriter");
+			System.out.println("ClientWorker unable to write response to socket.");
 		}
 	}
 }
