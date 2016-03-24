@@ -33,10 +33,6 @@ public class ClientWorker implements Runnable {
 
 	protected void respond(Request request) {
 		Response response = responder.getResponse();
-		try {
-			writer.respond(response.formatResponse());
-		} catch (IOException e) {
-			System.out.println("ClientWorker unable to write response to socket.");
-		}
+		writer.respond(response.formatResponse());
 	}
 }
