@@ -7,7 +7,7 @@ import javaserver.Routes;
 
 public class DirectoryResponseBuilder extends ResponseBuilder {
 	DirectoryHandler requestHandler;
-	
+
 	public DirectoryResponseBuilder(DirectoryHandler directoryRequestHandler) {
 		super(directoryRequestHandler);
 		this.requestHandler = directoryRequestHandler;

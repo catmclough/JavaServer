@@ -15,11 +15,11 @@ public class RequestHandler {
 		this.requestURI = request.getURI();
 		configureMethodOptions();
 	}
-	
+
 	protected void configureMethodOptions() {
 		supportedRequests.put("/form", new String[] {"POST", "PUT"});
 	}
-	
+
 	public void addRoute(String route, String[] methodOptions) {
 		supportedRequests.put(route, methodOptions);
 	}

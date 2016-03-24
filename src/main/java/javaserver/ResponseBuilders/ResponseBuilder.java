@@ -7,7 +7,7 @@ import javaserver.Response;
 public class ResponseBuilder {
 	private RequestHandler requestHandler;
 	protected Response response;
-	
+
 	public ResponseBuilder(RequestHandler requestHandler) {
 		this.requestHandler = requestHandler;
 	}

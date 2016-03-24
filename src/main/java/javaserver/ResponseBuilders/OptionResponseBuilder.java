@@ -6,7 +6,7 @@ import javaserver.HTTPStatusCode;
 public class OptionResponseBuilder extends ResponseBuilder {
 	OptionHandler requestHandler;
 	String requestURI;
-	
+
 	public OptionResponseBuilder(OptionHandler optionRequestHandler) {
 		super(optionRequestHandler);
 		this.requestHandler = optionRequestHandler;
@@ -38,5 +38,4 @@ public class OptionResponseBuilder extends ResponseBuilder {
 		}
 		return header;
 	}
-	
 }

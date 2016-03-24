@@ -6,12 +6,12 @@ import javaserver.HTTPStatusCode;
 public class RedirectResponseBuilder extends ResponseBuilder {
 	RedirectHandler requestHandler;
 	private String defaultRedirectLocation = "http://localhost:5000/";
-	
+
 	public RedirectResponseBuilder(RedirectHandler redirectHandler) {
 		super(redirectHandler);
 		this.requestHandler = redirectHandler;
 	}
-	
+
 	@Override
 	protected void setResponseData() {
 		response.setStatusLine(getStatusLine());

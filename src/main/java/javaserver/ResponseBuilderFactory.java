@@ -4,14 +4,12 @@ import javaserver.RequestHandlers.*;
 import javaserver.ResponseBuilders.*;
 
 public class ResponseBuilderFactory {
-	
+
 	public static ResponseBuilder createResponder(Request request) {
 		String requestURI = getURI(request);
-		
 		ResponseBuilder responseBuilder;
-
 		String requestHandlerType = Routes.acceptableRoutes.get(requestURI);
-		
+
 		if (requestHandlerType == null) {
 			requestHandlerType = "Default Handler";
 		}

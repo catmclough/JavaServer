@@ -19,10 +19,10 @@ public class ClientWorkerTest extends TestCase {
 	ClientWorker testClientWorker;
 	String simpleGet = "GET / HTTP/1.1\r\n";
 	String blankRequest = "";
-	
+
 	@Before
 	public void setUp() throws Exception {
-		App.configureRoutes();
+  		App.configureRoutes();
 	    Reader reader = new Reader(stubRequestReader(simpleGet));
 	    MockSocketWriter mockWriter = new MockSocketWriter(mockOutputStream());
 	    testClientWorker = new ClientWorker(reader, mockWriter);
@@ -31,7 +31,6 @@ public class ClientWorkerTest extends TestCase {
 	@Test
 	public void testRun() throws IOException {
 	  testClientWorker.run();
-
 	  String twoHundred = HTTPStatusCode.TWO_HUNDRED.getStatusLine();
 	  assertTrue(testClientWorker.writer.latestResponse.contains(twoHundred));
 	}

@@ -10,7 +10,7 @@ public class ParameterResponseBuilder extends ResponseBuilder {
 		super(paramHandler);
 		this.requestHandler = paramHandler;
 	}
-	
+
 	@Override
 	protected void setResponseData() {
 		response.setStatusLine(getStatusLine());

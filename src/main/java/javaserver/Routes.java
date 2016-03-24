@@ -11,14 +11,12 @@ public class Routes {
 		addRoute("/parameters", "Parameter Handler");
 		addRoute("/method_options", "Option Handler");
 		addRoute("/form", "Default Handler");
-
+		addRoute("/redirect", "Redirect Handler");
 		for (String file : getDirectoryListing("public")) {
 			addRoute("/" + file, "File Handler");
 		}
-
-		addRoute("/redirect", "Redirect Handler");
 	}
-	
+
 	private static void addRoute(String route, String requestHandler) {
 		acceptableRoutes.put(route, requestHandler);
 	}

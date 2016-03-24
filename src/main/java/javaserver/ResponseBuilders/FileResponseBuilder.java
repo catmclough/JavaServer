@@ -10,7 +10,7 @@ public class FileResponseBuilder extends ResponseBuilder {
 		super(fileRequestHandler);
 		this.requestHandler = fileRequestHandler;
 	}
-	
+
 	@Override
 	protected void setResponseData() {
 		response.setStatusLine(getStatusLine());
