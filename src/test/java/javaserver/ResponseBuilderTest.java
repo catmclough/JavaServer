@@ -126,4 +126,22 @@ public class ResponseBuilderTest {
 		String listOfDirectoryLinks = HTMLContent.listOfLinks(publicFileNames);
 		assertTrue(responseBody.contains(listOfDirectoryLinks));	
 	}
+	
+	@Test
+	public void testRespondsToRequestiWithoutURI() {
+		Response response = createResponse("GET", "");
+		assertEquals(response.getResponseCode(), fourOhFour);
+	}
+
+	@Test
+	public void testRespondsToBlankRequest() {
+		Response response = createResponse("", "");
+		assertEquals(response.getResponseCode(), fourOhFour);
+	}
+
+	@Test
+	public void testRespondsToCrazyRequest() {
+		Response response = createResponse("clakjflk", "aslkgfhaglk");
+		assertEquals(response.getResponseCode(), fourOhFour);
+	}
 }
