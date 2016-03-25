@@ -13,11 +13,7 @@ public class RequestParser {
 	}
 
 	public static String getRequestURI(String rawRequest) {
-		try {
-			return splitRequest(rawRequest)[1];
-		} catch (ArrayIndexOutOfBoundsException e) {
-			return "";
-		}
+		return splitRequest(rawRequest)[1];
 	}
 
 	private static String[] splitRequest(String rawRequest) {

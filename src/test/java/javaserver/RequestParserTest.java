@@ -17,24 +17,4 @@ public class RequestParserTest {
 	public void testParsesURI() {
 		assertEquals(RequestParser.getRequestURI(rawRequest), requestURI);
 	}
-	
-	@Test
-	public void handlesRequestWithNoURI() {
-		String incompleteRequest = "GET";
-		Request requestWithoutURI = RequestParser.createRequest(incompleteRequest);
-
-		assertNotNull(requestWithoutURI);
-		assertNotNull(requestWithoutURI.getURI());
-		assertTrue(requestWithoutURI.getURI().isEmpty());
-	}
-
-	@Test
-	public void handlesEmptyRequest() {
-		String incompleteRequest = "";
-		Request emptyRequest = RequestParser.createRequest(incompleteRequest);
-
-		assertNotNull(emptyRequest);
-		assertNotNull(emptyRequest.getMethod());
-		assertTrue(emptyRequest.getMethod().isEmpty());
-	}
 }
