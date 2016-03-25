@@ -18,7 +18,7 @@ public class ClientWorker implements Runnable {
 		String rawRequest = getRequest();
 		Request request = RequestParser.createRequest(rawRequest);
 		this.responder = ResponseBuilderFactory.createResponder(request);
-		respond(request);
+		writer.respond(responder.getResponse().formatResponse());
 	}
 
 	private String getRequest() {
@@ -29,10 +29,5 @@ public class ClientWorker implements Runnable {
 			System.out.println("Unable to read from socket.");
 		}
 		return request;
-	}
-
-	protected void respond(Request request) {
-		Response response = responder.getResponse();
-		writer.respond(response.formatResponse());
 	}
 }

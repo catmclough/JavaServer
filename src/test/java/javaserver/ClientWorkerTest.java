@@ -35,22 +35,6 @@ public class ClientWorkerTest extends TestCase {
 	  assertTrue(testClientWorker.writer.latestResponse.contains(twoHundred));
 	}
 
-	@Test
-	public void respondsToInvalidRequest() {
-		Request blankRequest = new Request("", "");
-		testClientWorker.respond(blankRequest);
-		String fourOhFour = HTTPStatusCode.FOUR_OH_FOUR.getStatusLine();
-		assertTrue(testClientWorker.writer.latestResponse.contains(fourOhFour));
-	}
-
-	@Test
-	public void respondsToUnSupportedRequest() {
-		Request unsupportedRequest = new Request("SPRINKLE", "/chocolate/sprinkles");
-		testClientWorker.respond(unsupportedRequest);
-		String fourOhFour = HTTPStatusCode.FOUR_OH_FOUR.getStatusLine();
-		assertTrue(testClientWorker.writer.latestResponse.contains(fourOhFour));
-	}
-
 	private BufferedReader stubRequestReader(String requestLine) {
 		InputStream stubInputStreamWithGet = new ByteArrayInputStream(requestLine.getBytes());
 		InputStreamReader inputReader = new InputStreamReader(stubInputStreamWithGet);

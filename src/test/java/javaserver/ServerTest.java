@@ -76,7 +76,7 @@ public class ServerTest extends TestCase {
 		}
 		assertFalse("Server's ServerSocket failed to close", caughtError);
 	}
-
+	
 	class MockServerSocket extends ServerSocket {
 		private int port;
 

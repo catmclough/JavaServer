@@ -18,6 +18,7 @@ public class Reader {
 			fullRequest += System.lineSeparator();
 			fullRequest += getData();
 		}
+		readingMechanism.close();
 		return fullRequest;
 	}
 	
