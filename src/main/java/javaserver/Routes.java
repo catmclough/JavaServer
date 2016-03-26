@@ -4,21 +4,25 @@ import java.io.File;
 import java.util.HashMap;
 
 public class Routes {
-	public static HashMap<String, String> acceptableRoutes = new HashMap<String, String>();
-
-	public static void configure() {
-		addRoute("/", "Directory Handler");
-		addRoute("/parameters", "Parameter Handler");
-		addRoute("/method_options", "Option Handler");
-		addRoute("/form", "Default Handler");
-		addRoute("/redirect", "Redirect Handler");
+	public static HashMap<String, String> routeHandlers = new HashMap<String, String>(); 
+	static {
+		routeHandlers.put("/", "Directory Handler");
+		routeHandlers.put("/parameters", "Parameter Handler");
+		routeHandlers.put("/method_options", "Option Handler");
+		routeHandlers.put("/form", "Form Handler");
+		routeHandlers.put("/redirect", "Redirect Handler");
 		for (String file : getDirectoryListing("public")) {
-			addRoute("/" + file, "File Handler");
+			routeHandlers.put("/" + file, "File Handler");
 		}
 	}
 
-	private static void addRoute(String route, String requestHandler) {
-		acceptableRoutes.put(route, requestHandler);
+	public static HashMap<String, String[]> routeOptions = new HashMap<String, String[]>();
+	static {
+		routeOptions.put("/", new String[] {"GET"});
+		routeOptions.put("/redirect", new String[] {"GET"});
+		routeOptions.put("/parameters", new String[] {"GET"});
+		routeOptions.put("/method_options", new String[] {"GET", "HEAD", "POST", "OPTIONS", "PUT"});
+		routeOptions.put("/form", new String[] {"POST", "PUT"});
 	}
 
 	public static String[] getDirectoryListing(String directoryName) {
@@ -26,3 +30,4 @@ public class Routes {
 		return directory.list();
 	}
 }
+		

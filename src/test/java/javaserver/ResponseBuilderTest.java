@@ -26,11 +26,6 @@ public class ResponseBuilderTest {
 	String fourOhFour= HTTPStatusCode.FOUR_OH_FOUR.getStatusLine();
 	String fourOhFive= HTTPStatusCode.FOUR_OH_FIVE.getStatusLine();
 
-	@Before
-	public void setUp() {
-		App.configureRoutes();
-	}
-	
 	private Response createResponse(String requestMethod, String route) {
 		Request request = new Request(requestMethod, route);
 		ResponseBuilder responder = ResponseBuilderFactory.createResponder(request);

@@ -22,7 +22,6 @@ public class ClientWorkerTest extends TestCase {
 
 	@Before
 	public void setUp() throws Exception {
-  		App.configureRoutes();
 	    Reader reader = new Reader(stubRequestReader(simpleGet));
 	    MockSocketWriter mockWriter = new MockSocketWriter(mockOutputStream());
 	    testClientWorker = new ClientWorker(reader, mockWriter);

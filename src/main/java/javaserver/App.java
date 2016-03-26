@@ -11,16 +11,11 @@ public class App {
 
 	public static void main(String[] args) throws IOException {
 		setUpServer();
-		configureRoutes();
 		runServer(server);
 	}
 
 	protected static void setUpServer() throws IOException {
 		server = new Server(new ServerSocket(PORT), new ThreadManager());
-	}
-
-	protected static void configureRoutes() {
-		Routes.configure();
 	}
 
 	protected static void runServer(Server server) throws IOException {

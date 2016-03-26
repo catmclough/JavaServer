@@ -29,11 +29,6 @@ public class AppTest extends TestCase{
 		assertNotNull(App.server);
 	}
 
-	public void testRouteConfigurations() throws IOException {
-		App.configureRoutes();
-		assertFalse(Routes.acceptableRoutes.isEmpty());
-	}
-
 	public void testRunsServer() throws IOException {
 		App.runServer(mockServer);
 		assertTrue(mockServer.isRunning);
