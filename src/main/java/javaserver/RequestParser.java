@@ -13,7 +13,24 @@ public class RequestParser {
 	}
 
 	public static String getRequestURI(String rawRequest) {
-		return splitRequest(rawRequest)[1];
+		try {
+			return splitRequest(rawRequest)[1];
+		} catch (ArrayIndexOutOfBoundsException e) {
+			return "";
+		}
+	}
+
+	protected static String getURIWithoutParams(String uri) {
+		if (requestHasParams(uri)) {
+			String[] routeParts = uri.split("\\?", 2);
+			return routeParts[0];
+		} else {
+			return uri;
+		}
+	}
+
+	private static boolean requestHasParams(String uri) {
+		return uri.contains("?");
 	}
 
 	private static String[] splitRequest(String rawRequest) {

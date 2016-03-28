@@ -15,10 +15,11 @@ import org.junit.Test;
 import junit.framework.TestCase;
 
 public class ClientWorkerTest extends TestCase {
-	Socket testClientSocket;
-	ClientWorker testClientWorker;
-	String simpleGet = "GET / HTTP/1.1\r\n";
-	String blankRequest = "";
+
+	private Socket testClientSocket;
+	private ClientWorker testClientWorker;
+	private String simpleGet = "GET / HTTP/1.1\r\n";
+	private String blankRequest = "";
 
 	@Before
 	public void setUp() throws Exception {

@@ -1,24 +1,32 @@
 package javaserver.ResponseBuilders;
 
 import java.io.UnsupportedEncodingException;
+import java.util.Arrays;
 
 import javaserver.HTTPStatusCode;
 import javaserver.Request;
+import javaserver.Response;
+import javaserver.Routes;
 
-public class ParameterResponseBuilder extends ResponseBuilder {
+public class ParameterResponseBuilder implements ResponseBuilder {
 
-	public ParameterResponseBuilder(Request request) {
-		super(request);
+	private Response response;
+
+	@Override
+	public Response getResponse(Request request) {
+		this.response = new Response();
+		setResponseData(request);
+		return this.response;
 	}
 
 	@Override
-	protected void setResponseData() {
-		response.setStatusLine(getStatusLine());
-		response.setBody(decodedParameterBody());
+	public void setResponseData(Request request) {
+		response.setStatusLine(getStatusLine(request));
+		response.setBody(decodedParameterBody(request));
 	}
 
 	@Override
-	protected String getStatusLine() {
+	public String getStatusLine(Request request) {
 		HTTPStatusCode responseCode;
 		if (requestIsSupported(request.getMethod(), request.getURIWithoutParams())) {
 			responseCode = HTTPStatusCode.TWO_HUNDRED;
@@ -28,17 +36,20 @@ public class ParameterResponseBuilder extends ResponseBuilder {
 		return responseCode.getStatusLine();
 	}
 
-	private String decodedParameterBody() {
+	private boolean requestIsSupported(String method, String requestURI) {
+		return Arrays.asList(Routes.routeOptions.get(requestURI)).contains(method);
+	}
+
+	private String decodedParameterBody(Request request) {
 		String body = "";
-		for (String parameterVar : splitParameters()) {
+		for (String parameterVar : splitParameters(request.getURI())) {
 			body += decodeParameter(parameterVar) + System.lineSeparator();
 		}
 		return body;
 	}
-	
-	
-	public String[] splitParameters() {
-		String query = separateParams();
+
+	public String[] splitParameters(String uri) {
+		String query = getParams(uri);
 		query = query.replace("=", " = ");
 		return query.split("&");
 	}
@@ -53,13 +64,9 @@ public class ParameterResponseBuilder extends ResponseBuilder {
 		return parameterLine;
 	}
 
-	private String separateRoute() {
-		String[] routeParts = request.getURI().split("\\?", 2);
-		return routeParts[0];
-	}
-
-	private String separateParams() {
-		String[] routeParts = request.getURI().split("\\?", 2);
+	private String getParams(String uri) {
+		String[] routeParts = uri.split("\\?", 2);
 		return routeParts[1];
 	}
+
 }

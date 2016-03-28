@@ -3,16 +3,19 @@ package javaserver;
 import java.io.File;
 import java.util.HashMap;
 
+import javaserver.ResponseBuilders.*;
+
 public class Routes {
-	public static HashMap<String, String> routeHandlers = new HashMap<String, String>(); 
+
+	public static HashMap<String, ResponseBuilder> routeResponders = new HashMap<String, ResponseBuilder>();
 	static {
-		routeHandlers.put("/", "Directory Handler");
-		routeHandlers.put("/parameters", "Parameter Handler");
-		routeHandlers.put("/method_options", "Option Handler");
-		routeHandlers.put("/form", "Form Handler");
-		routeHandlers.put("/redirect", "Redirect Handler");
+		routeResponders.put("/", new DirectoryResponseBuilder());
+		routeResponders.put("/parameters", new ParameterResponseBuilder());
+		routeResponders.put("/method_options", new OptionResponseBuilder());
+		routeResponders.put("/form", new FormResponseBuilder());
+		routeResponders.put("/redirect", new RedirectResponseBuilder());
 		for (String file : getDirectoryListing("public")) {
-			routeHandlers.put("/" + file, "File Handler");
+			routeResponders.put("/" + file, new FileResponseBuilder());
 		}
 	}
 
@@ -23,6 +26,9 @@ public class Routes {
 		routeOptions.put("/parameters", new String[] {"GET"});
 		routeOptions.put("/method_options", new String[] {"GET", "HEAD", "POST", "OPTIONS", "PUT"});
 		routeOptions.put("/form", new String[] {"POST", "PUT"});
+		for (String file : getDirectoryListing("public")) {
+			routeOptions.put("/" + file, new String[] {"GET"});
+		}
 	}
 
 	public static String[] getDirectoryListing(String directoryName) {
@@ -30,4 +36,3 @@ public class Routes {
 		return directory.list();
 	}
 }
-		

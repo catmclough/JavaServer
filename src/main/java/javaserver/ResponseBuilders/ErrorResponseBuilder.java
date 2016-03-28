@@ -1,14 +1,11 @@
 package javaserver.ResponseBuilders;
 
-import java.util.Arrays;
 
 import javaserver.HTTPStatusCode;
 import javaserver.Request;
 import javaserver.Response;
-import javaserver.Routes;
 
-public class FormResponseBuilder implements ResponseBuilder {
-
+public class ErrorResponseBuilder implements ResponseBuilder {
 	private Response response;
 
 	@Override
@@ -25,16 +22,7 @@ public class FormResponseBuilder implements ResponseBuilder {
 
 	@Override
 	public String getStatusLine(Request request) {
-		HTTPStatusCode responseCode;
-		if (requestIsSupported(request.getMethod(), request.getURI())) {
-			responseCode = HTTPStatusCode.TWO_HUNDRED;
-		} else {
-			responseCode = HTTPStatusCode.FOUR_OH_FOUR;
-		}
+		HTTPStatusCode responseCode = HTTPStatusCode.FOUR_OH_FOUR;
 		return responseCode.getStatusLine();
-	}
-
-	private boolean requestIsSupported(String method, String requestURI) {
-		return Arrays.asList(Routes.routeOptions.get(requestURI)).contains(method);
 	}
 }

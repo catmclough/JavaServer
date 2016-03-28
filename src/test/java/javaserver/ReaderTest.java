@@ -12,6 +12,7 @@ import java.io.ByteArrayInputStream;
 
 
 public class ReaderTest {
+
 	private Reader testReader;
 	private BufferedReader testBufferedReader;
 	private String simpleRequestLine = "GET /";

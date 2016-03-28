@@ -1,6 +1,7 @@
 package javaserver;
 
 public class Request {
+
 	private String method;
 	private String uri;
 

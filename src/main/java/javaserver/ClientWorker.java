@@ -2,12 +2,13 @@ package javaserver;
 
 import java.io.IOException;
 
+import javaserver.ResponseBuilders.ErrorResponseBuilder;
 import javaserver.ResponseBuilders.ResponseBuilder;
 
 public class ClientWorker implements Runnable {
+
 	private Reader reader;
 	public SocketWriter writer;
-	private ResponseBuilder responder;
 
 	ClientWorker(Reader reader, SocketWriter writer) {
 		this.reader = reader;
@@ -17,8 +18,10 @@ public class ClientWorker implements Runnable {
 	public void run() {
 		String rawRequest = getRequest();
 		Request request = RequestParser.createRequest(rawRequest);
-		this.responder = ResponseBuilderFactory.createResponder(request);
-		writer.respond(responder.getResponse().formatResponse());
+		ResponseBuilder responder = Routes.routeResponders.get(request.getURI());
+		if (responder == null)
+			responder = new ErrorResponseBuilder();
+		writer.respond(responder.getResponse(request).formatResponse());
 	}
 
 	private String getRequest() {

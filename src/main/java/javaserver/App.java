@@ -4,9 +4,9 @@ import java.io.IOException;
 import java.net.ServerSocket;
 
 public class App {
+
 	protected static final int PORT = 5000;
 	protected static Server server;
-
 	protected static boolean isOn = false;
 
 	public static void main(String[] args) throws IOException {
