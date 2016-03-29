@@ -8,7 +8,8 @@ import org.junit.BeforeClass;
 import junit.framework.TestCase;
 
 public class AppTest extends TestCase{
-	App testApp;
+
+	private App testApp;
 	private ServerSocket socket;
 	private MockServer mockServer;
 	private static int defaultPort = 5000;

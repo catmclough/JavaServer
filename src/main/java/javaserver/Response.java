@@ -1,6 +1,7 @@
 package javaserver;
 
 public class Response {
+
 	private String statusLine;
 	private String header;
 	private String body;

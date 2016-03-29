@@ -12,6 +12,7 @@ import org.junit.Test;
 import junit.framework.TestCase;
 
 public class ServerTest extends TestCase {
+
 	private Server testServer;
 	private ServerSocket mockedServerSocket;
 	private MockThreadManager mockThreadManager;
@@ -56,7 +57,7 @@ public class ServerTest extends TestCase {
 		testServer.run();
 		assertTrue(mockThreadManager.getOpenedThreads() > 0);
 	}
-	
+
 
 	@Test
 	public void testCanCreateMultipleThreads() throws IOException {
@@ -76,7 +77,7 @@ public class ServerTest extends TestCase {
 		}
 		assertFalse("Server's ServerSocket failed to close", caughtError);
 	}
-
+	
 	class MockServerSocket extends ServerSocket {
 		private int port;
 
@@ -91,7 +92,7 @@ public class ServerTest extends TestCase {
 		  return mockedClientSocket;
 		}
 	}
-	
+
 	class MockSocketWriter extends SocketWriter {
 		MockSocketWriter(DataOutputStream mockOutputStream) {
 		 	super(mockOutputStream);
@@ -109,12 +110,12 @@ public class ServerTest extends TestCase {
 		MockThreadManager() {
 			super();
 		}
-		
+
 		@Override
 		public void openNewThread(Reader reader, SocketWriter writer) {
 			openedThreads++;
 		}
-		
+
 		public int getOpenedThreads() {
 			return this.openedThreads;
 		}
