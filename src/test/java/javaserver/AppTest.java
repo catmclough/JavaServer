@@ -8,7 +8,8 @@ import org.junit.BeforeClass;
 import junit.framework.TestCase;
 
 public class AppTest extends TestCase{
-	App testApp;
+
+	private App testApp;
 	private ServerSocket socket;
 	private MockServer mockServer;
 	private static int defaultPort = 5000;
@@ -27,11 +28,6 @@ public class AppTest extends TestCase{
 	public void testServerCreation() throws IOException {
 		App.setUpServer();
 		assertNotNull(App.server);
-	}
-
-	public void testRouteConfigurations() throws IOException {
-		App.configureRoutes();
-		assertFalse(Routes.supportedRouteRequests.isEmpty());
 	}
 
 	public void testRunsServer() throws IOException {

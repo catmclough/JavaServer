@@ -12,15 +12,46 @@ import java.io.ByteArrayInputStream;
 
 
 public class ReaderTest {
+
 	private Reader testReader;
 	private BufferedReader testBufferedReader;
-	private String exampleRequestMessage = "GET /example HTTP/1.1\r\n\r\n\"Data\"=\"My Info\"";
+	private String simpleRequestLine = "GET /";
+	private String requestWithData = "POST /form HTTP/1.1\n\n\"Data\"=\"My Info\"";
+<<<<<<< HEAD
 
 	@Test
-	public void testReaderReadsFullMessage() throws IOException {
-		ByteArrayInputStream inputStream = new ByteArrayInputStream(exampleRequestMessage.getBytes());
+	public void testReaderReadsSimpleRequestLine() throws IOException {
+		ByteArrayInputStream inputStream = new ByteArrayInputStream(simpleRequestLine.getBytes());
 		testBufferedReader = new BufferedReader(new InputStreamReader(inputStream));
 		testReader = new Reader(testBufferedReader);
-		assertEquals("Simple request line was not properly read", testReader.readFromSocket(), exampleRequestMessage);
+
+		assertEquals("Simple request line was not properly read", testReader.readFromSocket(), simpleRequestLine);
+	}
+
+	@Test
+	public void testReaderReadsMessageWithData() throws IOException {
+		ByteArrayInputStream inputStream = new ByteArrayInputStream(requestWithData.getBytes());
+		testBufferedReader = new BufferedReader(new InputStreamReader(inputStream));
+		testReader = new Reader(testBufferedReader);
+
+=======
+
+	@Test
+	public void testReaderReadsSimpleRequestLine() throws IOException {
+		ByteArrayInputStream inputStream = new ByteArrayInputStream(simpleRequestLine.getBytes());
+		testBufferedReader = new BufferedReader(new InputStreamReader(inputStream));
+		testReader = new Reader(testBufferedReader);
+
+		assertEquals("Simple request line was not properly read", testReader.readFromSocket(), simpleRequestLine);
+	}
+
+	@Test
+	public void testReaderReadsMessageWithData() throws IOException {
+		ByteArrayInputStream inputStream = new ByteArrayInputStream(requestWithData.getBytes());
+		testBufferedReader = new BufferedReader(new InputStreamReader(inputStream));
+		testReader = new Reader(testBufferedReader);
+
+>>>>>>> squash-commits
+		assertEquals("Request with data was not properly read", testReader.readFromSocket(), requestWithData);
 	}
 }
