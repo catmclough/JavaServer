@@ -15,61 +15,97 @@ public class ResponseBuilderTest {
 
 	String codedURI = "/parameters?variable_1=Operators%20%3C%2C%20%3E%2C%20%3D%2C%20!%3D%3B%20%2B%2C%20-%2C%20*%2C%20%26%2C%20%40%2C%20%23%2C%20%24%2C%20%5B%2C%20%5D%3A%20%22is%20that%20all%22%3F&variable_2=stuff";
 
-	Request requestWithCodedParams = new Request("GET", codedURI);
-	Request acceptableRequest =  new Request("GET", "/form");
-	Request unacceptableRequest = new Request("GET", "/foo");
-	Request requestWithOptions = new Request("GET", "/method_options");
-	
-	String methodOptionsHeader = "Allow: GET,HEAD,POST,OPTIONS,PUT";
-	String twoHundred = HTTPStatusCode.TWO_HUNDRED.getStatusLine();
-	String fourOhFour= HTTPStatusCode.FOUR_OH_FOUR.getStatusLine();
+	private String methodOptionsHeader = "Allow: GET,HEAD,POST,OPTIONS,PUT";
+	private String redirectHeader = "Location: http://localhost:5000/";
 
+	private String twoHundred = HTTPStatusCode.TWO_HUNDRED.getStatusLine();
+	private String threeOhTwo = HTTPStatusCode.THREE_OH_TWO.getStatusLine();
+	private String fourOhFour= HTTPStatusCode.FOUR_OH_FOUR.getStatusLine();
+	private String fourOhFive= HTTPStatusCode.FOUR_OH_FIVE.getStatusLine();
 
-	@Before
-	public void setUp() {
-		App.configureRoutes();
+	private Response createResponse(String requestLine) {
+		Request request = RequestParser.createRequest(requestLine);
+		ResponseBuilder responder = Routes.routeResponders.get(RequestParser.getURIWithoutParams(request.getURI()));
+		if (responder == null)
+			responder = new ErrorResponseBuilder();
+		return responder.getResponse(request);
 	}
 
 	@Test
-	public void testCreatesResponseWithResponseCode() {
-		ResponseBuilder responder = new ResponseBuilder(acceptableRequest);
-		Response response = responder.getResponse();
-		assertNotNull(response.getResponseCode());
-	}
-
-	@Test
-	public void testCreatesResponseWithHeader() {
-		ResponseBuilder responder = new ResponseBuilder(acceptableRequest);
-		Response response = responder.getResponse();
-		assertNotNull(response.getHeader());
-	}
-
-	@Test
-	public void testCreatesResponseWithBody() {
-		ResponseBuilder responder = new ResponseBuilder(acceptableRequest);
-		Response response = responder.getResponse();
-		assertNotNull(response.getBody());
-	}
-
-	@Test
-	public void testTwoHundredResponseCode() throws IOException {
-		ResponseBuilder responder = new ResponseBuilder(acceptableRequest);
-		Response response = responder.getResponse();
+	public void testRespondsWith200() {
+		Response response = createResponse("GET /");
 		assertEquals(response.getResponseCode(), twoHundred);
 	}
 
 	@Test
+	public void testRedirectRespondsWith302() {
+		Response response = createResponse("GET /redirect");
+		assertEquals(response.getResponseCode(), threeOhTwo);
+	}
+
+	@Test
 	public void testFourOhFourResponseCode() throws IOException {
-		ResponseBuilder responder = new ResponseBuilder(unacceptableRequest);
-		Response response = responder.getResponse();
-		assertEquals(response.getResponseCode(), fourOhFour);
+		Response unsupportedRequestResponse = createResponse("GET /foo");
+		assertEquals(unsupportedRequestResponse.getResponseCode(), fourOhFour);
+	}
+		
+	@Test
+	public void testAcceptableFileRequest() throws IOException {
+		Response response = createResponse("GET /file1");
+		assertEquals(response.getResponseCode(), twoHundred);
+	}
+
+	@Test
+	public void testThreeOhTwoResponseCode() throws IOException {
+		Response response = createResponse("GET /redirect");
+		assertEquals(response.getResponseCode(), threeOhTwo);
+	}
+	
+	public void testSimplePost() {
+		Response postFormResponse = createResponse("POST /form");
+		assertEquals(postFormResponse.getResponseCode(), twoHundred);
+	}
+
+	@Test
+	public void testSimplePut() {
+		Response postFormResponse = createResponse("PUT /form");
+		assertEquals(postFormResponse.getResponseCode(), twoHundred);
+	}
+
+	@Test
+	public void testMethodNotAllowedResponseCode() throws IOException {
+		Response unallowedRequestResponse = createResponse("POST /file1");
+		assertEquals(unallowedRequestResponse.getResponseCode(), fourOhFive);
+	}
+
+	@Test
+	public void testOptionsResponseCode() throws IOException {
+		Response optionsResponse = createResponse("GET /method_options");
+		assertEquals(optionsResponse.getResponseCode(), twoHundred);
 	}
 
 	@Test
 	public void testOptionsHeader() throws IOException {
-		ResponseBuilder responder = new ResponseBuilder(requestWithOptions);
-		Response response = responder.getResponse();
-		assertEquals(response.getHeader(), methodOptionsHeader);
+		Response optionsResponse = createResponse("GET /method_options");
+		assertEquals(optionsResponse.getHeader(), methodOptionsHeader);
+	}
+
+	@Test
+	public void testRedirectHeader() throws IOException {
+		Response redirectResponse = createResponse("GET /redirect");
+		assertEquals(redirectResponse.getHeader(), redirectHeader);
+	}
+
+	@Test
+	public void testValidCodedParameters200() {
+		Response validParamsResponse = createResponse("GET " + codedURI);
+		assertEquals(validParamsResponse.getResponseCode(), twoHundred);
+	}
+
+	@Test
+	public void testInvalidCodedParams404() {
+		Response invalidParamResponse = createResponse("GET /foo?");
+		assertEquals(invalidParamResponse.getResponseCode(), fourOhFour);
 	}
 
 	@Test
