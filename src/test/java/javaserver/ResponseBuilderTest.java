@@ -117,9 +117,26 @@ public class ResponseBuilderTest {
 	}
 
 	@Test
-	public void testCodedParamsGets200Response() {
-		ResponseBuilder responder = new ResponseBuilder(requestWithCodedParams);
-		Response response = responder.getResponse();
-		assertEquals(response.getResponseCode(), twoHundred);
+	public void testHTMLHeader() {
+		Response getRootResponse = createResponse("GET /");
+		assertEquals(getRootResponse.getHeader(), "Content-Type: text/html;");
+	}
+
+	@Test
+	public void testDirectoryLinks() {
+		Response getRootResponse = createResponse("GET /");
+		String responseBody = getRootResponse.getBody();
+
+		File publicDirectory = new File("public");
+		String[] publicFileNames = publicDirectory.list();
+
+		String listOfDirectoryLinks = HTMLContent.listOfLinks(publicFileNames);
+		assertTrue(responseBody.contains(listOfDirectoryLinks));
+	}
+
+	@Test
+	public void testRespondsToCrazyRequest() {
+		Response response = createResponse("clakjflk aslkgfhaglk");
+		assertEquals(response.getResponseCode(), fourOhFour);
 	}
 }

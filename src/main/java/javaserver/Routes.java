@@ -1,5 +1,6 @@
 package javaserver;
 
+import java.io.File;
 import java.util.HashMap;
 
 public class Routes {
@@ -16,8 +17,17 @@ public class Routes {
 		routeOptions.put("/method_options", SUPPORTED_METHOD_OPTIONS);
 	}
 
-	public static String[] getOptions(String route) {
-		return routeOptions.get(route);
+	public static String getPublicFileNames() {
+		String listing = "";
+		String[] publicFiles = getDirectoryListing("public");
+		for (String file: publicFiles) {
+			listing += file + System.lineSeparator();
+		}
+		return listing;
+	}
+
+	public static String[] getDirectoryListing(String directoryName) {
+		File directory = new File(directoryName);
+		return directory.list();
 	}
 }
-
