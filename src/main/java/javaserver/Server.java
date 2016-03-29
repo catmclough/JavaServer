@@ -26,6 +26,7 @@ public class Server {
 		acceptClient();
 		setReaderAndWriter();
 		threadManager.openNewThread(this.reader, this.writer);
+		clientSocket.close();
 	}
 
 	public void shutDown() throws IOException {

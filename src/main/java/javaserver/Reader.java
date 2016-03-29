@@ -4,8 +4,8 @@ import java.io.BufferedReader;
 import java.io.IOException;
 
 public class Reader {
+
 	private BufferedReader readingMechanism;
-	private int minRequestLength = 1;
 	private char lastCharOfRequest = (char) -1;
 
 	Reader(BufferedReader readingMechanism) {
@@ -13,17 +13,31 @@ public class Reader {
 	}
 
 	public String readFromSocket() throws IOException {
-		char nextChar;
 		String fullRequest = "";
-		while (readingMechanism.ready() || fullRequest.length() < minRequestLength) {
-			nextChar = read();
+		fullRequest += getRequestLine();
+		if (readingMechanism.ready()) {
+			fullRequest += System.lineSeparator();
+			fullRequest += getData();
+		}
+		readingMechanism.close();
+		return fullRequest;
+	}
+
+	private String getRequestLine() throws IOException {
+		return readingMechanism.readLine();
+	}
+
+	private String getData() throws IOException {
+		String data = "";
+		while (readingMechanism.ready()) {
+			char nextChar = read();
 			if (nextChar != lastCharOfRequest) {
-				fullRequest += nextChar;
+				data += nextChar;
 			} else {
 				break;
 			}
 		}
-		return fullRequest;
+		return data;
 	}
 
 	private char read() throws IOException {

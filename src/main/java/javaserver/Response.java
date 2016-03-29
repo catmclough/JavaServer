@@ -30,10 +30,14 @@ public class Response {
 	}
 
 	public String formatResponse() {
-		String output = getResponseCode() + System.lineSeparator();
-		output += getHeader() + System.lineSeparator();
+		String output = statusLine + System.lineSeparator();
+		if (header != null) {
+			output += header + System.lineSeparator();
+		}
 		output += System.lineSeparator();
-		output += getBody() + System.lineSeparator();
+		if (body != null) {
+			output += body + System.lineSeparator();
+		}
 		return output;
 	}
 }
