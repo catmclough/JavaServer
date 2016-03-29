@@ -2,10 +2,13 @@ package javaserver;
 
 import java.io.IOException;
 
+import javaserver.ResponseBuilders.ErrorResponseBuilder;
+import javaserver.ResponseBuilders.ResponseBuilder;
+
 public class ClientWorker implements Runnable {
+
 	private Reader reader;
 	public SocketWriter writer;
-	private ResponseBuilder responder;
 
 	ClientWorker(Reader reader, SocketWriter writer) {
 		this.reader = reader;
