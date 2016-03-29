@@ -14,29 +14,26 @@ import org.junit.Test;
 import junit.framework.TestCase;
 
 public class ClientWorkerTest extends TestCase {
-	Socket testClientSocket;
-	ClientWorker testClientWorker;
-	BufferedReader mockGetReader;
+
+	private ClientWorker testClientWorker;
+	String simpleGet = "GET / HTTP/1.1\r\n";
 
 	@Before
 	public void setUp() throws Exception {
-		App.configureRoutes();
-		Reader reader = new Reader(stubGetRequestReader());
-		MockSocketWriter mockWriter = new MockSocketWriter(mockOutputStream());
-		this.testClientWorker = new ClientWorker(reader, mockWriter);
+	    Reader reader = new Reader(stubRequestReader(simpleGet));
+	    MockSocketWriter mockWriter = new MockSocketWriter(mockOutputStream());
+	    testClientWorker = new ClientWorker(reader, mockWriter);
 	}
 
 	@Test
 	public void testRun() throws IOException {
 	  testClientWorker.run();
-	  String twoHundredResponse = HTTPStatusCode.TWO_HUNDRED.getStatusLine();
-	  assertTrue(testClientWorker.writer.latestResponse.contains(twoHundredResponse));
+	  String twoHundred = HTTPStatusCode.TWO_HUNDRED.getStatusLine();
+	  assertTrue(testClientWorker.writer.latestResponse.contains(twoHundred));
 	}
 
-
-	private BufferedReader stubGetRequestReader() {
-		String getRequest = "GET / HTTP/1.1\r\n";
-		InputStream stubInputStreamWithGet = new ByteArrayInputStream(getRequest.getBytes());
+	private BufferedReader stubRequestReader(String requestLine) {
+		InputStream stubInputStreamWithGet = new ByteArrayInputStream(requestLine.getBytes());
 		InputStreamReader inputReader = new InputStreamReader(stubInputStreamWithGet);
 		return new BufferedReader(inputReader);
 	}
