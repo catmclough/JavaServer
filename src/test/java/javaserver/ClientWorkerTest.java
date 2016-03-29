@@ -15,6 +15,7 @@ import org.junit.Test;
 import junit.framework.TestCase;
 
 public class ClientWorkerTest extends TestCase {
+<<<<<<< HEAD
 
 	private Socket testClientSocket;
 	private ClientWorker testClientWorker;
@@ -23,6 +24,16 @@ public class ClientWorkerTest extends TestCase {
 
 	@Before
 	public void setUp() throws Exception {
+=======
+	Socket testClientSocket;
+	ClientWorker testClientWorker;
+	String simpleGet = "GET / HTTP/1.1\r\n";
+	String blankRequest = "";
+
+	@Before
+	public void setUp() throws Exception {
+  		App.configureRoutes();
+>>>>>>> squash-commits
 	    Reader reader = new Reader(stubRequestReader(simpleGet));
 	    MockSocketWriter mockWriter = new MockSocketWriter(mockOutputStream());
 	    testClientWorker = new ClientWorker(reader, mockWriter);

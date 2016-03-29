@@ -9,8 +9,6 @@ import javaserver.Routes;
 
 public class OptionResponseBuilder implements ResponseBuilder {
 
-	private Response response;
-
 	@Override
 	public Response getResponse(Request request) {
 		this.response = new Response();
@@ -47,5 +45,4 @@ public class OptionResponseBuilder implements ResponseBuilder {
 		}
 		return header;
 	}
-
 }

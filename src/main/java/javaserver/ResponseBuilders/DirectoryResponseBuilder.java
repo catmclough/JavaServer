@@ -12,13 +12,13 @@ public class DirectoryResponseBuilder implements ResponseBuilder {
 
 	private Response response;
 	private String directory = "public";
-	
+
 	@Override
 	public Response getResponse(Request request) {
 		this.response = new Response();
 		setResponseData(request);
 		return this.response;
-	}
+  }
 
 	@Override
 	public void setResponseData(Request request) {

@@ -17,7 +17,6 @@ public class RedirectResponseBuilder implements ResponseBuilder {
 		this.response = new Response();
 		setResponseData(request);
 		return this.response;
-	}
 
 	@Override
 	public void setResponseData(Request request) {
