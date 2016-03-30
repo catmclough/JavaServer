@@ -10,6 +10,7 @@ import org.junit.Before;
 import org.junit.Test;
 
 public class SocketWriterTest {
+
 	private static SocketWriter testWriter;
 	private static String standardResponse = "200 A-OKAY";
 

@@ -4,6 +4,7 @@ import java.io.DataOutputStream;
 import java.io.IOException;
 
 public class SocketWriter {
+
 	private DataOutputStream writingMechanism;
 	public boolean isOutputStreamOpen = true;
 	public String latestResponse;
@@ -12,8 +13,12 @@ public class SocketWriter {
 		this.writingMechanism = dataOutput;
 	}
 
-	public void respond(String response) throws IOException {
-		writingMechanism.writeBytes(response);
+	public void respond(String response) {
+		try {
+			writingMechanism.writeBytes(response);
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
 		this.latestResponse = response;
 		closeOutputStream();
 	}

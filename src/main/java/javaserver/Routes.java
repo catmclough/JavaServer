@@ -1,40 +1,38 @@
 package javaserver;
 
+import java.io.File;
 import java.util.HashMap;
 
+import javaserver.ResponseBuilders.*;
+
 public class Routes {
-	public static final String[] FILES = {"/file1", "/text-file.txt"};
 
-	private static final String[] SUPPORTED_ROOT_REQUESTS = {"GET"};
-	private static final String[] SUPPORTED_FORM_REQUESTS = {"GET", "POST", "PUT"};
-	private static final String[] SUPPORTED_METHOD_OPTIONS = {"GET", "HEAD", "POST", "OPTIONS", "PUT"};
-	private static final String[] SUPPORTED_FILE_REQUESTS = {"GET"};
-
-	private static final String[] FOUND_REDIRECT_REQUESTS = {"GET"};
-
-	public static HashMap<String, String[]> supportedRouteRequests;
-	public static HashMap<String, String[]> foundRouteRequests;
-
-	public static void configure() {
-		supportedRouteRequests = new HashMap<String, String[]>();
-		supportedRouteRequests.put("/", SUPPORTED_ROOT_REQUESTS);
-		supportedRouteRequests.put("/form", SUPPORTED_FORM_REQUESTS);
-		supportedRouteRequests.put("/method_options", SUPPORTED_METHOD_OPTIONS);
-		for (String fileRoute : FILES) {
-			supportedRouteRequests.put(fileRoute, SUPPORTED_FILE_REQUESTS);
+	public static HashMap<String, ResponseBuilder> routeResponders = new HashMap<String, ResponseBuilder>();
+	static {
+		routeResponders.put("/", new DirectoryResponseBuilder());
+		routeResponders.put("/parameters", new ParameterResponseBuilder());
+		routeResponders.put("/method_options", new OptionResponseBuilder());
+		routeResponders.put("/form", new FormResponseBuilder());
+		routeResponders.put("/redirect", new RedirectResponseBuilder());
+		for (String file : getDirectoryListing("public")) {
+			routeResponders.put("/" + file, new FileResponseBuilder());
 		}
-
-		foundRouteRequests = new HashMap<String, String[]>();
-		foundRouteRequests.put("/redirect", FOUND_REDIRECT_REQUESTS);
 	}
 
-	public static String[] getOptions(String route) {
-		if (supportedRouteRequests.get(route) != null) {
-			return supportedRouteRequests.get(route);
-		} else if (foundRouteRequests.get(route) != null) {
-			return foundRouteRequests.get(route);
-		} else {
-			return null;
+	public static HashMap<String, String[]> routeOptions = new HashMap<String, String[]>();
+	static {
+		routeOptions.put("/", new String[] {"GET"});
+		routeOptions.put("/redirect", new String[] {"GET"});
+		routeOptions.put("/parameters", new String[] {"GET"});
+		routeOptions.put("/method_options", new String[] {"GET", "HEAD", "POST", "OPTIONS", "PUT"});
+		routeOptions.put("/form", new String[] {"POST", "PUT"});
+		for (String file : getDirectoryListing("public")) {
+			routeOptions.put("/" + file, new String[] {"GET"});
 		}
+	}
+
+	public static String[] getDirectoryListing(String directoryName) {
+		File directory = new File(directoryName);
+		return directory.list();
 	}
 }

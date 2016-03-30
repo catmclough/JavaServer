@@ -12,6 +12,7 @@ import org.junit.Test;
 import junit.framework.TestCase;
 
 public class ServerTest extends TestCase {
+
 	private Server testServer;
 	private ServerSocket mockedServerSocket;
 	private MockThreadManager mockThreadManager;
