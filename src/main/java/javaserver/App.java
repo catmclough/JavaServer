@@ -4,23 +4,18 @@ import java.io.IOException;
 import java.net.ServerSocket;
 
 public class App {
+
 	protected static final int PORT = 5000;
 	protected static Server server;
-
 	protected static boolean isOn = false;
 
 	public static void main(String[] args) throws IOException {
 		setUpServer();
-		configureRoutes();
 		runServer(server);
 	}
 
 	protected static void setUpServer() throws IOException {
 		server = new Server(new ServerSocket(PORT), new ThreadManager());
-	}
-
-	protected static void configureRoutes() {
-		Routes.configure();
 	}
 
 	protected static void runServer(Server server) throws IOException {

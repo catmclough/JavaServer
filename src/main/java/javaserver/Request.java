@@ -1,12 +1,13 @@
 package javaserver;
 
 public class Request {
-	String method;
-	String URI;
 
-	Request(String method, String URI) {
+	private String method;
+	private String uri;
+
+	Request(String method, String uri) {
 		this.method = method;
-		this.URI = URI;
+		this.uri = uri;
 	}
 
 	public String getMethod() {
@@ -14,14 +15,15 @@ public class Request {
 	}
 
 	public String getURI() {
-		return URI;
+		return uri;
 	}
 
-	public String[] routeOptions() {
-		return Routes.getOptions(URI);
+	public boolean hasParams() {
+		return uri.contains("?");
 	}
 
-	public boolean hasVariableParams() {
-		return URI.contains("?");
+	public String getURIWithoutParams() {
+		String[] routeParts = uri.split("\\?", 2);
+		return routeParts[0];
 	}
 }
