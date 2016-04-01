@@ -19,15 +19,12 @@ public class Routes {
 		}
 	}
 
-	public static HashMap<String, String[]> routeOptions = new HashMap<String, String[]>();
-	static {
-		routeOptions.put("/", new String[] {"GET"});
-		routeOptions.put("/redirect", new String[] {"GET"});
-		routeOptions.put("/parameters", new String[] {"GET"});
-		routeOptions.put("/method_options", new String[] {"GET", "HEAD", "POST", "OPTIONS", "PUT"});
-		routeOptions.put("/form", new String[] {"POST", "PUT"});
-		for (String file : getDirectoryListing("public")) {
-			routeOptions.put("/" + file, new String[] {"GET"});
+	public static Responder getResponder(String route) {
+		Responder responder = routeResponders.get(route);
+		if (responder == null) {
+			return new ErrorResponder();
+		} else {
+			return responder;
 		}
 	}
 
