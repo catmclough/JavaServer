@@ -27,9 +27,4 @@ public class Routes {
 			return responder;
 		}
 	}
-
-	public static String[] getDirectoryListing(String directoryName) {
-		File directory = new File(directoryName);
-		return directory.list();
-	}
 }

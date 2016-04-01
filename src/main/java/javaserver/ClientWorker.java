@@ -1,35 +1,43 @@
 package javaserver;
 
 import java.io.IOException;
-
-import javaserver.ResponseBuilders.ErrorResponseBuilder;
-import javaserver.ResponseBuilders.ResponseBuilder;
+import java.net.Socket;
+import javaserver.ResponseBuilders.Responder;
 
 public class ClientWorker implements Runnable {
 
-	private Reader reader;
-	public SocketWriter writer;
+	private Socket clientSocket;
+	protected Reader reader;
+	protected SocketWriter writer;
 
-	ClientWorker(Reader reader, SocketWriter writer) {
-		this.reader = reader;
-		this.writer = writer;
+	public ClientWorker(Socket clientSocket) {
+		this.clientSocket = clientSocket;
+		this.reader = new Reader();
+		this.writer = new SocketWriter();
 	}
 
 	public void run() {
-		String rawRequest = getRequest();
-		Request request = RequestParser.createRequest(rawRequest);
-		ResponseBuilder responder = Routes.routeResponders.get(request.getURI());
-		if (responder == null)
-			responder = new ErrorResponseBuilder();
-		writer.respond(responder.getResponse(request).formatResponse());
+		reader.openReader(clientSocket);
+		Request request = RequestParser.createRequest(getRequest(reader));
+		Responder responder = Routes.getResponder(request.getURI());
+		Response response = responder.getResponse(request);
+
+		writer.openWriter(clientSocket);
+		writer.respond(response.formatResponse());
+		try {
+			clientSocket.close();
+		} catch (IOException e) {
+			System.out.println("Unable to close client socket ");
+			e.printStackTrace();
+		}
 	}
 
-	private String getRequest() {
+	private String getRequest(Reader reader) {
 		String request = "";
 		try {
 			request = reader.readFromSocket();
-		} catch (IOException e) {
-			System.out.println("Unable to read from socket.");
+		} catch (IOException | NullPointerException e) {
+			System.out.println("Did not get any request from socket.");
 		}
 		return request;
 	}

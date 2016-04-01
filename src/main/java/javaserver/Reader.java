@@ -2,14 +2,22 @@ package javaserver;
 
 import java.io.BufferedReader;
 import java.io.IOException;
+import java.io.InputStreamReader;
+import java.net.Socket;
 
 public class Reader {
 
-	private BufferedReader readingMechanism;
+	protected BufferedReader readingMechanism;
 	private char lastCharOfRequest = (char) -1;
 
-	Reader(BufferedReader readingMechanism) {
-		this.readingMechanism = readingMechanism;
+	public void openReader(Socket clientSocket) {
+		InputStreamReader input;
+		try {
+			input = new InputStreamReader(clientSocket.getInputStream());
+			this.readingMechanism = new BufferedReader(input);
+		} catch (IOException e) {
+			System.out.println("Reader was unable to get input stream" + e.getStackTrace());
+		}
 	}
 
 	public String readFromSocket() throws IOException {
