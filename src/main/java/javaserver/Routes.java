@@ -1,21 +1,19 @@
 package javaserver;
 
-import java.io.File;
 import java.util.HashMap;
-
 import javaserver.ResponseBuilders.*;
 
 public class Routes {
 
-	public static HashMap<String, ResponseBuilder> routeResponders = new HashMap<String, ResponseBuilder>();
+	private static HashMap<String, Responder> routeResponders = new HashMap<String, Responder>();
 	static {
-		routeResponders.put("/", new DirectoryResponseBuilder());
-		routeResponders.put("/parameters", new ParameterResponseBuilder());
-		routeResponders.put("/method_options", new OptionResponseBuilder());
-		routeResponders.put("/form", new FormResponseBuilder());
-		routeResponders.put("/redirect", new RedirectResponseBuilder());
-		for (String file : getDirectoryListing("public")) {
-			routeResponders.put("/" + file, new FileResponseBuilder());
+		routeResponders.put("/", new DirectoryResponder(new String[] {"GET"}, App.publicDirectory));
+		routeResponders.put("/parameters", new ParameterResponder(new String[] {"GET"}));
+		routeResponders.put("/method_options", new OptionResponder(new String[] {"GET", "HEAD", "POST", "OPTIONS", "PUT"}));
+		routeResponders.put("/form", new FormResponder(new String[] {"POST", "PUT"}));
+		routeResponders.put("/redirect", new RedirectResponder(new String[] {"GET"}));
+		for (String file : App.publicDirectory.getDirectoryListing()) {
+			routeResponders.put("/" + file, new FileResponder(new String[] {"GET"}));
 		}
 	}
 

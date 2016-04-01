@@ -6,24 +6,18 @@ public class Response {
 	private String header;
 	private String body;
 
-	public void setStatusLine(String statusLine) {
-		this.statusLine = statusLine;
+	public Response(ResponseBuilder builder) {
+		this.statusLine = builder.statusLine;
+		this.header = builder.header;
+		this.body = builder.body;
 	}
 
 	public String getResponseCode() {
 		return statusLine;
 	}
 
-	public void setHeader(String header) {
-		this.header = header;
-	}
-
 	public String getHeader() {
 		return header;
-	}
-
-	public void setBody(String body) {
-		this.body = body;
 	}
 
 	public String getBody() {
@@ -31,14 +25,18 @@ public class Response {
 	}
 
 	public String formatResponse() {
-		String output = statusLine + System.lineSeparator();
+		String output = newLine(statusLine);
 		if (header != null) {
-			output += header + System.lineSeparator();
+			output += newLine(header);
 		}
-		output += System.lineSeparator();
+		output += newLine("");
 		if (body != null) {
-			output += body + System.lineSeparator();
+			output += newLine(body);
 		}
 		return output;
+	}
+
+	private String newLine(String line) {
+		return line + System.lineSeparator();
 	}
 }
