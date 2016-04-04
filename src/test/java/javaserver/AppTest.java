@@ -70,6 +70,11 @@ public class AppTest extends TestCase{
 		assertEquals(App.publicDirectory.getDirectoryName(), existingDirectory);
 	}
 
+	public void testFormatsRouteName() throws IOException {
+		App.setUpServer(new String[] {"-D", "/" + existingDirectory + "/"});
+		assertEquals(App.publicDirectory.getRoute(), existingDirectory + "/");
+	}
+
 	public void testSetsPublicDirectoryInRoutes() throws IOException {
 		App.setUpServer(new String[] {"-D", existingDirectory});
 		assertEquals(App.publicDirectory.getDirectoryName(), existingDirectory);

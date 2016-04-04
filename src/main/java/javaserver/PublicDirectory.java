@@ -17,9 +17,13 @@ public class PublicDirectory {
 
 	public String getRoute() {
 		if (route.startsWith("/")) {
+			route = route.substring(1);
+		}
+
+		if (route.endsWith("/")) {
 			return route;
 		} else {
-			return "/" + route;
+			return route + "/";
 		}
 	}
 
