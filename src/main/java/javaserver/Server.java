@@ -1,50 +1,39 @@
 package javaserver;
 
-import java.io.BufferedReader;
-import java.io.DataOutputStream;
 import java.io.IOException;
-import java.io.InputStreamReader;
-import java.io.OutputStream;
 import java.net.ServerSocket;
 import java.net.Socket;
-import javaserver.ResponseBuilders.ResponseBuilder;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 public class Server {
 
-	public Socket clientSocket;
-	public ClientWorker clientWorker;
-	private ServerSocket serverSocket;
-	private ThreadManager threadManager;
-	public Reader reader;
-	public ResponseBuilder responder;
-	public SocketWriter writer;
+	protected ServerSocket serverSocket;
+	protected ExecutorService threadPool;
+	protected boolean isOn = true;
+	protected ClientWorker clientWorker;
 
-	Server(ServerSocket serverSocket, ThreadManager threadManager) {
+	Server(ServerSocket serverSocket) {
 		this.serverSocket = serverSocket;
-		this.threadManager = threadManager;
+		this.threadPool = Executors.newFixedThreadPool(8);
 	}
 
 	public void run() throws IOException {
-		acceptClient();
-		setReaderAndWriter();
-		threadManager.openNewThread(this.reader, this.writer);
-		clientSocket.close();
+		while (isOn()) {
+			Socket clientSocket = serverSocket.accept();
+			clientWorker = new ClientWorker(clientSocket);
+			threadPool.execute(clientWorker);
+		}
+		shutDown();
+	}
+
+	private boolean isOn() {
+		return isOn;
 	}
 
 	public void shutDown() throws IOException {
+		threadPool.shutdown();
 		serverSocket.close();
-	}
-
-	private void acceptClient() throws IOException {
-		this.clientSocket = serverSocket.accept();
-	}
-
-	private void setReaderAndWriter() throws IOException {
-		InputStreamReader input = new InputStreamReader(clientSocket.getInputStream());
-		BufferedReader readingMechanism = new BufferedReader(input);
-		this.reader = new Reader(readingMechanism);
-		OutputStream outputStream = clientSocket.getOutputStream();
-		DataOutputStream output = new DataOutputStream(outputStream);
-		this.writer = new SocketWriter(output);
+		this.isOn = false;
 	}
 }

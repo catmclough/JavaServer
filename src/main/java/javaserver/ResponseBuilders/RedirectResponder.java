@@ -1,43 +1,39 @@
 package javaserver.ResponseBuilders;
 
 import java.util.Arrays;
-
 import javaserver.HTTPStatusCode;
 import javaserver.Request;
 import javaserver.Response;
-import javaserver.Routes;
+import javaserver.ResponseBuilder;
 
-public class RedirectResponseBuilder implements ResponseBuilder {
+public class RedirectResponder implements Responder {
 
-	private Response response;
+	private String[] supportedMethods;
 	private String defaultRedirectLocation = "http://localhost:5000/";
 
-	@Override
-	public Response getResponse(Request request) {
-		this.response = new Response();
-		setResponseData(request);
-		return this.response;
+	public RedirectResponder(String[] supportedMethods) {
+		this.supportedMethods = supportedMethods;
 	}
 
 	@Override
-	public void setResponseData(Request request) {
-		response.setStatusLine(getStatusLine(request));
-		response.setHeader(getResponseHeader(request));
+	public Response getResponse(Request request) {
+		  return new ResponseBuilder()
+		    .statusLine(getStatusLine(request))
+		    .header(getResponseHeader(request))
+		    .build();
 	}
 
 	@Override
 	public String getStatusLine(Request request) {
-		HTTPStatusCode responseCode;
 		if (requestIsSupported(request.getMethod(), request.getURI())) {
-			responseCode = HTTPStatusCode.THREE_OH_TWO;
+			return HTTPStatusCode.THREE_OH_TWO.getStatusLine();
 		} else {
-			responseCode = HTTPStatusCode.FOUR_OH_FOUR;
+			return HTTPStatusCode.FOUR_OH_FOUR.getStatusLine();
 		}
-		return responseCode.getStatusLine();
 	}
 
 	private boolean requestIsSupported(String method, String requestURI) {
-		return Arrays.asList(Routes.routeOptions.get(requestURI)).contains(method);
+		return Arrays.asList(supportedMethods).contains(method);
 	}
 
 	private String getResponseHeader(Request request) {

@@ -1,15 +1,12 @@
 package javaserver;
 
 import static org.junit.Assert.*;
-
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
-
+import java.net.Socket;
 import org.junit.Test;
-
 import java.io.ByteArrayInputStream;
-
 
 public class ReaderTest {
 
@@ -22,7 +19,8 @@ public class ReaderTest {
 	public void testReaderReadsSimpleRequestLine() throws IOException {
 		ByteArrayInputStream inputStream = new ByteArrayInputStream(simpleRequestLine.getBytes());
 		testBufferedReader = new BufferedReader(new InputStreamReader(inputStream));
-		testReader = new Reader(testBufferedReader);
+		testReader = new Reader();
+		testReader.readingMechanism = testBufferedReader;
 
 		assertEquals("Simple request line was not properly read", testReader.readFromSocket(), simpleRequestLine);
 	}
@@ -31,7 +29,8 @@ public class ReaderTest {
 	public void testReaderReadsMessageWithData() throws IOException {
 		ByteArrayInputStream inputStream = new ByteArrayInputStream(requestWithData.getBytes());
 		testBufferedReader = new BufferedReader(new InputStreamReader(inputStream));
-		testReader = new Reader(testBufferedReader);
+		testReader = new Reader();
+		testReader.readingMechanism = testBufferedReader;
 
 		assertEquals("Request with data was not properly read", testReader.readFromSocket(), requestWithData);
 	}
