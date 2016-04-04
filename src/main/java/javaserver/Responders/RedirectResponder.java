@@ -1,10 +1,8 @@
-package javaserver.ResponseBuilders;
+package javaserver.Responders;
 
-import java.util.Arrays;
 import javaserver.HTTPStatusCode;
 import javaserver.Request;
 import javaserver.Response;
-import javaserver.ResponseBuilder;
 
 public class RedirectResponder implements Responder {
 
@@ -17,28 +15,23 @@ public class RedirectResponder implements Responder {
 
 	@Override
 	public Response getResponse(Request request) {
-		  return new ResponseBuilder()
-		    .statusLine(getStatusLine(request))
+		  return new Response.ResponseBuilder(getStatusLine(request))
 		    .header(getResponseHeader(request))
 		    .build();
 	}
 
 	@Override
 	public String getStatusLine(Request request) {
-		if (requestIsSupported(request.getMethod(), request.getURI())) {
+		if (requestIsSupported(supportedMethods, request.getMethod())) {
 			return HTTPStatusCode.THREE_OH_TWO.getStatusLine();
 		} else {
 			return HTTPStatusCode.FOUR_OH_FOUR.getStatusLine();
 		}
 	}
 
-	private boolean requestIsSupported(String method, String requestURI) {
-		return Arrays.asList(supportedMethods).contains(method);
-	}
-
 	private String getResponseHeader(Request request) {
 		String header = new String();
-		if (requestIsSupported(request.getMethod(), request.getURI())) {
+		if (requestIsSupported(supportedMethods, request.getMethod())) {
 		  header += "Location: ";
 		  header += defaultRedirectLocation;
 		}

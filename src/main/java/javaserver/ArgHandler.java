@@ -3,11 +3,11 @@ package javaserver;
 import java.util.Arrays;
 
 public class ArgHandler {
-	private static String portFlag = "-P";
-	private static String publicDirectoryFlag = "-D";
+	private static final String PORT_FLAG = "-P";
+	private static final String DIRECTORY_FLAG = "-D";
 
 	public static int getPort(String[] args, int defaultPort) {
-		int portFlagIndex = Arrays.asList(args).indexOf(portFlag);
+		int portFlagIndex = Arrays.asList(args).indexOf(PORT_FLAG);
 		if (portFlagIndex >= 0)
 			try {
 				return Integer.parseInt(args[portFlagIndex + 1]);
@@ -20,7 +20,7 @@ public class ArgHandler {
 	}
 
 	public static String getChosenDirectoryName(String[] args) {
-		int publicDirectoryFlagIndex = Arrays.asList(args).indexOf(publicDirectoryFlag);
+		int publicDirectoryFlagIndex = Arrays.asList(args).indexOf(DIRECTORY_FLAG);
 		if (publicDirectoryFlagIndex >= 0) {
 			try {
 				return args[publicDirectoryFlagIndex + 1];

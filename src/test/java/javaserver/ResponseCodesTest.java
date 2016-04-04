@@ -2,6 +2,8 @@ package javaserver;
 
 import static org.junit.Assert.*;
 import java.io.IOException;
+
+import org.junit.BeforeClass;
 import org.junit.Test;
 
 import javaserver.Routes;
@@ -16,6 +18,11 @@ public class ResponseCodesTest {
 	private String threeOhTwo = HTTPStatusCode.THREE_OH_TWO.getStatusLine();
 	private String fourOhFour= HTTPStatusCode.FOUR_OH_FOUR.getStatusLine();
 	private String fourOhFive= HTTPStatusCode.FOUR_OH_FIVE.getStatusLine();
+
+	@BeforeClass
+	public static void setup() {
+		App.initializeDirectoryRouter();
+	}
 
 	private Response createResponse(String fullRequest) {
 		Request request = RequestParser.createRequest(fullRequest);

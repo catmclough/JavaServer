@@ -1,12 +1,9 @@
 package javaserver.Responders;
 
-import java.util.Arrays;
-
 import javaserver.Form;
 import javaserver.HTTPStatusCode;
 import javaserver.Request;
 import javaserver.Response;
-import javaserver.ResponseBuilder;
 
 public class FormResponder implements Responder {
 
@@ -20,32 +17,27 @@ public class FormResponder implements Responder {
 
 	@Override
 	public Response getResponse(Request request) {
-		return new ResponseBuilder()
-		.statusLine(getStatusLine(request))
-		.body(getData(request))
-		.build();
+		return new Response.ResponseBuilder(getStatusLine(request))
+      .body(getData(request))
+      .build();
 	}
 
 	@Override
 	public String getStatusLine(Request request) {
-		if (requestIsSupported(request.getMethod())) {
+		if (requestIsSupported(supportedMethods, request.getMethod())) {
 			return HTTPStatusCode.TWO_HUNDRED.getStatusLine();
 		} else {
 			return HTTPStatusCode.FOUR_OH_FOUR.getStatusLine();
 		}
 	}
 
-	private boolean requestIsSupported(String method) {
-		return Arrays.asList(supportedMethods).contains(method);
-	}
-	
 	private String getData(Request request) {
 		if (requestChangesData(request)) {
 			form = new Form(request.getData());
 		}
 		return form.getData();
 	}
-	
+
 	private boolean requestChangesData(Request request) {
 		return (!request.getData().isEmpty() && request.getMethod().equals("POST") || request.getMethod().equals("PUT"))
 				|| request.getMethod().equals("DELETE");

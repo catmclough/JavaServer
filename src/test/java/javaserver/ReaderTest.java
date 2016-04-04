@@ -4,7 +4,6 @@ import static org.junit.Assert.*;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.net.Socket;
 import org.junit.Test;
 import java.io.ByteArrayInputStream;
 

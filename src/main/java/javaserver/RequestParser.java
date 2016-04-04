@@ -20,7 +20,7 @@ public class RequestParser {
 			return "";
 		}
 	}
-	
+
 	public static String getRequestData(String rawRequest) {
 		String data = "";
 		try {

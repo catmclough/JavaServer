@@ -14,6 +14,7 @@ public class ClientWorkerTest extends TestCase {
 
 	@Before
 	public void setUp() throws Exception {
+		App.initializeDirectoryRouter();
 		mockSocket = new MockClientSocket();
 		clientWorker = new ClientWorker(mockSocket);
 
