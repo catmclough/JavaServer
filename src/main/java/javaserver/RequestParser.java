@@ -5,7 +5,8 @@ public class RequestParser {
 	public static Request createRequest(String rawRequest) {
 		String requestMethod = getRequestMethod(rawRequest);
 		String requestURI = getRequestURI(rawRequest);
-		return new Request(requestMethod, requestURI);
+		String requestData = getRequestData(rawRequest);
+		return new Request(requestMethod, requestURI, requestData);
 	}
 
 	public static String getRequestMethod(String rawRequest) {
@@ -18,6 +19,21 @@ public class RequestParser {
 		} catch (ArrayIndexOutOfBoundsException e) {
 			return "";
 		}
+	}
+	
+	public static String getRequestData(String rawRequest) {
+		String data = "";
+		try {
+			String[] requestLines = splitRequest(rawRequest);
+			for (int i = 2; i < requestLines.length; i++) {
+				if (requestLines[i].contains("=")) {
+					data += requestLines[i] + "\n";
+				}
+			}
+			return data;
+		} catch (ArrayIndexOutOfBoundsException e) {
+		}
+		return data;
 	}
 
 	protected static String getURIWithoutParams(String uri) {
@@ -34,6 +50,6 @@ public class RequestParser {
 	}
 
 	private static String[] splitRequest(String rawRequest) {
-		return rawRequest.split(" ");
+		return rawRequest.split("\\s|\n");
 	}
 }

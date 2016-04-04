@@ -4,10 +4,12 @@ public class Request {
 
 	private String method;
 	private String uri;
+	private String data;
 
-	public Request(String method, String uri) {
+	public Request(String method, String uri, String data) {
 		this.method = method;
 		this.uri = uri;
+		this.data = data;
 	}
 
 	public String getMethod() {
@@ -16,6 +18,10 @@ public class Request {
 
 	public String getURI() {
 		return uri;
+	}
+
+	public String getData() {
+		return data;
 	}
 
 	public boolean hasParams() {

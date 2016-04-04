@@ -1,6 +1,8 @@
-package javaserver.ResponseBuilders;
+package javaserver.Responders;
 
 import java.util.Arrays;
+
+import javaserver.Form;
 import javaserver.HTTPStatusCode;
 import javaserver.Request;
 import javaserver.Response;
@@ -9,15 +11,18 @@ import javaserver.ResponseBuilder;
 public class FormResponder implements Responder {
 
 	private String[] supportedMethods;
+	private Form form;
 
-	public FormResponder(String[] supportedMethods) {
+	public FormResponder(String[] supportedMethods, Form form) {
 		this.supportedMethods = supportedMethods;
+		this.form = form;
 	}
 
 	@Override
 	public Response getResponse(Request request) {
 		return new ResponseBuilder()
 		.statusLine(getStatusLine(request))
+		.body(getData(request))
 		.build();
 	}
 
@@ -32,5 +37,17 @@ public class FormResponder implements Responder {
 
 	private boolean requestIsSupported(String method) {
 		return Arrays.asList(supportedMethods).contains(method);
+	}
+	
+	private String getData(Request request) {
+		if (requestChangesData(request)) {
+			form = new Form(request.getData());
+		}
+		return form.getData();
+	}
+	
+	private boolean requestChangesData(Request request) {
+		return (!request.getData().isEmpty() && request.getMethod().equals("POST") || request.getMethod().equals("PUT"))
+				|| request.getMethod().equals("DELETE");
 	}
 }
