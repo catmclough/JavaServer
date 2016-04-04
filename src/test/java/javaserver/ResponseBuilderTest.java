@@ -4,17 +4,13 @@ import static org.junit.Assert.*;
 import java.io.File;
 import java.io.IOException;
 import org.junit.Test;
-import javaserver.ResponseBuilders.ErrorResponseBuilder;
-import javaserver.ResponseBuilders.ResponseBuilder;
+import javaserver.ResponseBuilders.ErrorResponder;
+import javaserver.ResponseBuilders.Responder;
+import javaserver.Routes;
 
 public class ResponseBuilderTest {
 
-	private ResponseBuilder testResponseBuilder;
-	private SocketWriter writer;
-	private ResponseBuilder responder;
-
 	private String codedURI = "/parameters?variable_1=Operators%20%3C%2C%20%3E%2C%20%3D%2C%20!%3D%3B%20%2B%2C%20-%2C%20*%2C%20%26%2C%20%40%2C%20%23%2C%20%24%2C%20%5B%2C%20%5D%3A%20%22is%20that%20all%22%3F&variable_2=stuff";
-
 	private String methodOptionsHeader = "Allow: GET,HEAD,POST,OPTIONS,PUT";
 	private String redirectHeader = "Location: http://localhost:5000/";
 
@@ -25,9 +21,9 @@ public class ResponseBuilderTest {
 
 	private Response createResponse(String requestLine) {
 		Request request = RequestParser.createRequest(requestLine);
-		ResponseBuilder responder = Routes.routeResponders.get(RequestParser.getURIWithoutParams(request.getURI()));
+		Responder responder = Routes.getResponder(RequestParser.getURIWithoutParams(request.getURI()));
 		if (responder == null)
-			responder = new ErrorResponseBuilder();
+			responder = new ErrorResponder();
 		return responder.getResponse(request);
 	}
 
@@ -78,6 +74,7 @@ public class ResponseBuilderTest {
 		Response optionsResponse = createResponse("GET /method_options");
 		assertEquals(optionsResponse.getHeader(), methodOptionsHeader);
 	}
+
 
 	@Test
 	public void testRedirectHeader() throws IOException {

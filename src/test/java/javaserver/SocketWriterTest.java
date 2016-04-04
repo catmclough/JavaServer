@@ -18,7 +18,8 @@ public class SocketWriterTest {
 	public void setUp() {
 		ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
 		DataOutputStream dataOutputStream = new DataOutputStream(outputStream);
-		testWriter = new SocketWriter(dataOutputStream);
+		testWriter = new SocketWriter();
+		testWriter.writingMechanism = dataOutputStream;
 	}
 
 	@Test

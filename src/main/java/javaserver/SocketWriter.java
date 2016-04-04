@@ -1,33 +1,39 @@
 package javaserver;
 
-import java.io.DataOutputStream;
 import java.io.IOException;
+import java.io.OutputStream;
+import java.net.Socket;
 
 public class SocketWriter {
 
-	private DataOutputStream writingMechanism;
-	public boolean isOutputStreamOpen = true;
-	public String latestResponse;
+	protected OutputStream writingMechanism;
+	protected boolean isOutputStreamOpen = true;
 
-	SocketWriter(DataOutputStream dataOutput) {
-		this.writingMechanism = dataOutput;
+	public void openWriter(Socket clientSocket) {
+		try {
+			this.writingMechanism = clientSocket.getOutputStream();;
+		} catch (IOException e) {
+			System.out.println("Unable to open output stream.");
+			e.printStackTrace();
+		}
 	}
 
 	public void respond(String response) {
 		try {
-			writingMechanism.writeBytes(response);
+			writingMechanism.write(response.getBytes());
 		} catch (IOException e) {
+			System.out.println("Unable to write response to OutputStream.");
 			e.printStackTrace();
 		}
-		this.latestResponse = response;
 		closeOutputStream();
 	}
 
 	public void closeOutputStream() {
 		try {
-			this.writingMechanism.close();
+			writingMechanism.close();
 		} catch (IOException e) {
-			System.out.println("SocketWriter was unable to close output stream");
+			System.out.println("Unable to close output stream: ");
+			e.printStackTrace();
 		}
 		this.isOutputStreamOpen = false;
 	}

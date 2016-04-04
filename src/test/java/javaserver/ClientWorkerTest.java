@@ -1,59 +1,98 @@
 package javaserver;
 
-import java.io.BufferedReader;
-import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
-import java.io.DataOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
 import java.net.Socket;
-
 import org.junit.Before;
 import org.junit.Test;
-
 import junit.framework.TestCase;
 
 public class ClientWorkerTest extends TestCase {
 
-	private Socket testClientSocket;
-	private ClientWorker testClientWorker;
-	private String simpleGet = "GET / HTTP/1.1\r\n";
-	private String blankRequest = "";
+	private ClientWorker clientWorker;
+	private MockClientSocket mockSocket;
+	private MockReader mockReader;
+	private MockSocketWriter mockWriter;
 
 	@Before
 	public void setUp() throws Exception {
-	    Reader reader = new Reader(stubRequestReader(simpleGet));
-	    MockSocketWriter mockWriter = new MockSocketWriter(mockOutputStream());
-	    testClientWorker = new ClientWorker(reader, mockWriter);
+		mockSocket = new MockClientSocket();
+		clientWorker = new ClientWorker(mockSocket);
+
+		String getRequest = "GET /foo";
+		mockReader = new MockReader(getRequest);
+		mockWriter = new MockSocketWriter();
+		clientWorker.reader = mockReader;
+		clientWorker.writer = mockWriter;
+		clientWorker.run();
 	}
 
 	@Test
-	public void testRun() throws IOException {
-	  testClientWorker.run();
-	  String twoHundred = HTTPStatusCode.TWO_HUNDRED.getStatusLine();
-	  assertTrue(testClientWorker.writer.latestResponse.contains(twoHundred));
+	public void testOpensReader() {
+		assertTrue(mockReader.opened);
 	}
 
-	private BufferedReader stubRequestReader(String requestLine) {
-		InputStream stubInputStreamWithGet = new ByteArrayInputStream(requestLine.getBytes());
-		InputStreamReader inputReader = new InputStreamReader(stubInputStreamWithGet);
-		return new BufferedReader(inputReader);
+	@Test
+	public void testOpensWriter() {
+		assertTrue(mockWriter.opened);
 	}
 
-	private DataOutputStream mockOutputStream() {
-		ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
-		return new DataOutputStream(outputStream);
+	@Test
+	public void testSendsFormattedResponseToWriter() {
+		String fourOhFour = HTTPStatusCode.FOUR_OH_FOUR.getStatusLine() + "\n\n";
+		assertEquals(fourOhFour, mockWriter.latestResponse);
 	}
-}
 
-class MockSocketWriter extends SocketWriter {
-	 MockSocketWriter(DataOutputStream mockOutputStream) {
-		 super(mockOutputStream);
-	 }
+	@Test
+	public void testClosesClientSocket() {
+	  clientWorker.run();
+	  assertTrue(mockSocket.isClosed());
+	}
 
-	 @Override
-	 public void respond(String response) {
-		 this.latestResponse = response;
-	 }
+	class MockClientSocket extends Socket {
+
+		MockClientSocket() {
+			super();
+		}
+	}
+
+	class MockReader extends Reader {
+
+		private String request;
+		public boolean opened = false;
+
+		MockReader(String request) {
+			this.request = request;
+		}
+
+		@Override
+		public void openReader(Socket socket) {
+			this.opened = true;
+		}
+
+		@Override
+		public String readFromSocket() {
+			return request;
+		}
+	}
+
+	class MockSocketWriter extends SocketWriter {
+
+		public String latestResponse;
+		public boolean opened = false;
+		public boolean closed = false;
+
+		@Override
+		public void openWriter(Socket socket) {
+			this.opened = true;
+		}
+
+		@Override
+		public void respond(String response) {
+			this.latestResponse = response;
+		}
+
+		@Override
+		public void closeOutputStream() {
+			this.closed = true;
+		}
+	}
 }

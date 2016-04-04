@@ -1,84 +1,100 @@
 package javaserver;
 
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
 import java.net.ServerSocket;
 import java.net.Socket;
-
+import java.net.UnknownHostException;
+import java.util.concurrent.ThreadPoolExecutor;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
-
 import junit.framework.TestCase;
 
 public class ServerTest extends TestCase {
 
-	private Server testServer;
-	private ServerSocket mockedServerSocket;
-	private MockThreadManager mockThreadManager;
+	private Server server;
 	Socket mockedClientSocket;
-
 	int defaultPort = 6000;
 
 	@Before
 	public void setUp() throws Exception {
-		mockedServerSocket = new MockServerSocket(defaultPort);
-		mockThreadManager = new MockThreadManager();
-		testServer = new Server(mockedServerSocket, mockThreadManager);
+		ServerSocket mockedServerSocket = new MockServerSocket(defaultPort);
+		server = new Server(mockedServerSocket);
 	}
 
 	@After
 	public void tearDown() throws IOException {
-		testServer.shutDown();
+		server.serverSocket.close();
 	}
 
 	@Test
 	public void testAcceptsClient() throws IOException {
-		testServer.run();
-		assertEquals(mockedClientSocket.getChannel() ,mockedServerSocket.getChannel());
+		server.run();
+		assertEquals(mockedClientSocket.getChannel(), server.serverSocket.getChannel());
 	}
 
 	@Test
-	public void testSetsReader() throws IOException {
-		assertNull("Reader should be null before accepting a client", testServer.reader);
-		testServer.run();
-		assertNotNull("Reader was not properly created", testServer.reader);
+	public void testUsesThreadPoolExecutor() throws IOException, InterruptedException {
+		server.run();
+		Thread.sleep(1000);
+		assertEquals(server.threadPool.getClass(), ThreadPoolExecutor.class);
 	}
 
 	@Test
-	public void testSetsWriter() throws IOException {
-		assertNull("Writer should be null before accepting a client", testServer.writer);
-		testServer.run();
-		assertNotNull("Writer was not properly created", testServer.writer);
+	public void testExecutesThreadPool() throws IOException {
+		server.run();
+		int openThreads = ((ThreadPoolExecutor) server.threadPool).getActiveCount();
+		assertEquals(1, openThreads);
 	}
 
 	@Test
-	public void testOpensNewThread() throws IOException {
-		testServer.run();
-		assertTrue(mockThreadManager.getOpenedThreads() > 0);
-	}
-
-
-	@Test
-	public void testCanCreateMultipleThreads() throws IOException {
-		testServer.run();
-		testServer.run();
-		testServer.run();
-		assertEquals(mockThreadManager.getOpenedThreads(), 3);
+	public void testShutsDownThreadPool() throws IOException {
+		server.shutDown();
+		assertTrue(server.threadPool.isShutdown());
 	}
 
 	@Test
-	public void testServerCanBeShutDown() {
+	public void testClosesServerSocket() throws IOException {
+		server.shutDown();
+		assertTrue(server.serverSocket.isClosed());
+	}
+
+	@Test
+	public void serverCanBeShutDown() {
 		boolean caughtError = false;
 		try {
-			testServer.shutDown();
+			server.shutDown();
 		} catch (IOException e) {
 			caughtError = true;
 		}
 		assertFalse("Server's ServerSocket failed to close", caughtError);
 	}
 
+	class MockSocket extends Socket {
+
+		MockSocket(String hostName, int port) throws UnknownHostException, IOException {
+			super(hostName, port);
+		}
+
+	 	@Override
+	 	public OutputStream getOutputStream() {
+	 		ByteArrayOutputStream out = new ByteArrayOutputStream();
+	 		return new DataOutputStream(out);
+	 	}
+
+	 	@Override
+	 	public InputStream getInputStream() {
+	 		return new ByteArrayInputStream("GET /foo".getBytes());
+	 	}
+	}
+
 	class MockServerSocket extends ServerSocket {
+
 		private int port;
 
 		MockServerSocket(int port) throws IOException {
@@ -88,36 +104,24 @@ public class ServerTest extends TestCase {
 
 		@Override
 		public Socket accept() throws IOException {
-		  mockedClientSocket = new Socket("localhost", port);
+		  mockedClientSocket = new MockSocket("localhost", port);
+		  server.isOn = false;
 		  return mockedClientSocket;
 		}
+
 	}
 
 	class MockSocketWriter extends SocketWriter {
-		MockSocketWriter(DataOutputStream mockOutputStream) {
-		 	super(mockOutputStream);
+
+		public String latestResponse;
+
+		MockSocketWriter(Socket clientSocket) {
+		 	super();
 	 	}
 
 	 	@Override
 	 	public void respond(String response) {
 	 		this.latestResponse = response;
 	 	}
-	}
-
-	class MockThreadManager extends ThreadManager {
-		int openedThreads = 0;
-
-		MockThreadManager() {
-			super();
-		}
-
-		@Override
-		public void openNewThread(Reader reader, SocketWriter writer) {
-			openedThreads++;
-		}
-
-		public int getOpenedThreads() {
-			return this.openedThreads;
-		}
 	}
 }
