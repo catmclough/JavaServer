@@ -10,7 +10,7 @@ import javaserver.Response;
 
 public class FileResponder implements Responder {
 
-	private String[] supportedMethods;
+	protected String[] supportedMethods;
 
 	public FileResponder(String[] supportedMethods) {
 		this.supportedMethods = supportedMethods;
@@ -18,9 +18,14 @@ public class FileResponder implements Responder {
 
 	@Override
 	public Response getResponse(Request request) {
-		return new Response.ResponseBuilder(getStatusLine(request))
-      .body(getBody(request))
-      .build();
+		if (request.isPartialRequest()) {
+			PartialResponder partialResponder = new PartialResponder(supportedMethods);
+			return partialResponder.getResponse(request);
+		} else {
+			return new Response.ResponseBuilder(getStatusLine(request))
+		  .body(getBody(request))
+		  .build();
+		}
 	}
 
 	@Override
@@ -32,9 +37,10 @@ public class FileResponder implements Responder {
 		}
 	}
 
-	private String getBody(Request request) {
+	protected String getBody(Request request) {
 		File thisFile = new File(App.getPublicDirectory().getRoute() + getFileName(request));
-		byte[] fileContents = new byte[(int) thisFile.length()];
+		int fileLength = (int) thisFile.length();
+		byte[] fileContents = new byte[fileLength];
 
 		if (requestIsSupported(supportedMethods, request.getMethod())) {
 			try {
@@ -46,11 +52,10 @@ public class FileResponder implements Responder {
 				e.printStackTrace();
 			}
 		}
-
 		return new String(fileContents);
 	}
 
-	private String getFileName(Request request) {
+	protected String getFileName(Request request) {
 		return request.getURI().substring(1);
 	}
 }

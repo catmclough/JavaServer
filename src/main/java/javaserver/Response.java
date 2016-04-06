@@ -44,7 +44,7 @@ public class Response {
 		protected String statusLine;
 		protected String header;
 		protected String body;
-		
+
 		public ResponseBuilder(String statusLine) {
 			this.statusLine = statusLine;
 		}

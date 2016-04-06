@@ -2,7 +2,6 @@ package javaserver;
 
 import java.io.IOException;
 import java.net.Socket;
-
 import javaserver.Responders.Responder;
 
 public class ClientWorker implements Runnable {

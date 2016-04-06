@@ -18,7 +18,7 @@ public class ResponseDataTest {
 	public void setup() {
 		App.initializeDirectoryRouter();
 	}
-	
+
 	private Response createResponse(String requestLine) {
 		Request request = RequestParser.createRequest(requestLine);
 		Responder responder = Routes.getResponder(RequestParser.getURIWithoutParams(request.getURI()));
@@ -69,7 +69,7 @@ public class ResponseDataTest {
 		String listOfDirectoryLinks = HTMLContent.listOfLinks(publicFileNames);
 		assertTrue(responseBody.contains(listOfDirectoryLinks));
 	}
-	
+
 	@Test
 	public void testFormInitializedWithEmptyDataLine() {
 		Response getForm = createResponse("GET /form");

@@ -1,13 +1,12 @@
 package javaserver;
 
 import static org.junit.Assert.*;
-
 import org.junit.BeforeClass;
 import org.junit.Test;
 import javaserver.Responders.*;
 
 public class FileContentsTest {
-	
+
 	@BeforeClass
 	public static void setup() {
 		App.initializeDirectoryRouter();

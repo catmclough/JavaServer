@@ -10,12 +10,12 @@ public class RequestParser {
 	}
 
 	public static String getRequestMethod(String rawRequest) {
-		return splitRequest(rawRequest)[0];
+		return rawRequest.split("\\s")[0];
 	}
 
 	public static String getRequestURI(String rawRequest) {
 		try {
-			return splitRequest(rawRequest)[1];
+			return rawRequest.split("\\s")[1];
 		} catch (ArrayIndexOutOfBoundsException e) {
 			return "";
 		}
@@ -24,16 +24,23 @@ public class RequestParser {
 	public static String getRequestData(String rawRequest) {
 		String data = "";
 		try {
-			String[] requestLines = splitRequest(rawRequest);
-			for (int i = 2; i < requestLines.length; i++) {
-				if (requestLines[i].contains("=")) {
-					data += requestLines[i] + "\n";
-				}
+			String[] requestLines = rawRequest.split(System.lineSeparator());
+			for (int i = 1; i < requestLines.length; i++) {
+				data += requestLines[i] + System.lineSeparator();
 			}
 			return data;
 		} catch (ArrayIndexOutOfBoundsException e) {
 		}
 		return data;
+	}
+
+	public static String getPartialRange(String requestData) {
+		for (String dataLine : requestData.split(System.lineSeparator())) {
+			if (dataLine.startsWith("Range:")) {
+				return dataLine;
+			}
+		}
+		return null;
 	}
 
 	protected static String getURIWithoutParams(String uri) {
@@ -47,9 +54,5 @@ public class RequestParser {
 
 	private static boolean requestHasParams(String uri) {
 		return uri.contains("?");
-	}
-
-	private static String[] splitRequest(String rawRequest) {
-		return rawRequest.split("\\s|\n");
 	}
 }

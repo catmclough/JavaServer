@@ -26,7 +26,6 @@ public class DirectoryResponder implements Responder {
       .build();
 	}
 
-
 	@Override
 	public String getStatusLine(Request request) {
 		if (requestIsSupported(supportedMethods, request.getMethod())) {

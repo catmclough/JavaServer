@@ -32,4 +32,8 @@ public class Request {
 		String[] routeParts = uri.split("\\?", 2);
 		return routeParts[0];
 	}
+
+	public boolean isPartialRequest() {
+		return data.contains("bytes=");
+	}
 }
