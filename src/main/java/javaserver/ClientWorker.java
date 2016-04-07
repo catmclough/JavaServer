@@ -2,7 +2,8 @@ package javaserver;
 
 import java.io.IOException;
 import java.net.Socket;
-import javaserver.ResponseBuilders.Responder;
+
+import javaserver.responders.Responder;
 
 public class ClientWorker implements Runnable {
 
@@ -19,7 +20,7 @@ public class ClientWorker implements Runnable {
 	public void run() {
 		reader.openReader(clientSocket);
 		Request request = RequestParser.createRequest(getRequest(reader));
-		Responder responder = Routes.getResponder(request.getURI());
+		Responder responder = Routes.getResponder(RequestParser.getURIWithoutParams(request.getURI()));
 		Response response = responder.getResponse(request);
 
 		writer.openWriter(clientSocket);

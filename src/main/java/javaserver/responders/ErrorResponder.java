@@ -1,17 +1,15 @@
-package javaserver.ResponseBuilders;
+package javaserver.responders;
 
 import javaserver.HTTPStatusCode;
 import javaserver.Request;
 import javaserver.Response;
-import javaserver.ResponseBuilder;
 
 public class ErrorResponder implements Responder {
 
 	@Override
 	public Response getResponse(Request request) {
-		return new ResponseBuilder()
-		.statusLine(getStatusLine(request))
-		.build();
+		return new Response.ResponseBuilder(getStatusLine(request))
+      .build();
 	}
 
 	@Override

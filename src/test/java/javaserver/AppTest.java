@@ -18,6 +18,7 @@ public class AppTest extends TestCase{
 
 	@Before
 	public void setUp() throws IOException {
+		App.initializeDirectoryRouter();
 		this.socket = new ServerSocket();
 		this.mockServer = new MockServer(socket);
 		System.setOut(new PrintStream(outContent));
@@ -51,14 +52,14 @@ public class AppTest extends TestCase{
 
 	public void testSetsDefaultPublicDirectory() throws IOException {
 		App.setUpServer(new String[] {"-D"});
-		assertEquals(App.publicDirectory.getDirectoryName(), App.DEFAULT_PUBLIC_DIRECTORY);
+		assertEquals(App.getPublicDirectory().getRoute(), App.DEFAULT_PUBLIC_DIRECTORY);
 	}
 
 	public void testUnrecognizedDirectoryMessage() throws IOException {
 		boolean errorCaught = false;
 		try {
-			App.setUpServer(new String[] {"-D", "/non_existant_directory"});
-		} catch (Error e) {
+			App.setDirectory(new String[] {"-D", "/non_existant_directory"});
+		} catch (DirectoryNotFoundException e) {
 			errorCaught = true;
 		}
 
@@ -67,12 +68,17 @@ public class AppTest extends TestCase{
 
 	public void testRecognizesExistingDirectory() throws IOException {
 		App.setUpServer(new String[] {"-D", existingDirectory});
-		assertEquals(App.publicDirectory.getDirectoryName(), existingDirectory);
+		assertEquals(App.getPublicDirectory().getDirectoryName(), existingDirectory);
+	}
+
+	public void testFormatsRouteName() throws IOException {
+		App.setUpServer(new String[] {"-D", "/" + existingDirectory + "/"});
+		assertEquals(App.getPublicDirectory().getRoute(), existingDirectory + "/");
 	}
 
 	public void testSetsPublicDirectoryInRoutes() throws IOException {
 		App.setUpServer(new String[] {"-D", existingDirectory});
-		assertEquals(App.publicDirectory.getDirectoryName(), existingDirectory);
+		assertEquals(App.getPublicDirectory().getDirectoryName(), existingDirectory);
 	}
 
 	public void testServerCreation() throws IOException {
