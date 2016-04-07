@@ -1,4 +1,4 @@
-package javaserver.Responders;
+package javaserver.responders;
 
 import java.util.Arrays;
 import javaserver.Request;

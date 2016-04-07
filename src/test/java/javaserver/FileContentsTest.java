@@ -3,7 +3,8 @@ package javaserver;
 import static org.junit.Assert.*;
 import org.junit.BeforeClass;
 import org.junit.Test;
-import javaserver.Responders.*;
+
+import javaserver.responders.*;
 
 public class FileContentsTest {
 

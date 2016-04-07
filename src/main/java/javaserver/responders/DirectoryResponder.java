@@ -1,4 +1,4 @@
-package javaserver.Responders;
+package javaserver.responders;
 
 import javaserver.App;
 import javaserver.HTMLContent;
@@ -31,7 +31,7 @@ public class DirectoryResponder implements Responder {
 		if (requestIsSupported(supportedMethods, request.getMethod())) {
 			return HTTPStatusCode.TWO_HUNDRED.getStatusLine();
 		} else {
-			return HTTPStatusCode.FOUR_OH_FIVE.getStatusLine();
+			return HTTPStatusCode.FOUR_OH_FOUR.getStatusLine();
 		}
 	}
 

@@ -1,4 +1,4 @@
-package javaserver.Responders;
+package javaserver.responders;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -25,24 +25,28 @@ public class PartialResponder extends FileResponder {
 		  .build();
 	}
 
-	private String getHeader() {
-		return "Content-Length: " + this.contentLength;
-	}
-
 	@Override
 	public String getStatusLine(Request request) {
-		if (requestIsSupported(supportedMethods, request.getMethod())) {
-			return HTTPStatusCode.TWO_OH_SIX.getStatusLine();
-		} else {
-			return HTTPStatusCode.FOUR_OH_FIVE.getStatusLine();
-		}
+		return HTTPStatusCode.TWO_OH_SIX.getStatusLine();
+	}
+
+	private String getHeader() {
+		return "Content-Length: " + this.contentLength;
 	}
 
 	@Override
 	protected String getBody(Request request) {
 		File thisFile = new File(App.getPublicDirectory().getRoute() + getFileName(request));
 		int fileLength = (int) thisFile.length();
-		int[] range = getRequestedByteRange(RequestParser.getPartialRange(request.getData()), fileLength);
+		int[] range;
+
+		try {
+			range = getRequestedByteRange(RequestParser.getPartialRange(request.getData()), fileLength);
+		} catch (ArrayIndexOutOfBoundsException e) {
+			System.out.println("Invalid range of bytes requested.");
+			throw e;
+		}
+
 		byte[] fileContents = new byte[fileLength];
 
 		try {

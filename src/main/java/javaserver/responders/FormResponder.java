@@ -1,4 +1,4 @@
-package javaserver.Responders;
+package javaserver.responders;
 
 import javaserver.Form;
 import javaserver.HTTPStatusCode;

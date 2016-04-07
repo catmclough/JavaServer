@@ -43,7 +43,7 @@ public class RequestParser {
 		return null;
 	}
 
-	protected static String getURIWithoutParams(String uri) {
+	public static String getURIWithoutParams(String uri) {
 		if (requestHasParams(uri)) {
 			String[] routeParts = uri.split("\\?", 2);
 			return routeParts[0];

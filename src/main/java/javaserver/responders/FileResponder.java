@@ -1,4 +1,4 @@
-package javaserver.Responders;
+package javaserver.responders;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -9,6 +9,8 @@ import javaserver.Request;
 import javaserver.Response;
 
 public class FileResponder implements Responder {
+	
+	//test that, when given a partial, it creates a PartialResponder object to respond
 
 	protected String[] supportedMethods;
 

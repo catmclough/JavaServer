@@ -1,4 +1,4 @@
-package javaserver.Responders;
+package javaserver.responders;
 
 import java.io.UnsupportedEncodingException;
 import javaserver.HTTPStatusCode;

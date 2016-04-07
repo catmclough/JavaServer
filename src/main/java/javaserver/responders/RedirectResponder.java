@@ -1,28 +1,29 @@
-package javaserver.Responders;
+package javaserver.responders;
 
 import javaserver.HTTPStatusCode;
 import javaserver.Request;
 import javaserver.Response;
 
-public class OptionResponder implements Responder {
+public class RedirectResponder implements Responder {
 
 	private String[] supportedMethods;
+	private String defaultRedirectLocation = "http://localhost:5000/";
 
-	public OptionResponder(String[] supportedMethods) {
+	public RedirectResponder(String[] supportedMethods) {
 		this.supportedMethods = supportedMethods;
 	}
 
 	@Override
 	public Response getResponse(Request request) {
-		return new Response.ResponseBuilder(getStatusLine(request))
-      .header(getResponseHeader(request))
-      .build();
+		  return new Response.ResponseBuilder(getStatusLine(request))
+		    .header(getResponseHeader(request))
+		    .build();
 	}
 
 	@Override
 	public String getStatusLine(Request request) {
 		if (requestIsSupported(supportedMethods, request.getMethod())) {
-			return HTTPStatusCode.TWO_HUNDRED.getStatusLine();
+			return HTTPStatusCode.THREE_OH_TWO.getStatusLine();
 		} else {
 			return HTTPStatusCode.FOUR_OH_FOUR.getStatusLine();
 		}
@@ -31,8 +32,8 @@ public class OptionResponder implements Responder {
 	private String getResponseHeader(Request request) {
 		String header = new String();
 		if (requestIsSupported(supportedMethods, request.getMethod())) {
-			header += "Allow: ";
-			header += String.join(",", supportedMethods);
+		  header += "Location: ";
+		  header += defaultRedirectLocation;
 		}
 		return header;
 	}

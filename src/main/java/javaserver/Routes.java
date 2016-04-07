@@ -1,7 +1,8 @@
 package javaserver;
 
 import java.util.HashMap;
-import javaserver.Responders.*;
+
+import javaserver.responders.*;
 
 public class Routes {
 

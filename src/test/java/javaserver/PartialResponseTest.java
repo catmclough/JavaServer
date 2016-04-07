@@ -2,8 +2,9 @@ package javaserver;
 
 import static org.junit.Assert.*;
 import org.junit.Test;
-import javaserver.Responders.ErrorResponder;
-import javaserver.Responders.Responder;
+
+import javaserver.responders.ErrorResponder;
+import javaserver.responders.Responder;
 
 public class PartialResponseTest {
 
