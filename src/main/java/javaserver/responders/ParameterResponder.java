@@ -16,8 +16,8 @@ public class ParameterResponder implements Responder {
 	@Override
 	public Response getResponse(Request request) {
 		return new Response.ResponseBuilder(getStatusLine(request))
-      .body(decodedParameterBody(request))
-      .build();
+          .body(decodedParameterBody(request))
+          .build();
 	}
 
 	@Override

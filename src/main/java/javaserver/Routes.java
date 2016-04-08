@@ -13,6 +13,7 @@ public class Routes {
 		routeResponders.put("/method_options", new OptionResponder(new String[] {"GET", "HEAD", "POST", "OPTIONS", "PUT"}));
 		routeResponders.put("/form", new FormResponder(new String[] {"GET", "POST", "PUT", "DELETE"}, new Form("")));
 		routeResponders.put("/redirect", new RedirectResponder(new String[] {"GET"}));
+		routeResponders.put("/logs", new LogResponder(new String[] {"GET"}, App.requestLog));
 		for (String file : App.getPublicDirectory().getDirectoryListing()) {
 			routeResponders.put("/" + file, new FileResponder(new String[] {"GET"}));
 		}

@@ -9,6 +9,7 @@ public class App {
 	public static String name = "Cat's Java Server";
 	protected static final int DEFAULT_PORT = 5000;
 	protected static int port;
+	protected static RequestLog requestLog;
 	protected static final String DEFAULT_PUBLIC_DIRECTORY = "public/";
 	protected static PublicDirectory publicDirectory = initializeDirectoryRouter();
 	protected static Server server;
@@ -23,6 +24,7 @@ public class App {
 	}
 
 	protected static void setUpServer(String[] args) throws IOException {
+	    requestLog = new RequestLog();
 		port = ArgHandler.getPort(args, DEFAULT_PORT);
 		try {
 			setDirectory(args);

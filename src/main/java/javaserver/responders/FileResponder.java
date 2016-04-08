@@ -25,8 +25,8 @@ public class FileResponder implements Responder {
 			return partialResponder.getResponse(request);
 		} else {
 			return new Response.ResponseBuilder(getStatusLine(request))
-		  .body(getBody(request))
-		  .build();
+              .body(getBody(request))
+              .build();
 		}
 	}
 

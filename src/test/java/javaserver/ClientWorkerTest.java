@@ -11,14 +11,16 @@ public class ClientWorkerTest extends TestCase {
 	private MockClientSocket mockSocket;
 	private MockReader mockReader;
 	private MockSocketWriter mockWriter;
-
+	private RequestLog mockLog;
+    String getRequest = "GET /foo";
+	
 	@Before
 	public void setUp() throws Exception {
 		App.initializeDirectoryRouter();
 		mockSocket = new MockClientSocket();
-		clientWorker = new ClientWorker(mockSocket);
+		mockLog = new RequestLog();
+		clientWorker = new ClientWorker(mockSocket, mockLog);
 
-		String getRequest = "GET /foo";
 		mockReader = new MockReader(getRequest);
 		mockWriter = new MockSocketWriter();
 		clientWorker.reader = mockReader;
@@ -29,6 +31,11 @@ public class ClientWorkerTest extends TestCase {
 	@Test
 	public void testOpensReader() {
 		assertTrue(mockReader.opened);
+	}
+
+	@Test
+	public void testGetsAndLogsRequest() {
+	    assertTrue(mockLog.log.contains(getRequest));
 	}
 
 	@Test

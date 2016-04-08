@@ -19,10 +19,10 @@ public class PartialResponder extends FileResponder {
 	}
 
 	public Response getResponse(Request request) {
-			return new Response.ResponseBuilder(getStatusLine(request))
-		  .body(getBody(request))
-		  .header(getHeader())
-		  .build();
+        return new Response.ResponseBuilder(getStatusLine(request))
+          .body(getBody(request))
+          .header(getHeader())
+          .build();
 	}
 
 	@Override

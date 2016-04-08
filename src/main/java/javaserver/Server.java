@@ -21,7 +21,7 @@ public class Server {
 	public void run() throws IOException {
 		while (isOn()) {
 			Socket clientSocket = serverSocket.accept();
-			clientWorker = new ClientWorker(clientSocket);
+			clientWorker = new ClientWorker(clientSocket, App.requestLog);
 			threadPool.execute(clientWorker);
 		}
 		shutDown();

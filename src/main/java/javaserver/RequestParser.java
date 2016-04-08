@@ -8,7 +8,7 @@ public class RequestParser {
 		String requestData = getRequestData(rawRequest);
 		return new Request(requestMethod, requestURI, requestData);
 	}
-
+	
 	public static String getRequestMethod(String rawRequest) {
 		return rawRequest.split("\\s")[0];
 	}
@@ -32,6 +32,19 @@ public class RequestParser {
 		} catch (ArrayIndexOutOfBoundsException e) {
 		}
 		return data;
+	}
+	
+	public static String getCodedCredentials(Request request) {
+	    return getAuthHeader(request.getData()).split("Authorization: Basic ")[1];
+	}
+	
+	private static String getAuthHeader(String requestData) {
+	    for (String dataLine : requestData.split(System.lineSeparator())) {
+	        if (dataLine.startsWith("Authorization:")) {
+	            return dataLine;
+	        }
+	    }
+	    return null;
 	}
 
 	public static String getPartialRange(String requestData) {

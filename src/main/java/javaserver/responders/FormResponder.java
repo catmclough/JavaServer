@@ -18,8 +18,8 @@ public class FormResponder implements Responder {
 	@Override
 	public Response getResponse(Request request) {
 		return new Response.ResponseBuilder(getStatusLine(request))
-      .body(getData(request))
-      .build();
+          .body(getData(request))
+          .build();
 	}
 
 	@Override

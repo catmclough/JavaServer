@@ -10,16 +10,20 @@ public class ClientWorker implements Runnable {
 	private Socket clientSocket;
 	protected Reader reader;
 	protected SocketWriter writer;
+	private RequestLog requestLog;
 
-	public ClientWorker(Socket clientSocket) {
+	public ClientWorker(Socket clientSocket, RequestLog requestLog) {
 		this.clientSocket = clientSocket;
 		this.reader = new Reader();
 		this.writer = new SocketWriter();
+		this.requestLog = requestLog;
 	}
 
 	public void run() {
 		reader.openReader(clientSocket);
-		Request request = RequestParser.createRequest(getRequest(reader));
+		String rawRequest = getRequest(reader);
+		requestLog.addRequest(rawRequest);
+		Request request = RequestParser.createRequest(rawRequest);
 		Responder responder = Routes.getResponder(RequestParser.getURIWithoutParams(request.getURI()));
 		Response response = responder.getResponse(request);
 

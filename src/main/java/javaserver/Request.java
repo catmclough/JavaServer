@@ -33,6 +33,10 @@ public class Request {
 		return routeParts[0];
 	}
 
+	public boolean hasBasicAuthHeader() {
+	    return data.contains("Authorization: Basic ");
+	}
+
 	public boolean isPartialRequest() {
 		return data.contains("bytes=");
 	}

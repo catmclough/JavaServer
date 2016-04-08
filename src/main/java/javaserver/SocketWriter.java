@@ -25,6 +25,7 @@ public class SocketWriter {
 			System.out.println("Unable to write response to OutputStream.");
 			e.printStackTrace();
 		}
+		System.out.println(response);
 		closeOutputStream();
 	}
 

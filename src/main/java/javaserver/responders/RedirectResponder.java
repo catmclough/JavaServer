@@ -15,9 +15,9 @@ public class RedirectResponder implements Responder {
 
 	@Override
 	public Response getResponse(Request request) {
-		  return new Response.ResponseBuilder(getStatusLine(request))
-		    .header(getResponseHeader(request))
-		    .build();
+      return new Response.ResponseBuilder(getStatusLine(request))
+        .header(getResponseHeader(request))
+        .build();
 	}
 
 	@Override
