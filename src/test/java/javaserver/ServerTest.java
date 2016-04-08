@@ -23,7 +23,6 @@ public class ServerTest extends TestCase {
 
 	@Before
 	public void setUp() throws Exception {
-		App.initializeDirectoryRouter();
 		ServerSocket mockedServerSocket = new MockServerSocket(defaultPort);
 		server = new Server(mockedServerSocket);
 	}

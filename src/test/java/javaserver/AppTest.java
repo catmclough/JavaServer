@@ -6,19 +6,18 @@ import java.io.PrintStream;
 import java.net.ServerSocket;
 import org.junit.After;
 import org.junit.Before;
+
 import junit.framework.TestCase;
 
 public class AppTest extends TestCase{
-
 	private ServerSocket socket;
 	private MockServer mockServer;
 	private String[] emptyArgs = new String[] {};
-	private String existingDirectory = "public";
 	private final ByteArrayOutputStream outContent = new ByteArrayOutputStream();
+	private final String defaultPublicDir = "public/";
 
 	@Before
 	public void setUp() throws IOException {
-		App.initializeDirectoryRouter();
 		this.socket = new ServerSocket();
 		this.mockServer = new MockServer(socket);
 		System.setOut(new PrintStream(outContent));
@@ -31,16 +30,21 @@ public class AppTest extends TestCase{
 		System.setOut(null);
 	}
 
+	public void testSetsUpLog() throws IOException {
+	    App.setUpServer(emptyArgs);
+	    assertNotNull(App.requestLog);
+	}
+
 	public void testSetsDefaultPort() throws IOException {
 		App.setUpServer(emptyArgs);
 		assertEquals(App.port, App.DEFAULT_PORT);
 		App.server.shutDown();
 
-		App.setUpServer(new String[] {"-P"});
+		App.setUpServer(emptyArgs);
 		assertEquals(App.port, App.DEFAULT_PORT);
 	}
 
-	public void testSpecifiedPortInArgs() throws IOException {
+	public void testSetsSpecifiedPortInArgs() throws IOException {
 		App.setUpServer(new String[] {"-P", "8080"});
 		assertEquals(App.port, 8080);
 	}
@@ -51,34 +55,8 @@ public class AppTest extends TestCase{
 	}
 
 	public void testSetsDefaultPublicDirectory() throws IOException {
-		App.setUpServer(new String[] {"-D"});
-		assertEquals(App.getPublicDirectory().getRoute(), App.DEFAULT_PUBLIC_DIRECTORY);
-	}
-
-	public void testUnrecognizedDirectoryMessage() throws IOException {
-		boolean errorCaught = false;
-		try {
-			App.setDirectory(new String[] {"-D", "/non_existant_directory"});
-		} catch (DirectoryNotFoundException e) {
-			errorCaught = true;
-		}
-
-		assertTrue(errorCaught);
-	}
-
-	public void testRecognizesExistingDirectory() throws IOException {
-		App.setUpServer(new String[] {"-D", existingDirectory});
-		assertEquals(App.getPublicDirectory().getDirectoryName(), existingDirectory);
-	}
-
-	public void testFormatsRouteName() throws IOException {
-		App.setUpServer(new String[] {"-D", "/" + existingDirectory + "/"});
-		assertEquals(App.getPublicDirectory().getRoute(), existingDirectory + "/");
-	}
-
-	public void testSetsPublicDirectoryInRoutes() throws IOException {
-		App.setUpServer(new String[] {"-D", existingDirectory});
-		assertEquals(App.getPublicDirectory().getDirectoryName(), existingDirectory);
+		App.setUpServer(emptyArgs);
+		assertEquals(App.DEFAULT_PUBLIC_DIRECTORY, defaultPublicDir);
 	}
 
 	public void testServerCreation() throws IOException {
@@ -93,7 +71,6 @@ public class AppTest extends TestCase{
 }
 
 class MockServer extends Server {
-
 	public boolean isRunning = false;
 
 	MockServer(ServerSocket socket) {

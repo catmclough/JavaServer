@@ -4,7 +4,8 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.util.Arrays;
-import javaserver.App;
+
+import javaserver.DirectoryHandler;
 import javaserver.HTTPStatusCode;
 import javaserver.Request;
 import javaserver.RequestParser;
@@ -14,8 +15,8 @@ public class PartialResponder extends FileResponder {
 
 	private int contentLength;
 
-	public PartialResponder(String[] supportedMethods) {
-		super(supportedMethods);
+	public PartialResponder(String[] supportedMethods, File publicDir) {
+		super(supportedMethods, publicDir);
 	}
 
 	public Response getResponse(Request request) {
@@ -36,7 +37,7 @@ public class PartialResponder extends FileResponder {
 
 	@Override
 	protected String getBody(Request request) {
-		File thisFile = new File(App.getPublicDirectory().getRoute() + getFileName(request));
+		File thisFile = new File(DirectoryHandler.getPublicDirectoryPath() + getFileName(request));
 		int fileLength = (int) thisFile.length();
 		int[] range;
 

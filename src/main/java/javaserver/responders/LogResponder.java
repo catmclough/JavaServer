@@ -24,31 +24,32 @@ public class LogResponder implements Responder {
 	public Response getResponse(Request request) {
 		return new Response.ResponseBuilder(getStatusLine(request))
 		    .header(getBasicAuthHeader())
-		    .body(getLog())
+		    .body(getLog(request))
             .build();
 	}
 	
 	@Override
 	public String getStatusLine(Request request) {
-	    if (requestIsSupported(supportedMethods, request.getMethod()) 
-	            && request.hasBasicAuthHeader()
-	            && hasValidCredentials(RequestParser.getCodedCredentials(request))) {
+	    if (requestIsSupported(supportedMethods, request.getMethod())  && isAuthorized(request)) {
 	        return HTTPStatusCode.TWO_HUNDRED.getStatusLine();
 	    } else {
             return HTTPStatusCode.FOUR_OH_ONE.getStatusLine();
 	    }
 	}
 	
+	private boolean isAuthorized(Request request) {
+	    return request.hasBasicAuthHeader() && hasValidCredentials(RequestParser.getCodedCredentials(request)); 
+	}
+	
 	private String getBasicAuthHeader() {
 	   return "WWW-Authenticate: Basic realm=\"" + realm + "\"";
 	}
 
-	private String getLog() {
+	private String getLog(Request request) {
 	    String body = "";
-	    if (!requestLog.log.isEmpty()) {
-	        System.out.println("request in log.");
-            for (String request : requestLog.log) {
-                body += request;
+	    if (isAuthorized(request)) {
+            for (String loggedRequest : requestLog.log) {
+                body += loggedRequest;
             }
 	    }
 	    return body;

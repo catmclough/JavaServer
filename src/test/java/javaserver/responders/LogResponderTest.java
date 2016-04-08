@@ -63,4 +63,11 @@ public class LogResponderTest {
 	   requestLog.addRequest(simpleGet);
 	   assertTrue(responder.getResponse(getLogsWithValidAuth).getBody().contains(simpleGet));
 	}
+
+	@Test
+	public void testGetLogsBodyWithoutAuthBody() {
+	    String simpleGet = "GET /foo";
+	    requestLog.addRequest(simpleGet);
+	    assertFalse(responder.getResponse(getLogsWithoutAuth).getBody().contains(simpleGet));
+	}
 }

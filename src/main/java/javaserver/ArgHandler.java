@@ -19,16 +19,31 @@ public class ArgHandler {
 		}
 	}
 
-	public static String getChosenDirectoryName(String[] args) {
+	public static String getDirectory(String[] args, String defaultDirectory) {
+	    if (ArgHandler.argsHaveValidDirectoryChoice(args)) {
+	        return ArgHandler.getChosenDirectory(args);
+	    } else {
+	        return defaultDirectory;
+	    }
+	}
+
+	
+	private static boolean argsHaveValidDirectoryChoice(String[] args) {
 		int publicDirectoryFlagIndex = Arrays.asList(args).indexOf(DIRECTORY_FLAG);
 		if (publicDirectoryFlagIndex >= 0) {
 			try {
-				return args[publicDirectoryFlagIndex + 1];
+			    return args[publicDirectoryFlagIndex + 1] != null;
 			} catch (ArrayIndexOutOfBoundsException e) {
-				return null;
+				return false;
 			}
 		} else {
-			return null;
+			return false;
 		}
 	}
+	
+	private static String getChosenDirectory(String[] args) {
+		int publicDirectoryFlagIndex = Arrays.asList(args).indexOf(DIRECTORY_FLAG);
+	    return args[publicDirectoryFlagIndex + 1];
+	}
+
 }
