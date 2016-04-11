@@ -27,7 +27,7 @@ public class FileResponderTest {
 		Response fileResponse = responder.getResponse(getFile);
 		assertEquals(fileResponse.getResponseCode(), twoHundred);
 	}
-
+	
 	@Test
 	public void testMethodNotAllowedResponseCode() {
 		Response unallowedRequestResponse = responder.getResponse(postFile);

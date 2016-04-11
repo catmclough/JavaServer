@@ -1,12 +1,15 @@
 package javaserver;
 
+import java.util.HashMap;
+
 public class RequestParser {
 
 	public static Request createRequest(String rawRequest) {
 		String requestMethod = getRequestMethod(rawRequest);
 		String requestURI = getRequestURI(rawRequest);
+		HashMap<String, String> requestHeaders = getRequestHeaders(rawRequest);
 		String requestData = getRequestData(rawRequest);
-		return new Request(requestMethod, requestURI, requestData);
+		return new Request(requestMethod, requestURI, requestHeaders, requestData);
 	}
 	
 	public static String getRequestMethod(String rawRequest) {
@@ -15,47 +18,44 @@ public class RequestParser {
 
 	public static String getRequestURI(String rawRequest) {
 		try {
-			return rawRequest.split("\\s")[1];
+			return rawRequest.split("\\s")[1].trim();
 		} catch (ArrayIndexOutOfBoundsException e) {
 			return "";
 		}
 	}
+	
+	public static HashMap<String, String> getRequestHeaders(String rawRequest) {
+	   String[] requestLines = rawRequest.split(System.lineSeparator()); 
+	   HashMap<String, String> headers = new HashMap<String, String>();
+	   for (int i = 1; i < requestLines.length; i++) {
+	      String[] headerParts = requestLines[i].split(Headers.SEPARATOR); 
+	      if (headerParts != null) {
+	          if (Headers.KNOWN_HEADERS.contains(headerParts[0])) 
+                 headers.put(headerParts[0].trim(), headerParts[1].trim());
+	      }
+	   }
+	   return headers;
+	}
 
 	public static String getRequestData(String rawRequest) {
-		String data = "";
-		try {
-			String[] requestLines = rawRequest.split(System.lineSeparator());
-			for (int i = 1; i < requestLines.length; i++) {
-				data += requestLines[i] + System.lineSeparator();
-			}
-			return data;
-		} catch (ArrayIndexOutOfBoundsException e) {
-		}
-		return data;
+	   String[] requestLines = rawRequest.split(System.lineSeparator()); 
+	   String data = "";
+	   for (int i = 1; i < requestLines.length; i++) {
+	       boolean lineIsHeader = false;
+	       for (String header : Headers.KNOWN_HEADERS) {
+	           if (requestLines[i].startsWith(header))
+	                lineIsHeader = true; 
+	       }
+	       if (!lineIsHeader)
+	           data += requestLines[i].trim();
+	   }
+	   return data;
 	}
 	
 	public static String getCodedCredentials(Request request) {
-	    return getAuthHeader(request.getData()).split("Authorization: Basic ")[1];
+	    return request.getHeaders().get("Authorization").split("Basic")[1].trim();
 	}
 	
-	private static String getAuthHeader(String requestData) {
-	    for (String dataLine : requestData.split(System.lineSeparator())) {
-	        if (dataLine.startsWith("Authorization:")) {
-	            return dataLine;
-	        }
-	    }
-	    return null;
-	}
-
-	public static String getPartialRange(String requestData) {
-		for (String dataLine : requestData.split(System.lineSeparator())) {
-			if (dataLine.startsWith("Range:")) {
-				return dataLine;
-			}
-		}
-		return null;
-	}
-
 	public static String getURIWithoutParams(String uri) {
 		if (requestHasParams(uri)) {
 			String[] routeParts = uri.split("\\?", 2);

@@ -1,15 +1,22 @@
 package javaserver;
 
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+
 public class Response {
 
 	private String statusLine;
 	private String header;
 	private String body;
+	private byte[] bodyData;
+    private String newLine = System.lineSeparator();
+
 
 	private Response(ResponseBuilder builder) {
 		this.statusLine = builder.statusLine;
 		this.header = builder.header;
 		this.body = builder.body;
+		this.bodyData = builder.bodyData;
 	}
 
 	public String getResponseCode() {

@@ -38,7 +38,7 @@ public class LogResponder implements Responder {
 	}
 	
 	private boolean isAuthorized(Request request) {
-	    return request.hasBasicAuthHeader() && hasValidCredentials(RequestParser.getCodedCredentials(request)); 
+	    return request.getHeaders().containsKey("Authorization") && hasValidCredentials(RequestParser.getCodedCredentials(request)); 
 	}
 	
 	private String getBasicAuthHeader() {
