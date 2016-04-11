@@ -4,7 +4,6 @@ import static org.junit.Assert.*;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
-
 import org.junit.After;
 import org.junit.Test;
 import javaserver.HTTPStatusCode;
@@ -16,7 +15,7 @@ import javaserver.Routes;
 public class PatchResponderTest {
 
 	private String patchRequest(String ifMatchHeader) {
-	    return "PATCH " + fileRoute + System.lineSeparator() + ifMatchHeader 
+	    return "PATCH " + fileRoute + System.lineSeparator() + ifMatchHeader
 	        + System.lineSeparator() + System.lineSeparator() + patchedContent;
 	}
 
@@ -41,20 +40,19 @@ public class PatchResponderTest {
 	String[] supportedMethods = new String[] {"GET", "PATCH"};
 	File publicDir = new File("public/");
 	private PatchResponder responder = new PatchResponder(supportedMethods, publicDir);
-	
+
 	private Request validPatchRequest = RequestParser.createRequest(patchRequest(defaultContentMatchHeader));
 
 	@After
 	public void resetFileToDefault() throws IOException {
-	   File file = new File(publicDirectory + fileRoute); 
+	   File file = new File(publicDirectory + fileRoute);
 	   Files.write(file.toPath(), defaultFileContents.getBytes());
 	}
-	
 
 	@Test
 	public void testGetResponse() {
-	   assertEquals(getFile().getResponseCode(), twoHundred); 
-	   assertEquals(getFile().getBody(), defaultFileContents); 
+	   assertEquals(getFile().getResponseCode(), twoHundred);
+	   assertEquals(getFile().getBody(), defaultFileContents);
 	}
 
 	@Test
@@ -63,16 +61,16 @@ public class PatchResponderTest {
 	    responder.getResponse(invalidPatchRequest);
 	    assertEquals(getFile().getBody(), defaultFileContents);
 	}
-	
+
 	@Test
 	public void testPatchResponseCode() {
 	    Response validPatchResponse = responder.getResponse(validPatchRequest);
 	    assertEquals(validPatchResponse.getResponseCode(), twoOhFour);
 	}
-	
+
 	@Test
 	public void TestRecognizesEtagMatch() {
-	   assertTrue(responder.etagMatchesFileContent(validPatchRequest)); 
+	   assertTrue(responder.etagMatchesFileContent(validPatchRequest));
 	}
 
 	@Test

@@ -2,20 +2,18 @@ package javaserver;
 
 import java.net.Socket;
 import java.util.Arrays;
-
 import org.junit.Before;
 import org.junit.Test;
 import junit.framework.TestCase;
 
 public class ClientWorkerTest extends TestCase {
-
 	private ClientWorker clientWorker;
 	private MockClientSocket mockSocket;
 	private MockReader mockReader;
 	private MockSocketWriter mockWriter;
 	private RequestLog mockLog;
-    String getRequest = "GET /foo";
-	
+  private String getRequest = "GET /foo";
+
 	@Before
 	public void setUp() throws Exception {
 		mockSocket = new MockClientSocket();
@@ -57,14 +55,12 @@ public class ClientWorkerTest extends TestCase {
 	}
 
 	class MockClientSocket extends Socket {
-
 		MockClientSocket() {
 			super();
 		}
 	}
 
 	class MockReader extends Reader {
-
 		private String request;
 		public boolean opened = false;
 
@@ -84,8 +80,7 @@ public class ClientWorkerTest extends TestCase {
 	}
 
 	class MockSocketWriter extends SocketWriter {
-
-	    public byte[] latestResponse;
+	  public byte[] latestResponse;
 		public boolean opened = false;
 		public boolean closed = false;
 

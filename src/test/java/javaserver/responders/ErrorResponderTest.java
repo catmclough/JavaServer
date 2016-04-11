@@ -1,9 +1,7 @@
 package javaserver.responders;
 
 import static org.junit.Assert.*;
-
 import org.junit.Test;
-
 import javaserver.HTTPStatusCode;
 import javaserver.Request;
 import javaserver.RequestParser;
@@ -11,7 +9,6 @@ import javaserver.Response;
 import javaserver.Routes;
 
 public class ErrorResponderTest {
-
 	private String unknownRoute = "/foobar";
 	private String unknownRouteWithParams = "/foobar?var1=xyz";
 	private String unknownFileWithPartial = "/foobar\nRange: bytes=0-10";
@@ -60,5 +57,4 @@ public class ErrorResponderTest {
 		Response invalidRangeResponse = responder.getResponse(RequestParser.createRequest(unknownFileWithPartial));
 		assertEquals(invalidRangeResponse.getResponseCode(), fourOhFour);
 	}
-	
 }

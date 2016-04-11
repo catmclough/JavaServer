@@ -6,7 +6,6 @@ import java.io.PrintStream;
 import java.net.ServerSocket;
 import org.junit.After;
 import org.junit.Before;
-
 import junit.framework.TestCase;
 
 public class AppTest extends TestCase{

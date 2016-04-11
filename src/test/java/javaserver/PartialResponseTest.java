@@ -2,12 +2,10 @@ package javaserver;
 
 import static org.junit.Assert.*;
 import org.junit.Test;
-
 import javaserver.responders.ErrorResponder;
 import javaserver.responders.Responder;
 
 public class PartialResponseTest {
-
 	String partialRequestWithFullRange = "GET /partial_content.txt HTTP/1.1\nRange: bytes=0-4";
 	String partialRequestHeader = "Content-Length: 5";
 

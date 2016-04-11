@@ -4,7 +4,6 @@ import java.io.IOException;
 import java.net.ServerSocket;
 
 public class App {
-
 	public static String name = "Cat's Java Server";
 	public static final int DEFAULT_PORT = 5000;
 	public static final String DEFAULT_PUBLIC_DIRECTORY = "public/";
@@ -22,7 +21,7 @@ public class App {
 	    handleArgs(args);
 		server = new Server(new ServerSocket(port));
 	}
-	
+
 	private static void handleArgs(String[] args) {
 		port = ArgHandler.getPort(args, DEFAULT_PORT);
 

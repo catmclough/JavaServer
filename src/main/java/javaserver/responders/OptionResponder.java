@@ -5,7 +5,6 @@ import javaserver.Request;
 import javaserver.Response;
 
 public class OptionResponder implements Responder {
-
 	private String[] supportedMethods;
 
 	public OptionResponder(String[] supportedMethods) {

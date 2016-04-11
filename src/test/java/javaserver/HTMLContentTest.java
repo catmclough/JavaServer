@@ -5,7 +5,6 @@ import org.junit.Before;
 import org.junit.Test;
 
 public class HTMLContentTest {
-
 	private String openingHTML;
 	private String closingHTML;
 

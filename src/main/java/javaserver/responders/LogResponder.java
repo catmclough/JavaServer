@@ -27,7 +27,7 @@ public class LogResponder implements Responder {
 		    .body(getLog(request))
             .build();
 	}
-	
+
 	@Override
 	public String getStatusLine(Request request) {
 	    if (requestIsSupported(supportedMethods, request.getMethod())  && isAuthorized(request)) {
@@ -36,11 +36,11 @@ public class LogResponder implements Responder {
             return HTTPStatusCode.FOUR_OH_ONE.getStatusLine();
 	    }
 	}
-	
+
 	private boolean isAuthorized(Request request) {
 	    return request.getHeaders().containsKey("Authorization") && hasValidCredentials(RequestParser.getCodedCredentials(request)); 
 	}
-	
+
 	private String getBasicAuthHeader() {
 	   return "WWW-Authenticate: Basic realm=\"" + realm + "\"";
 	}

@@ -1,9 +1,7 @@
 package javaserver.responders;
 
 import static org.junit.Assert.*;
-
 import org.junit.Test;
-
 import javaserver.HTTPStatusCode;
 import javaserver.Request;
 import javaserver.RequestParser;
@@ -11,7 +9,6 @@ import javaserver.Response;
 import javaserver.Routes;
 
 public class FormResponderTest {
-
 	private String formRoute = "/form";
 	private String postData = "snack=crackerjack";
 

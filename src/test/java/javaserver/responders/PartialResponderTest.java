@@ -1,11 +1,8 @@
 package javaserver.responders;
 
 import static org.junit.Assert.*;
-
 import java.io.File;
-
 import org.junit.Test;
-
 import javaserver.App;
 import javaserver.HTTPStatusCode;
 import javaserver.Request;
@@ -16,7 +13,7 @@ import javaserver.Response;
 public class PartialResponderTest {
 	String fileRoute = "/partial_content.txt";
 	String unknownFileRoute = "/unknown-file.txt";
-	
+
 	Request fullRangeRequest = RequestParser.createRequest("GET " + fileRoute + "\nRange: bytes=0-4");
 	Request noBeginningPartial = RequestParser.createRequest("GET " + fileRoute + "\nRange: bytes=-4");
 	Request noEndPointPartial = RequestParser.createRequest("GET " + fileRoute + "\nRange: bytes=4-");

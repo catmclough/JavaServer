@@ -17,7 +17,7 @@ public class LogResponderTest {
 	String invalidCredentialsAuthHeader = "Authorization: Basic xxx";
 	String validCredentialsAuthHeader = "Authorization: Basic YWRtaW46aHVudGVyMg==";
 
-	Request getLogsWithoutAuth = RequestParser.createRequest("GET " + logsRoute); 
+	Request getLogsWithoutAuth = RequestParser.createRequest("GET " + logsRoute);
 	Request getLogsWithInvalidAuth = RequestParser.createRequest("GET " + logsRoute +  System.lineSeparator() + invalidCredentialsAuthHeader);
 	Request getLogsWithValidAuth = RequestParser.createRequest("GET " + logsRoute +  System.lineSeparator() + validCredentialsAuthHeader);
 
@@ -31,7 +31,7 @@ public class LogResponderTest {
 	public void testLogResponderCreation() {
 		assertEquals(responder.getClass(), LogResponder.class);
 	}
-	
+
 	@Test
 	public void testGetLogsNoAuthHeaderResponseCode() {
 		assertEquals(responder.getResponse(getLogsWithoutAuth).getResponseCode(), fourOhOne);
@@ -41,22 +41,22 @@ public class LogResponderTest {
 	public void testGetLogsWithoutAuthResponseHeader() {
 		assertEquals(responder.getResponse(getLogsWithoutAuth).getHeader(), basicAuth);
 	}
-	
+
 	@Test
 	public void testGetLogsWithInvalidAuthResponseCode() {
-	   assertEquals(responder.getResponse(getLogsWithInvalidAuth).getResponseCode(), fourOhOne); 
+	   assertEquals(responder.getResponse(getLogsWithInvalidAuth).getResponseCode(), fourOhOne);
 	}
 
 	@Test
 	public void testGetLogsWithInvalidAuthHeader() {
-	   assertEquals(responder.getResponse(getLogsWithInvalidAuth).getHeader(), basicAuth); 
+	   assertEquals(responder.getResponse(getLogsWithInvalidAuth).getHeader(), basicAuth);
 	}
 
 	@Test
 	public void testGetLogsWithValidAuthResponseCode() {
-	   assertEquals(responder.getResponse(getLogsWithValidAuth).getResponseCode(), twoHundred); 
+	   assertEquals(responder.getResponse(getLogsWithValidAuth).getResponseCode(), twoHundred);
 	}
-	
+
 	@Test
 	public void testGetLogsWithValidAuthBody() {
 	   String simpleGet = "GET /foo";

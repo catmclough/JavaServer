@@ -5,7 +5,6 @@ import javaserver.Request;
 import javaserver.Response;
 
 public class RedirectResponder implements Responder {
-
 	private String[] supportedMethods;
 	private String defaultRedirectLocation = "http://localhost:5000/";
 

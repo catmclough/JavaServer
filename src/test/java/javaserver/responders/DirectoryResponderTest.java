@@ -1,7 +1,6 @@
 package javaserver.responders;
 
 import static org.junit.Assert.*;
-
 import java.io.File;
 import org.junit.Test;
 import javaserver.Request;
@@ -12,7 +11,6 @@ import javaserver.Response;
 import javaserver.Routes;
 
 public class DirectoryResponderTest {
-
 	private String directoryRoute = "/";
 	private Request supportedRequest = RequestParser.createRequest("GET " + directoryRoute);
 	private Request unsupportedRequest = RequestParser.createRequest("POST " + directoryRoute);
@@ -34,7 +32,7 @@ public class DirectoryResponderTest {
 		Response unsupportedRequestResponse = responder.getResponse(unsupportedRequest);
 		assertEquals(unsupportedRequestResponse.getResponseCode(), fourOhFour);
 	}
-	
+
 	@Test
 	public void testRespondsWithContentTypeHeader() {
 		Response response = responder.getResponse(supportedRequest);
@@ -52,5 +50,4 @@ public class DirectoryResponderTest {
 		String listOfDirectoryLinks = HTMLContent.listOfLinks(publicFileNames);
 		assertTrue(responseBody.contains(listOfDirectoryLinks));
 	}
-
 }

@@ -8,7 +8,6 @@ import javaserver.Request;
 import javaserver.Response;
 
 public class DirectoryResponder implements Responder {
-
 	private String[] supportedMethods;
 	private File directory;
 	private String htmlHeader = "Content-Type: text/html;";

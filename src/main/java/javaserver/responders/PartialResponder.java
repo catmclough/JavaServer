@@ -10,7 +10,6 @@ import javaserver.Request;
 import javaserver.Response;
 
 public class PartialResponder extends FileResponder {
-
 	private int contentLength;
 
 	public PartialResponder(String[] supportedMethods, File publicDir) {

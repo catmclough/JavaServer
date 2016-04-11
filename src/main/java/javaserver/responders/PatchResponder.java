@@ -46,7 +46,7 @@ public class PatchResponder extends FileResponder {
             return false;
         }
     }
-    
+
     private String encode(byte[] content) {
         java.security.MessageDigest d = null;
         try {
@@ -57,7 +57,7 @@ public class PatchResponder extends FileResponder {
         d.update(content);
         return encodeToString(d.digest());
       }
-    
+
     private String encodeToString(byte[] hash) {
         StringBuilder hexHash = new StringBuilder(hash.length * 2);
         for (byte b : hash) {
@@ -65,7 +65,7 @@ public class PatchResponder extends FileResponder {
         }
         return hexHash.toString();
     }
-    
+
     private String patchContentWrittenToFile(Request request) {
         File file = new File(directory + request.getURI());
         try {

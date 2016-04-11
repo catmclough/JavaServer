@@ -6,7 +6,6 @@ import javaserver.Request;
 import javaserver.Response;
 
 public class ParameterResponder implements Responder {
-
 	private String[] supportedMethods;
 
 	public ParameterResponder(String[] supportedMethods) {

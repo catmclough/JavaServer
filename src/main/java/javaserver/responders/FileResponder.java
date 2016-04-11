@@ -8,7 +8,6 @@ import javaserver.Request;
 import javaserver.Response;
 
 public class FileResponder implements Responder {
-
 	protected String[] supportedMethods;
 	protected File directory;
 
@@ -31,7 +30,7 @@ public class FileResponder implements Responder {
               .build();
 		}
 	}
-	
+
 	protected String getBody(Request request) {
         File thisFile = new File(directory + request.getURI());
         int fileLength = (int) thisFile.length();

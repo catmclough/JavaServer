@@ -2,11 +2,9 @@ package javaserver;
 
 import java.io.IOException;
 import java.net.Socket;
-
 import javaserver.responders.Responder;
 
 public class ClientWorker implements Runnable {
-
 	private Socket clientSocket;
 	protected Reader reader;
 	protected SocketWriter writer;

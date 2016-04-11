@@ -15,7 +15,7 @@ public class DirectoryHandler {
             throw new DirectoryNotFoundException(directory);
         }
 	}
-	
+
 	public static File getPublicDirectory() {
 	    if (publicDirectory == null) {
             try {
@@ -26,7 +26,7 @@ public class DirectoryHandler {
 	    }
 	    return publicDirectory;
 	}
-	
+
 	public static String[] getNonImageFiles() {
 	    ArrayList<String> textFileList = new ArrayList<String>();
 	    for (String file : getPublicDirectory().list()) {
@@ -37,7 +37,7 @@ public class DirectoryHandler {
 	    String[] textFiles = new String[textFileList.size()];
 	    return textFileList.toArray(textFiles);
 	}
-	
+
 	public static String[] getImageFiles() {
 	    ArrayList<String> imageFileList = new ArrayList<String>();
 	    for (String file : getPublicDirectory().list()) {
@@ -56,15 +56,15 @@ public class DirectoryHandler {
 	public static String getPublicDirectoryPath() {
 	    return getPublicDirectory().getPath() + "/";
 	}
-	
+
 	private static boolean directoryExists(String directoryPath) {
 		File directory = new File(formatPath(directoryPath));
 		return directory.exists();
 	}
-	
+
 	private static String formatPath(String directoryPath) {
 	   String formattedPath = directoryPath;
-	   if (directoryPath.startsWith("/"))  
+	   if (directoryPath.startsWith("/"))
 	       formattedPath = directoryPath.substring(1);
 	   return formattedPath;
 	}

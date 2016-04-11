@@ -1,9 +1,7 @@
 package javaserver.responders;
 
 import static org.junit.Assert.*;
-
 import org.junit.Test;
-
 import javaserver.HTTPStatusCode;
 import javaserver.Request;
 import javaserver.RequestParser;
@@ -11,7 +9,6 @@ import javaserver.Response;
 import javaserver.Routes;
 
 public class FileResponderTest {
-
 	String fileRoute = "/file1";
 	String fileContents = "file1 contents";
 
@@ -31,7 +28,7 @@ public class FileResponderTest {
 		Response fileResponse = responder.getResponse(getFile);
 		assertEquals(fileResponse.getResponseCode(), twoHundred);
 	}
-	
+
 	@Test
 	public void testMethodNotAllowedResponseCode() {
 		Response unallowedRequestResponse = responder.getResponse(postFile);
@@ -43,16 +40,16 @@ public class FileResponderTest {
 		Response existingFileResponse = responder.getResponse(getFile);
 		assertTrue(existingFileResponse.getBody().contains(fileContents));
 	}
-	
+
 	@Test
 	public void testCreatesAndRespondsWithPartialResponder() {
-	  Response partialResponse = responder.getResponse(getPartial);  
+	  Response partialResponse = responder.getResponse(getPartial);
 	  assertEquals(partialResponse.getResponseCode(), twoOhSix);
 	}
 
 	@Test
 	public void testCreatesAndRespondsWithPatchResponder() {
-	  Response patchResponse = responder.getResponse(patchContent);  
+	  Response patchResponse = responder.getResponse(patchContent);
 	  assertEquals(patchResponse.getResponseCode(), twoOhFour);
 	}
 }

@@ -6,7 +6,6 @@ import org.junit.Test;
 
 public class DirectoryHandlerTest {
 
-
     @Test
     public void testRecognizesExistingDirectory() throws IOException {
         try {
@@ -20,7 +19,7 @@ public class DirectoryHandlerTest {
     @Test
     public void testRecognizesExistingDirectoryWithFormatIssue() {
         boolean errorCaught = false;
-        try { 
+        try {
             DirectoryHandler.createPublicDirectory("/public");
         } catch (DirectoryNotFoundException e) {
             errorCaught = true;

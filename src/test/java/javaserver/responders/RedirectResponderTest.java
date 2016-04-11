@@ -9,12 +9,11 @@ import javaserver.Response;
 import javaserver.Routes;
 
 public class RedirectResponderTest {
-
 	private String redirectRoute = "/redirect";
 	private String redirectHeader = "Location: http://localhost:5000/";
 	private Request supportedRequest = RequestParser.createRequest("GET " + redirectRoute);
 	private Request unsupportedRequest = RequestParser.createRequest("POST " + redirectRoute);
-	
+
 	private Responder responder = Routes.getResponder(redirectRoute);
 	private String threeOhTwo = HTTPStatusCode.THREE_OH_TWO.getStatusLine();
 	private String fourOhFour= HTTPStatusCode.FOUR_OH_FOUR.getStatusLine();

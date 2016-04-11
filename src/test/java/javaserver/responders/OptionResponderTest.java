@@ -9,7 +9,6 @@ import javaserver.Response;
 import javaserver.Routes;
 
 public class OptionResponderTest {
-
 	private String optionRoute = "/method_options";
 	private String methodOptionsHeader = "Allow: GET,HEAD,POST,OPTIONS,PUT";
 	private Request methodOptionsRequest = RequestParser.createRequest("GET " + optionRoute);
@@ -21,7 +20,7 @@ public class OptionResponderTest {
 	public void testOptionsResponseCode() {
 		assertEquals(optionsResponse.getResponseCode(), twoHundred);
 	}
-	
+
 	@Test
 	public void testOptionsHeader() {
 		assertEquals(optionsResponse.getHeader(), methodOptionsHeader);

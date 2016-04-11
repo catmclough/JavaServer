@@ -3,7 +3,6 @@ package javaserver;
 import java.util.HashMap;
 
 public class Request {
-
 	private String method;
 	private String uri;
 	private HashMap<String, String> headers;
@@ -23,7 +22,7 @@ public class Request {
 	public String getURI() {
 		return uri;
 	}
-	
+
 	public HashMap<String, String> getHeaders() {
 	    return headers;
 	}

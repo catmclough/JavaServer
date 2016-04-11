@@ -11,7 +11,6 @@ import javaserver.Response;
 import javaserver.Routes;
 
 public class ImageResponderTest {
-
     String publicDirectoryPath = "public/";
     String unknownImagePath = "/non-existant-image";
     String existingJpegImage = "image.jpeg";
@@ -26,7 +25,7 @@ public class ImageResponderTest {
         Responder responder = Routes.getResponder("/" + existingJpegImage);
         assertEquals(responder.getClass(), ImageResponder.class);
     }
-    
+
     @Test
     public void testPublicImageStatusLine() {
         Response imageResponse = responder.getResponse(jpegRequest);
@@ -50,7 +49,7 @@ public class ImageResponderTest {
        Response imageResponse = responder.getResponse(jpegRequest);
        assertTrue(imageResponse.getHeader().contains("Content-Type: image/jpeg"));
     }
-    
+
     @Test
     public void testPNGHeader() {
        Request pngRequest = RequestParser.createRequest("GET /" + existingPNGImage);
@@ -61,7 +60,7 @@ public class ImageResponderTest {
     @Test
     public void testImageResponseBody() {
        Request validRequest = RequestParser.createRequest("GET /" + existingPNGImage);
-       Response imageResponse = responder.getResponse(validRequest); 
+       Response imageResponse = responder.getResponse(validRequest);
        assertTrue(Arrays.equals(imageResponse.getBodyData(), responder.getImageData(validRequest)));
     }
 }

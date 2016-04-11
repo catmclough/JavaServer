@@ -5,7 +5,6 @@ import java.io.OutputStream;
 import java.net.Socket;
 
 public class SocketWriter {
-
 	protected OutputStream writingMechanism;
 	protected boolean isOutputStreamOpen = true;
 

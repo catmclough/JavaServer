@@ -6,7 +6,6 @@ import java.io.InputStreamReader;
 import java.net.Socket;
 
 public class Reader {
-
 	protected BufferedReader readingMechanism;
 	private char lastCharOfRequest = (char) -1;
 

@@ -30,9 +30,9 @@ public class Response {
 	public String getBody() {
 		return body;
 	}
-	
+
 	public byte[] getBodyData() {
-	   return bodyData; 
+	   return bodyData;
 	}
 
 	public byte[] formatResponse() {
@@ -43,10 +43,10 @@ public class Response {
 		output += newLine;
 		if (body != null)
             output += body + newLine;
-		
+
 		try {
             outputStream.write(output.getBytes());
-            if (bodyData != null) 
+            if (bodyData != null)
                 outputStream.write(bodyData);
         } catch (IOException e) {
             System.out.println("Unable to write response body to ByteArrayOutputStream.");

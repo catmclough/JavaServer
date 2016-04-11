@@ -6,7 +6,6 @@ import javaserver.Request;
 import javaserver.Response;
 
 public class FormResponder implements Responder {
-
 	private String[] supportedMethods;
 	private Form form;
 

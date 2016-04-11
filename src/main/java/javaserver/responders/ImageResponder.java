@@ -12,7 +12,6 @@ import javaserver.RequestParser;
 import javaserver.Response;
 
 public class ImageResponder extends FileResponder {
-
     private String[] acceptedImageFormats = new String[] {"jpeg", "gif", "png"};
     private boolean imageWasFound = true;
 
@@ -39,11 +38,11 @@ public class ImageResponder extends FileResponder {
     }
 
     private String getImageHeaders(Request request) {
-       String header = "Content-Length: " + getImageData(request).length + System.lineSeparator() 
+       String header = "Content-Length: " + getImageData(request).length + System.lineSeparator()
        + "Content-Type: image/" + getImageFormat(request);
        return header;
     }
-    
+
     private String getImageFormat(Request request) {
         String format = RequestParser.getImageFormat(request);
         if (!Arrays.asList(acceptedImageFormats).contains(format)) {
@@ -55,7 +54,7 @@ public class ImageResponder extends FileResponder {
 
 	protected byte[] getImageData(Request request) {
 		File thisFile = new File(DirectoryHandler.getPublicDirectoryPath() + getFileName(request));
-		byte[] fileContents;
+		byte[] fileContents = new byte[0];
 
 		if (requestIsSupported(supportedMethods, request.getMethod())) {
             try {
@@ -66,6 +65,6 @@ public class ImageResponder extends FileResponder {
                 System.out.println("Unable to read from file.");
             }
 		}
-        return "".getBytes();
+    return fileContents;
 	}
 }

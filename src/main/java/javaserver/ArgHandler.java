@@ -27,7 +27,6 @@ public class ArgHandler {
 	    }
 	}
 
-	
 	private static boolean argsHaveValidDirectoryChoice(String[] args) {
 		int publicDirectoryFlagIndex = Arrays.asList(args).indexOf(DIRECTORY_FLAG);
 		if (publicDirectoryFlagIndex >= 0) {
@@ -40,7 +39,7 @@ public class ArgHandler {
 			return false;
 		}
 	}
-	
+
 	private static String getChosenDirectory(String[] args) {
 		int publicDirectoryFlagIndex = Arrays.asList(args).indexOf(DIRECTORY_FLAG);
 	    return args[publicDirectoryFlagIndex + 1];
