@@ -19,7 +19,7 @@ public class DirectoryResponder implements Responder {
 
 	@Override
 	public Response getResponse(Request request) {
-		return new Response.ResponseBuilder(getStatusLine(request))
+        return new Response.ResponseBuilder(getStatusLine(request))
           .header(htmlHeader)
           .body(getDirectoryLinksHTML())
           .build();

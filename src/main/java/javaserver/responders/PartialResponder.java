@@ -16,7 +16,7 @@ public class PartialResponder extends FileResponder {
 		super(supportedMethods, publicDir);
 	}
 
-	public Response getResponse(Request request) {
+	public Response createResponse(Request request) {
         return new Response.ResponseBuilder(getStatusLine(request))
           .body(getBody(request))
           .header(getHeader())

@@ -18,17 +18,38 @@ public class FileResponder implements Responder {
 
 	@Override
 	public Response getResponse(Request request) {
-		if (request.getHeaders().containsKey("Range")) {
-			PartialResponder partialResponder = new PartialResponder(supportedMethods, directory);
-			return partialResponder.getResponse(request);
-		} else if (request.getMethod().equals("PATCH")) {
-		    PatchResponder patchResponder = new PatchResponder(supportedMethods, directory);
-		    return patchResponder.getResponse(request);
-		} else {
-			return new Response.ResponseBuilder(getStatusLine(request))
-              .body(getBody(request))
+	    if (requestIsSupported(supportedMethods, request.getMethod())) {
+            Responder responder = createResponder(request);
+            return responder.createResponse(request);
+	    } else {
+            return new Response.ResponseBuilder(HTTPStatusCode.FOUR_OH_FIVE.getStatusLine())
               .build();
+	    }
+	}
+
+	private Responder createResponder(Request request) {
+		if (request.getHeaders().containsKey("Range")) {
+			return new PartialResponder(supportedMethods, directory);
+		} else if (request.getMethod().equals("PATCH")) {
+		    return new PatchResponder(supportedMethods, directory);
+		} else {
+		    return this;
 		}
+	}
+
+	public Response createResponse(Request request) {
+        return new Response.ResponseBuilder(getStatusLine(request))
+          .body(getBody(request))
+          .build();
+	}
+
+	@Override
+	public String getStatusLine(Request request) {
+        return HTTPStatusCode.TWO_HUNDRED.getStatusLine();
+	}
+
+	public String getFileName(Request request) {
+		return request.getURI().substring(1);
 	}
 
 	protected String getBody(Request request) {
@@ -36,29 +57,14 @@ public class FileResponder implements Responder {
         int fileLength = (int) thisFile.length();
         byte[] fileContents = new byte[fileLength];
 
-        if (requestIsSupported(supportedMethods, request.getMethod())) {
-            try {
-                FileInputStream fileInput = new FileInputStream(thisFile);
-                fileInput.read(fileContents);
-                fileInput.close();
-            } catch (IOException e) {
-                System.out.println("Unable to read from file with input stream");
-                e.printStackTrace();
-            }
+        try {
+            FileInputStream fileInput = new FileInputStream(thisFile);
+            fileInput.read(fileContents);
+            fileInput.close();
+        } catch (IOException e) {
+            System.out.println("Unable to read from file with input stream");
+            e.printStackTrace();
         }
         return new String(fileContents);
     }
-
-	@Override
-	public String getStatusLine(Request request) {
-		if (requestIsSupported(supportedMethods, request.getMethod())) {
-            return HTTPStatusCode.TWO_HUNDRED.getStatusLine();
-		} else {
-			return HTTPStatusCode.FOUR_OH_FIVE.getStatusLine();
-		}
-	}
-
-	public String getFileName(Request request) {
-		return request.getURI().substring(1);
-	}
 }

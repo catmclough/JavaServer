@@ -10,14 +10,21 @@ import javaserver.Routes;
 
 public class ErrorResponderTest {
 	private String unknownRoute = "/foobar";
+	private Responder responder = Routes.getResponder(unknownRoute);
+
 	private String unknownRouteWithParams = "/foobar?var1=xyz";
 	private String unknownFileWithPartial = "/foobar\nRange: bytes=0-10";
 	private Request unsupportedRequest = RequestParser.createRequest("GET " + unknownRoute);
-	private Responder responder = Routes.getResponder(unknownRoute);
-	private String fourOhFour= HTTPStatusCode.FOUR_OH_FOUR.getStatusLine();
+
+	private String fourOhFour = HTTPStatusCode.FOUR_OH_FOUR.getStatusLine();
 
 	@Test
-	public void testFourOhFourResponseCode() {
+	public void testErrorResponderCreation() {
+	    assertEquals(responder.getClass(), ErrorResponder.class);
+	}
+
+	@Test
+	public void test404ResponseCode() {
 		Response unsupportedRequestResponse = responder.getResponse(unsupportedRequest);
 		assertEquals(unsupportedRequestResponse.getResponseCode(), fourOhFour);
 	}
@@ -51,10 +58,8 @@ public class ErrorResponderTest {
 
 	@Test
 	public void testInvalidiFileRequestWithPartial() {
-		Responder responder = Routes.getResponder(unknownFileWithPartial);
-		assertEquals(responder.getClass(), ErrorResponder.class);
-
 		Response invalidRangeResponse = responder.getResponse(RequestParser.createRequest(unknownFileWithPartial));
 		assertEquals(invalidRangeResponse.getResponseCode(), fourOhFour);
 	}
 }
+

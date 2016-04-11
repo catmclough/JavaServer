@@ -13,30 +13,37 @@ import javaserver.Routes;
 public class DirectoryResponderTest {
 	private String directoryRoute = "/";
 	private Request supportedRequest = RequestParser.createRequest("GET " + directoryRoute);
-	private Request unsupportedRequest = RequestParser.createRequest("POST " + directoryRoute);
+	private String directoryContentType = "Content-Type: text/html;";
 
 	private Responder responder = Routes.getResponder(directoryRoute);
 
-	private String twoHundred = HTTPStatusCode.TWO_HUNDRED.getStatusLine();
-	private String fourOhFour= HTTPStatusCode.FOUR_OH_FOUR.getStatusLine();
-	private String contentType = "Content-Type: text/html;";
+	private String[] getListOfPublicFiles() {
+		File publicDirectory = new File("public");
+		return publicDirectory.list();
+	}
+
+	@Test
+	public void testDirectoryResponderCreation() {
+	    assertEquals(responder.getClass(), DirectoryResponder.class);
+	}
 
 	@Test
 	public void testRespondsWith200() {
 		Response response = responder.getResponse(supportedRequest);
-		assertEquals(response.getResponseCode(), twoHundred);
+		assertEquals(response.getResponseCode(), HTTPStatusCode.TWO_HUNDRED.getStatusLine());
 	}
 
 	@Test
-	public void testRespondsWithFourOhFour() {
+	public void testRespondsWith404() {
+	    Request unsupportedRequest = RequestParser.createRequest("POST " + directoryRoute);
 		Response unsupportedRequestResponse = responder.getResponse(unsupportedRequest);
-		assertEquals(unsupportedRequestResponse.getResponseCode(), fourOhFour);
+		assertEquals(unsupportedRequestResponse.getResponseCode(), HTTPStatusCode.FOUR_OH_FOUR.getStatusLine());
 	}
 
 	@Test
 	public void testRespondsWithContentTypeHeader() {
 		Response response = responder.getResponse(supportedRequest);
-		assertEquals(response.getHeader(), contentType);
+		assertEquals(response.getHeader(), directoryContentType);
 	}
 
 	@Test
@@ -44,10 +51,7 @@ public class DirectoryResponderTest {
 		Response response = responder.getResponse(supportedRequest);
 		String responseBody = response.getBody();
 
-		File publicDirectory = new File("public");
-		String[] publicFileNames = publicDirectory.list();
-
-		String listOfDirectoryLinks = HTMLContent.listOfLinks(publicFileNames);
+		String listOfDirectoryLinks = HTMLContent.listOfLinks(getListOfPublicFiles());
 		assertTrue(responseBody.contains(listOfDirectoryLinks));
 	}
 }

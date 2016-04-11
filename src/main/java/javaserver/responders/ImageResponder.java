@@ -4,7 +4,6 @@ import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.util.Arrays;
-
 import javaserver.DirectoryHandler;
 import javaserver.HTTPStatusCode;
 import javaserver.Request;
@@ -65,6 +64,6 @@ public class ImageResponder extends FileResponder {
                 System.out.println("Unable to read from file.");
             }
 		}
-    return fileContents;
+        return fileContents;
 	}
 }

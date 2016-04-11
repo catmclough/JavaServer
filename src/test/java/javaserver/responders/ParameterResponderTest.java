@@ -13,12 +13,29 @@ public class ParameterResponderTest {
 	private Request requestWithParams = RequestParser.createRequest("GET " + codedURI);
 	private Responder responder = Routes.getResponder(RequestParser.getURIWithoutParams(codedURI));
 
-	private String twoHundred = HTTPStatusCode.TWO_HUNDRED.getStatusLine();
+	@Test
+	public void testParameterResponderCreation() {
+	   assertEquals(responder.getClass(), ParameterResponder.class);
+	}
 
 	@Test
-	public void testValidCodedParameters200() {
+	public void testValidCodedParametersResponseCode() {
 		Response validParamsResponse = responder.getResponse(requestWithParams);
-		assertEquals(validParamsResponse.getResponseCode(), twoHundred);
+		assertEquals(validParamsResponse.getResponseCode(), HTTPStatusCode.TWO_HUNDRED.getStatusLine());
+	}
+
+	@Test
+	public void testInValidRequestResponseCode() {
+	    Request requestWithInvalidParams = RequestParser.createRequest("POST " + codedURI);
+		Response invalidParamsResponse = responder.getResponse(requestWithInvalidParams);
+		assertEquals(invalidParamsResponse.getResponseCode(), HTTPStatusCode.FOUR_OH_FOUR.getStatusLine());
+	}
+
+	@Test
+	public void testUnrecognizedParamsInResponseBody() {
+	    Request requestWithRandomParams = RequestParser.createRequest("GET /random_params?foo=bar");
+	    Response nonCodedParamResponse = responder.getResponse(requestWithRandomParams);
+	    assertEquals(nonCodedParamResponse.getResponseCode(), HTTPStatusCode.TWO_HUNDRED.getStatusLine());
 	}
 
 	@Test

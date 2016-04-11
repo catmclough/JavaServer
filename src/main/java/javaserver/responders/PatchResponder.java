@@ -3,8 +3,9 @@ package javaserver.responders;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
+import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
-//import java.util.Formatter;
+import java.util.Formatter;
 import javaserver.HTTPStatusCode;
 import javaserver.Request;
 import javaserver.Response;
@@ -15,26 +16,21 @@ public class PatchResponder extends FileResponder {
 		super(supportedMethods, publicDir);
 	}
 
-    @Override
-    public Response getResponse(Request request) {
+    public Response createResponse(Request request) {
+        updateFileContents(request);
         return new Response.ResponseBuilder(getStatusLine(request))
-          .body(getFileContents(request))
+          .body(getBody(request))
           .build();
     }
 
     @Override
     public String getStatusLine(Request request) {
-		if (requestIsSupported(supportedMethods, request.getMethod())) {
-            return HTTPStatusCode.TWO_OH_FOUR.getStatusLine();
-		} else {
-			return HTTPStatusCode.FOUR_OH_FIVE.getStatusLine();
-		}
+        return HTTPStatusCode.TWO_OH_FOUR.getStatusLine();
     }
 
-    private String getFileContents(Request request) {
+    private void updateFileContents(Request request) {
        if (etagMatchesFileContent(request))
-           return patchContentWrittenToFile(request);
-       return getBody(request);
+           patchContentWrittenToFile(request);
     }
 
     protected boolean etagMatchesFileContent(Request request) {
@@ -48,22 +44,25 @@ public class PatchResponder extends FileResponder {
     }
 
     private String encode(byte[] content) {
-        java.security.MessageDigest d = null;
+        String sha1 = "";
         try {
-            d = java.security.MessageDigest.getInstance("SHA-1");
+            MessageDigest md = MessageDigest.getInstance("SHA-1");
+            md.update(content);
+            sha1 = getHex(md.digest());
         } catch (NoSuchAlgorithmException e) {
-            e.printStackTrace();
+            System.out.println("Could not encode file contents to SHA-1");
         }
-        d.update(content);
-        return encodeToString(d.digest());
+        return sha1;
       }
 
-    private String encodeToString(byte[] hash) {
-        StringBuilder hexHash = new StringBuilder(hash.length * 2);
-        for (byte b : hash) {
-            hexHash.append(String.format("%02x", b));
-        }
-        return hexHash.toString();
+    private String getHex(byte[] hash) {
+       Formatter formatter = new Formatter();
+       for (byte b : hash) {
+          formatter.format("%02x", b);
+       }
+       String hex = formatter.toString();
+       formatter.close();
+       return hex;
     }
 
     private String patchContentWrittenToFile(Request request) {

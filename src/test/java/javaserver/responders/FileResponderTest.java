@@ -18,21 +18,16 @@ public class FileResponderTest {
 	Request patchContent = RequestParser.createRequest("PATCH " + fileRoute + "\nIf-Match: xyz");
 	Responder responder = Routes.getResponder(fileRoute);
 
-	private String twoHundred = HTTPStatusCode.TWO_HUNDRED.getStatusLine();
-	private String twoOhFour = HTTPStatusCode.TWO_OH_FOUR.getStatusLine();
-	private String twoOhSix = HTTPStatusCode.TWO_OH_SIX.getStatusLine();
-	private String fourOhFive= HTTPStatusCode.FOUR_OH_FIVE.getStatusLine();
-
 	@Test
 	public void testSupportedFileRequestResponseCode() {
 		Response fileResponse = responder.getResponse(getFile);
-		assertEquals(fileResponse.getResponseCode(), twoHundred);
+		assertEquals(fileResponse.getResponseCode(), HTTPStatusCode.TWO_HUNDRED.getStatusLine());
 	}
 
 	@Test
 	public void testMethodNotAllowedResponseCode() {
 		Response unallowedRequestResponse = responder.getResponse(postFile);
-		assertEquals(unallowedRequestResponse.getResponseCode(), fourOhFive);
+		assertEquals(unallowedRequestResponse.getResponseCode(), HTTPStatusCode.FOUR_OH_FIVE.getStatusLine());
 	}
 
 	@Test
@@ -44,12 +39,12 @@ public class FileResponderTest {
 	@Test
 	public void testCreatesAndRespondsWithPartialResponder() {
 	  Response partialResponse = responder.getResponse(getPartial);
-	  assertEquals(partialResponse.getResponseCode(), twoOhSix);
+	  assertEquals(partialResponse.getResponseCode(), HTTPStatusCode.TWO_OH_SIX.getStatusLine());
 	}
 
 	@Test
 	public void testCreatesAndRespondsWithPatchResponder() {
 	  Response patchResponse = responder.getResponse(patchContent);
-	  assertEquals(patchResponse.getResponseCode(), twoOhFour);
+	  assertEquals(patchResponse.getResponseCode(), HTTPStatusCode.TWO_OH_FOUR.getStatusLine());
 	}
 }

@@ -29,6 +29,13 @@ public class PartialResponderTest {
 	}
 
 	@Test
+	public void testInvalidPartialRequestResponseCode() {
+	    Request invalidRequest = RequestParser.createRequest("POST " + fileRoute + "\nRange: bytes=0-4");
+		Response partial = responder.getResponse(invalidRequest);
+		assertEquals(partial.getResponseCode(), HTTPStatusCode.FOUR_OH_FIVE.getStatusLine());
+	}
+
+	@Test
 	public void testHalfOfRangeRequestResponseCode() {
 		Response noBeginningPartialResponse = responder.getResponse(noBeginningPartial);
 		assertEquals(noBeginningPartialResponse.getResponseCode(), twoOhSix);

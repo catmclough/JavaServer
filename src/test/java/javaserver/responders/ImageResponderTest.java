@@ -11,14 +11,13 @@ import javaserver.Response;
 import javaserver.Routes;
 
 public class ImageResponderTest {
-    String publicDirectoryPath = "public/";
-    String unknownImagePath = "/non-existant-image";
-    String existingJpegImage = "image.jpeg";
-    String existingPNGImage = "image.png";
-    Request jpegRequest = RequestParser.createRequest("GET /" + existingJpegImage);
-    Request bogusRequest = RequestParser.createRequest("GET /" + unknownImagePath);
+    private String unknownImagePath = "/non-existant-image";
+    private String existingJpegImage = "image.jpeg";
+    private String existingPNGImage = "image.png";
+    private Request jpegRequest = RequestParser.createRequest("GET /" + existingJpegImage);
+    private Request bogusRequest = RequestParser.createRequest("GET /" + unknownImagePath);
 
-   ImageResponder responder = new ImageResponder(new String[] {"GET"}, new File("public"));
+    ImageResponder responder = new ImageResponder(new String[] {"GET"}, new File("public"));
 
     @Test
     public void testImageResponderCreation() {

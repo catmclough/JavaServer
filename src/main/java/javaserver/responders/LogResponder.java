@@ -1,7 +1,6 @@
 package javaserver.responders;
 
 import java.util.Base64;
-
 import javaserver.HTTPStatusCode;
 import javaserver.Request;
 import javaserver.RequestLog;
