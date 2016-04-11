@@ -19,26 +19,26 @@ public class PartialResponseTest {
 		return responder.getResponse(request);
 	}
 
-//	@Test
-//	public void testPartialContentWithFullRange() {
-//		String firstFiveBytes = "This ";
-//		Response partialResponse = createResponse(partialRequestWithFullRange);
-//		assertEquals(partialResponse.getBody(), firstFiveBytes);
-//	}
-//
-//	@Test
-//	public void testPartialContentWithEndOfRange() {
-//		String partialRequestWithEndOfRange = "GET /partial_content.txt HTTP/1.1\nRange: bytes=-6";
-//		String lastSixBytes = " 206.\n";
-//		Response partialResponse = createResponse(partialRequestWithEndOfRange);
-//		assertEquals(partialResponse.getBody(), lastSixBytes);
-//	}
-//
-//	@Test
-//	public void testPartialContentWithStartOfRange() {
-//		String fileRequestWithStartOfRange = "GET /partial_content.txt HTTP/1.1\nRange: bytes=4-";
-//		String requestedBytes = " is a file that contains text to read part of in order to fulfill a 206.\n";
-//		Response partialResponse = createResponse(fileRequestWithStartOfRange);
-//		assertEquals(partialResponse.getBody(), requestedBytes);
-//	}
+	@Test
+	public void testPartialContentWithFullRange() {
+		String firstFiveBytes = "This ";
+		Response partialResponse = createResponse(partialRequestWithFullRange);
+		assertEquals(partialResponse.getBody(), firstFiveBytes);
+	}
+
+	@Test
+	public void testPartialContentWithEndOfRange() {
+		String partialRequestWithEndOfRange = "GET /partial_content.txt HTTP/1.1\nRange: bytes=-6";
+		String lastSixBytes = " 206.\n";
+		Response partialResponse = createResponse(partialRequestWithEndOfRange);
+		assertEquals(partialResponse.getBody(), lastSixBytes);
+	}
+
+	@Test
+	public void testPartialContentWithStartOfRange() {
+		String fileRequestWithStartOfRange = "GET /partial_content.txt HTTP/1.1\nRange: bytes=4-";
+		String requestedBytes = " is a file that contains text to read part of in order to fulfill a 206.\n";
+		Response partialResponse = createResponse(fileRequestWithStartOfRange);
+		assertEquals(partialResponse.getBody(), requestedBytes);
+	}
 }

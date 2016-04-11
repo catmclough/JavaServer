@@ -29,12 +29,12 @@ public class ParameterResponder implements Responder {
 		}
 	}
 
-	private byte[] decodedParameterBody(Request request) {
+	private String decodedParameterBody(Request request) {
 		String body = "";
 		for (String parameterVar : splitParameters(request.getURI())) {
 			body += decodeParameter(parameterVar) + System.lineSeparator();
 		}
-		return body.getBytes();
+		return body;
 	}
 
 	public String[] splitParameters(String uri) {

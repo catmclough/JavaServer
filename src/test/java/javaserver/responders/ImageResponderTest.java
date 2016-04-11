@@ -1,9 +1,9 @@
 package javaserver.responders;
 
 import static org.junit.Assert.*;
-
+import java.io.File;
+import java.util.Arrays;
 import org.junit.Test;
-
 import javaserver.HTTPStatusCode;
 import javaserver.Request;
 import javaserver.RequestParser;
@@ -19,6 +19,8 @@ public class ImageResponderTest {
     Request jpegRequest = RequestParser.createRequest("GET /" + existingJpegImage);
     Request bogusRequest = RequestParser.createRequest("GET /" + unknownImagePath);
 
+   ImageResponder responder = new ImageResponder(new String[] {"GET"}, new File("public"));
+
     @Test
     public void testImageResponderCreation() {
         Responder responder = Routes.getResponder("/" + existingJpegImage);
@@ -27,45 +29,39 @@ public class ImageResponderTest {
     
     @Test
     public void testPublicImageStatusLine() {
-        Responder responder = Routes.getResponder("/" + existingJpegImage);
         Response imageResponse = responder.getResponse(jpegRequest);
         assertEquals(imageResponse.getResponseCode(), HTTPStatusCode.TWO_HUNDRED.getStatusLine());
     }
 
     @Test
     public void testUnknownImageStatusLine() {
-        Responder responder = Routes.getResponder(unknownImagePath);
         Response imageResponse = responder.getResponse(bogusRequest);
         assertEquals(imageResponse.getResponseCode(), HTTPStatusCode.FOUR_OH_FOUR.getStatusLine());
     }
 
     @Test
     public void testContentLengthHeaderExists() {
-       Responder responder = Routes.getResponder("/" + existingJpegImage);
        Response imageResponse = responder.getResponse(jpegRequest);
        assertTrue(imageResponse.getHeader().contains("Content-Length: "));
     }
 
     @Test
     public void testJPEGHeader() {
-       Responder responder = Routes.getResponder("/" + existingJpegImage);
        Response imageResponse = responder.getResponse(jpegRequest);
        assertTrue(imageResponse.getHeader().contains("Content-Type: image/jpeg"));
     }
     
     @Test
     public void testPNGHeader() {
-       Responder responder = Routes.getResponder("/" + existingPNGImage);
        Request pngRequest = RequestParser.createRequest("GET /" + existingPNGImage);
        Response imageResponse = responder.getResponse(pngRequest);
        assertTrue(imageResponse.getHeader().contains("Content-Type: image/png"));
     }
 
-//    @Test
-//    public void testImageResponseBody() {
-//       Responder responder = Routes.getResponder("/" + existingPNGImage);
-//       Request validRequest = RequestParser.createRequest("GET /" + existingPNGImage);
-//       Response imageResponse = responder.getResponse(validRequest); 
-//       assertTrue(imageResponse.getBody().equals()
-//    }
+    @Test
+    public void testImageResponseBody() {
+       Request validRequest = RequestParser.createRequest("GET /" + existingPNGImage);
+       Response imageResponse = responder.getResponse(validRequest); 
+       assertTrue(Arrays.equals(imageResponse.getBodyData(), responder.getImageData(validRequest)));
+    }
 }

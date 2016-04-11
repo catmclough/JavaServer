@@ -22,15 +22,15 @@ public class ParameterResponderTest {
 		assertEquals(validParamsResponse.getResponseCode(), twoHundred);
 	}
 
-//	@Test
-//	public void testDecodedParamsInResponseBody() {
-//		String decodedParamOne = "variable_1 = Operators <, >, =, !=; +, -, *, &, @, #, $, [, ]: \"is that all\"?";
-//		String decodedParamTwo = "variable_2 = stuff";
-//
-//		Response validRequestWithCodedParamResponse = responder.getResponse(requestWithParams);
-//		String responseBody = validRequestWithCodedParamResponse.getBody();
-//
-//		assertTrue(responseBody.contains(decodedParamOne));
-//		assertTrue(responseBody.contains(decodedParamTwo));
-//	}
+	@Test
+	public void testDecodedParamsInResponseBody() {
+		String decodedParamOne = "variable_1 = Operators <, >, =, !=; +, -, *, &, @, #, $, [, ]: \"is that all\"?";
+		String decodedParamTwo = "variable_2 = stuff";
+
+		Response validRequestWithCodedParamResponse = responder.getResponse(requestWithParams);
+		String responseBody = validRequestWithCodedParamResponse.getBody();
+
+		assertTrue(responseBody.contains(decodedParamOne));
+		assertTrue(responseBody.contains(decodedParamTwo));
+	}
 }

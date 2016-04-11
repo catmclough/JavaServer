@@ -14,6 +14,7 @@ import javaserver.Response;
 public class ImageResponder extends FileResponder {
 
     private String[] acceptedImageFormats = new String[] {"jpeg", "gif", "png"};
+    private boolean imageWasFound = true;
 
     public ImageResponder(String[] supportedMethods, File publicDirectory) {
         super(supportedMethods, publicDirectory);
@@ -24,7 +25,17 @@ public class ImageResponder extends FileResponder {
         return new Response.ResponseBuilder(getStatusLine(request))
           .header(getImageHeaders(request))
           .body(getImageData(request))
+          .statusLine(getStatusLine(request))
           .build();
+    }
+
+    @Override
+    public String getStatusLine(Request request) {
+        if (imageWasFound) {
+            return HTTPStatusCode.TWO_HUNDRED.getStatusLine();
+        } else {
+            return HTTPStatusCode.FOUR_OH_FOUR.getStatusLine();
+        }
     }
 
     private String getImageHeaders(Request request) {
@@ -35,8 +46,10 @@ public class ImageResponder extends FileResponder {
     
     private String getImageFormat(Request request) {
         String format = RequestParser.getImageFormat(request);
-        if (!Arrays.asList(acceptedImageFormats).contains(format)) 
+        if (!Arrays.asList(acceptedImageFormats).contains(format)) {
             System.out.println("Unsupported image format.");
+            this.imageWasFound = false;
+        }
         return format;
     }
 
@@ -49,19 +62,10 @@ public class ImageResponder extends FileResponder {
                 fileContents = Files.readAllBytes(thisFile.toPath());
                 return fileContents;
             } catch (IOException e1) {
+                this.imageWasFound = false;
                 System.out.println("Unable to read from file.");
-                e1.printStackTrace();
             }
 		}
         return "".getBytes();
 	}
-
-    @Override
-    public String getStatusLine(Request request) {
-        if (requestIsSupported(supportedMethods, request.getMethod())) {
-            return HTTPStatusCode.TWO_HUNDRED.getStatusLine();
-        } else {
-            return HTTPStatusCode.FOUR_OH_FOUR.getStatusLine();
-        }
-    }
 }

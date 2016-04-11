@@ -40,7 +40,11 @@ public class PatchResponder extends FileResponder {
     protected boolean etagMatchesFileContent(Request request) {
         String encodedSHA1FileContent = encode(getBody(request).getBytes());
         String etag = request.getHeaders().get("If-Match");
-        return (etag.equals(encodedSHA1FileContent));
+        if (etag != null) {
+            return (etag.equals(encodedSHA1FileContent));
+        } else {
+            return false;
+        }
     }
     
     private String encode(byte[] content) {

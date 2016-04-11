@@ -57,17 +57,17 @@ public class LogResponderTest {
 	   assertEquals(responder.getResponse(getLogsWithValidAuth).getResponseCode(), twoHundred); 
 	}
 	
-//	@Test
-//	public void testGetLogsWithValidAuthBody() {
-//	   String simpleGet = "GET /foo";
-//	   requestLog.addRequest(simpleGet);
-//	   assertTrue(responder.getResponse(getLogsWithValidAuth).getBody().contains(simpleGet));
-//	}
-//
-//	@Test
-//	public void testGetLogsBodyWithoutAuthBody() {
-//	    String simpleGet = "GET /foo";
-//	    requestLog.addRequest(simpleGet);
-//	    assertFalse(responder.getResponse(getLogsWithoutAuth).getBody().contains(simpleGet));
-//	}
+	@Test
+	public void testGetLogsWithValidAuthBody() {
+	   String simpleGet = "GET /foo";
+	   requestLog.addRequest(simpleGet);
+	   assertTrue(responder.getResponse(getLogsWithValidAuth).getBody().contains(simpleGet));
+	}
+
+	@Test
+	public void testGetLogsBodyWithoutAuthBody() {
+	    String simpleGet = "GET /foo";
+	    requestLog.addRequest(simpleGet);
+	    assertFalse(responder.getResponse(getLogsWithoutAuth).getBody().contains(simpleGet));
+	}
 }
