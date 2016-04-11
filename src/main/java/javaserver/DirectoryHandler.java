@@ -1,6 +1,7 @@
 package javaserver;
 
 import java.io.File;
+import java.util.ArrayList;
 
 public class DirectoryHandler {
 	private static File publicDirectory;
@@ -24,6 +25,32 @@ public class DirectoryHandler {
             }
 	    }
 	    return publicDirectory;
+	}
+	
+	public static String[] getNonImageFiles() {
+	    ArrayList<String> textFileList = new ArrayList<String>();
+	    for (String file : getPublicDirectory().list()) {
+	        if (!isImage(file)) {
+	            textFileList.add(file);
+	        }
+	    }
+	    String[] textFiles = new String[textFileList.size()];
+	    return textFileList.toArray(textFiles);
+	}
+	
+	public static String[] getImageFiles() {
+	    ArrayList<String> imageFileList = new ArrayList<String>();
+	    for (String file : getPublicDirectory().list()) {
+	        if (isImage(file)) {
+	            imageFileList.add(file);
+	        }
+	    }
+	    String[] imageFiles = new String[imageFileList.size()];
+	    return imageFileList.toArray(imageFiles);
+	}
+
+	private static boolean isImage(String file) {
+	   return file.endsWith(".gif") || file.endsWith(".jpeg") || file.endsWith(".png");
 	}
 
 	public static String getPublicDirectoryPath() {

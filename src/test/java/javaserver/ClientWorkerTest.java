@@ -1,6 +1,8 @@
 package javaserver;
 
 import java.net.Socket;
+import java.util.Arrays;
+
 import org.junit.Before;
 import org.junit.Test;
 import junit.framework.TestCase;
@@ -45,7 +47,7 @@ public class ClientWorkerTest extends TestCase {
 	@Test
 	public void testSendsFormattedResponseToWriter() {
 		String fourOhFour = HTTPStatusCode.FOUR_OH_FOUR.getStatusLine() + "\n\n";
-		assertEquals(fourOhFour, mockWriter.latestResponse);
+		assertTrue(Arrays.equals(fourOhFour.getBytes(), mockWriter.latestResponse));
 	}
 
 	@Test
@@ -83,7 +85,7 @@ public class ClientWorkerTest extends TestCase {
 
 	class MockSocketWriter extends SocketWriter {
 
-		public String latestResponse;
+	    public byte[] latestResponse;
 		public boolean opened = false;
 		public boolean closed = false;
 
@@ -93,8 +95,8 @@ public class ClientWorkerTest extends TestCase {
 		}
 
 		@Override
-		public void respond(String response) {
-			this.latestResponse = response;
+		public void respond(byte[] response) {
+		    this.latestResponse = response;
 		}
 
 		@Override

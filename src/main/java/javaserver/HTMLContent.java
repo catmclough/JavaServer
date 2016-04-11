@@ -14,7 +14,7 @@ public class HTMLContent {
 		unorderedList += "</ul>" + System.lineSeparator();
 		return unorderedList;
 	}
-
+	
 	public static String closeBodyAndHTML() {
 		return "</body>\n</html>";
 	}

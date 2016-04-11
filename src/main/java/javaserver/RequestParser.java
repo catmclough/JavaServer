@@ -68,4 +68,13 @@ public class RequestParser {
 	private static boolean requestHasParams(String uri) {
 		return uri.contains("?");
 	}
+	
+	public static String getImageFormat(Request request) {
+	    try {
+           return request.getURI().split("\\.")[1];
+	    } catch (ArrayIndexOutOfBoundsException e) {
+	       System.out.println("Request has no image format extension."); 
+	       return "";
+	    }
+	}
 }

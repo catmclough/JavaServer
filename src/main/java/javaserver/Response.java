@@ -23,27 +23,36 @@ public class Response {
 	public String getBody() {
 		return body;
 	}
-
-	public String formatResponse() {
-		String output = newLine(statusLine);
-		if (header != null) {
-			output += newLine(header);
-		}
-		output += newLine("");
-		if (body != null) {
-			output += newLine(body);
-		}
-		return output;
+	
+	public byte[] getBodyData() {
+	   return bodyData; 
 	}
 
-	private String newLine(String line) {
-		return line + System.lineSeparator();
+	public byte[] formatResponse() {
+	    ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
+		String output = statusLine + newLine;
+		if (header != null)
+            output += header + newLine;
+		output += newLine;
+		if (body != null)
+            output += body + newLine;
+		
+		try {
+            outputStream.write(output.getBytes());
+            if (bodyData != null) 
+                outputStream.write(bodyData);
+        } catch (IOException e) {
+            System.out.println("Unable to write response body to ByteArrayOutputStream.");
+            e.printStackTrace();
+        }
+		return outputStream.toByteArray();
 	}
 
 	public static class ResponseBuilder {
 		protected String statusLine;
 		protected String header;
 		protected String body;
+		protected byte[] bodyData;
 
 		public ResponseBuilder(String statusLine) {
 			this.statusLine = statusLine;
@@ -61,6 +70,11 @@ public class Response {
 
 		public ResponseBuilder body(String body) {
 			this.body = body;
+			return this;
+		}
+
+		public ResponseBuilder body(byte[] bodyData) {
+			this.bodyData = bodyData;
 			return this;
 		}
 

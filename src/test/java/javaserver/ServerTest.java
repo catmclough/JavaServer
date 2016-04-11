@@ -120,8 +120,8 @@ public class ServerTest extends TestCase {
 	 	}
 
 	 	@Override
-	 	public void respond(String response) {
-	 		this.latestResponse = response;
+	 	public void respond(byte[] response) {
+	 		this.latestResponse = response.toString();
 	 	}
 	}
 }

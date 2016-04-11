@@ -39,7 +39,7 @@ public class FormResponder implements Responder {
 	}
 
 	private boolean requestChangesData(Request request) {
-		return (!request.getData().isEmpty() && request.getMethod().equals("POST") || request.getMethod().equals("PUT"))
+		return (request.getMethod().equals("POST") || request.getMethod().equals("PUT"))
 				|| request.getMethod().equals("DELETE");
 	}
 }

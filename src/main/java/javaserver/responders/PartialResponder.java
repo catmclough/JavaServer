@@ -1,14 +1,12 @@
 package javaserver.responders;
 
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.IOException;
+import java.nio.file.Files;
 import java.util.Arrays;
-
 import javaserver.DirectoryHandler;
 import javaserver.HTTPStatusCode;
 import javaserver.Request;
-import javaserver.RequestParser;
 import javaserver.Response;
 
 public class PartialResponder extends FileResponder {
@@ -38,25 +36,23 @@ public class PartialResponder extends FileResponder {
 	@Override
 	protected String getBody(Request request) {
 		File thisFile = new File(DirectoryHandler.getPublicDirectoryPath() + getFileName(request));
-		int fileLength = (int) thisFile.length();
 		int[] range;
+		int fileLength = (int) thisFile.length();
 
 		try {
-			range = getRequestedByteRange(RequestParser.getPartialRange(request.getData()), fileLength);
+			range = splitByteRange(request.getHeaders().get("Range"), fileLength);
 		} catch (ArrayIndexOutOfBoundsException e) {
 			System.out.println("Invalid range of bytes requested.");
 			throw e;
 		}
 
-		byte[] fileContents = new byte[fileLength];
-
+		byte[] fileContents;
 		try {
-			FileInputStream fileInput = new FileInputStream(thisFile);
-			fileInput.read(fileContents);
-			fileInput.close();
+		    fileContents = Files.readAllBytes(thisFile.toPath());
 		} catch (IOException e) {
-			System.out.println("Unable to read from file with input stream");
+			System.out.println("Unable to read partial.");
 			e.printStackTrace();
+			fileContents = "".getBytes();
 		}
 
 		int startOfRange = range[0];
@@ -66,7 +62,7 @@ public class PartialResponder extends FileResponder {
 		return new String(partialContent);
 	}
 
-	private int[] getRequestedByteRange(String requestData, int fileLength) {
+	private int[] splitByteRange(String requestData, int fileLength) {
 		String rawRange = requestData.split("=")[1];
 		String[] rangeData = getRangeData(rawRange);
 		return getRange(rangeData, fileLength);

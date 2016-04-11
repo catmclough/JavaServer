@@ -18,9 +18,9 @@ public class SocketWriter {
 		}
 	}
 
-	public void respond(String response) {
+	public void respond(byte[] response) {
 		try {
-			writingMechanism.write(response.getBytes());
+			writingMechanism.write(response);
 		} catch (IOException e) {
 			System.out.println("Unable to write response to OutputStream.");
 			e.printStackTrace();

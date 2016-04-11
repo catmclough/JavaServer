@@ -14,8 +14,11 @@ public class Routes {
 		routeResponders.put("/form", new FormResponder(new String[] {"GET", "POST", "PUT", "DELETE"}, new Form("")));
 		routeResponders.put("/redirect", new RedirectResponder(new String[] {"GET"}));
 		routeResponders.put("/logs", new LogResponder(new String[] {"GET"}, App.requestLog));
-		for (String file : DirectoryHandler.getPublicDirectory().list()) {
-			routeResponders.put("/" + file, new FileResponder(new String[] {"GET"}, DirectoryHandler.getPublicDirectory()));
+		for (String file : DirectoryHandler.getNonImageFiles()) {
+			routeResponders.put("/" + file, new FileResponder(new String[] {"GET", "PATCH"}, DirectoryHandler.getPublicDirectory()));
+		}
+		for (String imageFile : DirectoryHandler.getImageFiles()) {
+		    routeResponders.put("/" + imageFile, new ImageResponder(new String[] {"GET"}, DirectoryHandler.getPublicDirectory()));
 		}
 	}
 

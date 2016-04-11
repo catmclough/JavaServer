@@ -19,16 +19,17 @@ public class SocketWriterTest {
 		testWriter = new SocketWriter();
 		testWriter.writingMechanism = dataOutputStream;
 	}
-
+	
 	@Test
-	public void testResponds() {
-		Exception exception = null;
-		try {
-			testWriter.respond(standardResponse);
-		} catch (Exception e){
-			exception = e;
-		}
-		assertNull(exception);
+	public void testWritesByteResponse() {
+	  String exception = null;
+	  byte[] responseBytes = standardResponse.getBytes();  
+	  try {
+          testWriter.respond(responseBytes);
+	  } catch (Exception e) {
+	      exception = e.getMessage();
+	  }
+	  assertNull(exception);
 	}
 
 	@Test
