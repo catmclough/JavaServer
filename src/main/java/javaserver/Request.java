@@ -1,14 +1,17 @@
 package javaserver;
 
-public class Request {
+import java.util.HashMap;
 
+public class Request {
 	private String method;
 	private String uri;
+	private HashMap<String, String> headers;
 	private String data;
 
-	public Request(String method, String uri, String data) {
+	public Request(String method, String uri, HashMap<String, String> headers, String data) {
 		this.method = method;
 		this.uri = uri;
+		this.headers = headers;
 		this.data = data;
 	}
 
@@ -18,6 +21,10 @@ public class Request {
 
 	public String getURI() {
 		return uri;
+	}
+
+	public HashMap<String, String> getHeaders() {
+	    return headers;
 	}
 
 	public String getData() {
@@ -31,9 +38,5 @@ public class Request {
 	public String getURIWithoutParams() {
 		String[] routeParts = uri.split("\\?", 2);
 		return routeParts[0];
-	}
-
-	public boolean isPartialRequest() {
-		return data.contains("bytes=");
 	}
 }

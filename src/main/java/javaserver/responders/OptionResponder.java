@@ -5,8 +5,8 @@ import javaserver.Request;
 import javaserver.Response;
 
 public class OptionResponder implements Responder {
-
 	private String[] supportedMethods;
+	private String optionHeader = "Allow: ";
 
 	public OptionResponder(String[] supportedMethods) {
 		this.supportedMethods = supportedMethods;
@@ -15,8 +15,8 @@ public class OptionResponder implements Responder {
 	@Override
 	public Response getResponse(Request request) {
 		return new Response.ResponseBuilder(getStatusLine(request))
-      .header(getResponseHeader(request))
-      .build();
+          .header(getResponseHeader(request))
+          .build();
 	}
 
 	@Override
@@ -30,10 +30,8 @@ public class OptionResponder implements Responder {
 
 	private String getResponseHeader(Request request) {
 		String header = new String();
-		if (requestIsSupported(supportedMethods, request.getMethod())) {
-			header += "Allow: ";
-			header += String.join(",", supportedMethods);
-		}
+		if (request.getMethod().equals("OPTIONS"))
+			header += optionHeader + String.join(",", supportedMethods);
 		return header;
 	}
 }

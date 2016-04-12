@@ -4,12 +4,15 @@ import static org.junit.Assert.*;
 import org.junit.Test;
 
 public class RequestParserTest {
-
 	private String rawRequest = "POST /users/123 HTTP/1.1";
 	private String requestMethod = "POST";
 	private String requestURI = "/users/123";
-	private String requestWithRange = "GET /partial_content.txt HTTP/1.1\r\nRange: bytes=0-4";
-	private String partialData = "Range: bytes=0-4\n";
+	private String partialData = "bytes=0-4";
+	private String requestWithRange = "GET /partial_content.txt HTTP/1.1" + System.lineSeparator() + "Range: bytes=0-4";
+	private String etag = "xyz";
+	private String patchedContent = "new content";
+	private String requestWithEtagAndData = "PATCH /path-content.txt HTTP/1.1" + System.lineSeparator() + "If-Match: xyz\n"
+	        + System.lineSeparator() + System.lineSeparator() + patchedContent;
 	private String uriWithParams = "GET /parameters?foo=bar";
 	private String uriWithoutParams = "GET /parameters";
 
@@ -24,12 +27,22 @@ public class RequestParserTest {
 	}
 
 	@Test
-	public void testParsesData() {
-		assertEquals(RequestParser.getRequestData(requestWithRange), partialData);
+	public void testURIWithoutParams() {
+		assertEquals(RequestParser.getURIWithoutParams(uriWithParams), uriWithoutParams);
 	}
 
 	@Test
-	public void testURIWithoutParams() {
-		assertEquals(RequestParser.getURIWithoutParams(uriWithParams), uriWithoutParams);
+	public void testParsesRangeHeader() {
+		assertEquals(RequestParser.getRequestHeaders(requestWithRange).get("Range"), partialData);
+	}
+
+	@Test
+	public void testParsesEtag() {
+	    assertEquals(RequestParser.getRequestHeaders(requestWithEtagAndData).get("If-Match"), etag);
+	}
+
+	@Test
+	public void testParsesData() {
+	    assertEquals(RequestParser.getRequestData(requestWithEtagAndData), patchedContent);
 	}
 }

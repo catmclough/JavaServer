@@ -6,7 +6,6 @@ import javaserver.Request;
 import javaserver.Response;
 
 public class FormResponder implements Responder {
-
 	private String[] supportedMethods;
 	private Form form;
 
@@ -18,8 +17,8 @@ public class FormResponder implements Responder {
 	@Override
 	public Response getResponse(Request request) {
 		return new Response.ResponseBuilder(getStatusLine(request))
-      .body(getData(request))
-      .build();
+          .body(getData(request))
+          .build();
 	}
 
 	@Override
@@ -39,7 +38,7 @@ public class FormResponder implements Responder {
 	}
 
 	private boolean requestChangesData(Request request) {
-		return (!request.getData().isEmpty() && request.getMethod().equals("POST") || request.getMethod().equals("PUT"))
+		return (request.getMethod().equals("POST") || request.getMethod().equals("PUT"))
 				|| request.getMethod().equals("DELETE");
 	}
 }

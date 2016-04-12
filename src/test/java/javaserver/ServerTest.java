@@ -16,14 +16,12 @@ import org.junit.Test;
 import junit.framework.TestCase;
 
 public class ServerTest extends TestCase {
-
 	private Server server;
-	Socket mockedClientSocket;
+	private Socket mockedClientSocket;
 	int defaultPort = 6000;
 
 	@Before
 	public void setUp() throws Exception {
-		App.initializeDirectoryRouter();
 		ServerSocket mockedServerSocket = new MockServerSocket(defaultPort);
 		server = new Server(mockedServerSocket);
 	}
@@ -77,7 +75,6 @@ public class ServerTest extends TestCase {
 	}
 
 	class MockSocket extends Socket {
-
 		MockSocket(String hostName, int port) throws UnknownHostException, IOException {
 			super(hostName, port);
 		}
@@ -95,7 +92,6 @@ public class ServerTest extends TestCase {
 	}
 
 	class MockServerSocket extends ServerSocket {
-
 		private int port;
 
 		MockServerSocket(int port) throws IOException {
@@ -113,7 +109,6 @@ public class ServerTest extends TestCase {
 	}
 
 	class MockSocketWriter extends SocketWriter {
-
 		public String latestResponse;
 
 		MockSocketWriter(Socket clientSocket) {
@@ -121,8 +116,8 @@ public class ServerTest extends TestCase {
 	 	}
 
 	 	@Override
-	 	public void respond(String response) {
-	 		this.latestResponse = response;
+	 	public void respond(byte[] response) {
+	 		this.latestResponse = response.toString();
 	 	}
 	}
 }

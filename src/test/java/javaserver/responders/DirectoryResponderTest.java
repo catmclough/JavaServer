@@ -1,45 +1,67 @@
 package javaserver.responders;
 
 import static org.junit.Assert.*;
-
 import java.io.File;
-
+import java.io.IOException;
+import org.junit.AfterClass;
+import org.junit.BeforeClass;
 import org.junit.Test;
+
 import javaserver.Request;
 import javaserver.HTMLContent;
 import javaserver.HTTPStatusCode;
 import javaserver.RequestParser;
 import javaserver.Response;
-import javaserver.Routes;
 
 public class DirectoryResponderTest {
-
 	private String directoryRoute = "/";
+	private String directoryContentType = "Content-Type: text/html;";
+	private static String[] supportedDirectoryMethods = new String[] {"GET"};
+	private static File file1;
+	private static File file2;
+
 	private Request supportedRequest = RequestParser.createRequest("GET " + directoryRoute);
-	private Request unsupportedRequest = RequestParser.createRequest("POST " + directoryRoute);
+	private static File mockPublicDirectory;
+	private static Responder responder;
 
-	private Responder responder = Routes.getResponder(directoryRoute);
+	@BeforeClass
+	public static void setupPublicDirectory() throws IOException {
+	   mockPublicDirectory = new File("tempFolder");
+	   mockPublicDirectory.mkdir();
+	   file1 = File.createTempFile("file", "1", mockPublicDirectory);
+	   file2 = File.createTempFile("file", "2", mockPublicDirectory);
+	   responder = new DirectoryResponder(supportedDirectoryMethods, mockPublicDirectory);
+	}
 
-	private String twoHundred = HTTPStatusCode.TWO_HUNDRED.getStatusLine();
-	private String fourOhFour= HTTPStatusCode.FOUR_OH_FOUR.getStatusLine();
-	private String contentType = "Content-Type: text/html;";
+	@AfterClass
+	public static void deleteMockDirectory() {
+	   file1.delete();
+	   file2.delete(); 
+	   mockPublicDirectory.delete();
+	}
+
+	@Test
+	public void testDirectoryResponderCreation() {
+	    assertEquals(responder.getClass(), DirectoryResponder.class);
+	}
 
 	@Test
 	public void testRespondsWith200() {
 		Response response = responder.getResponse(supportedRequest);
-		assertEquals(response.getResponseCode(), twoHundred);
+		assertEquals(response.getResponseCode(), HTTPStatusCode.TWO_HUNDRED.getStatusLine());
 	}
 
 	@Test
-	public void testRespondsWithFourOhFour() {
+	public void testRespondsWith404() {
+	    Request unsupportedRequest = RequestParser.createRequest("POST " + directoryRoute);
 		Response unsupportedRequestResponse = responder.getResponse(unsupportedRequest);
-		assertEquals(unsupportedRequestResponse.getResponseCode(), fourOhFour);
+		assertEquals(unsupportedRequestResponse.getResponseCode(), HTTPStatusCode.FOUR_OH_FOUR.getStatusLine());
 	}
-	
+
 	@Test
 	public void testRespondsWithContentTypeHeader() {
 		Response response = responder.getResponse(supportedRequest);
-		assertEquals(response.getHeader(), contentType);
+		assertEquals(response.getHeader(), directoryContentType);
 	}
 
 	@Test
@@ -47,11 +69,9 @@ public class DirectoryResponderTest {
 		Response response = responder.getResponse(supportedRequest);
 		String responseBody = response.getBody();
 
-		File publicDirectory = new File("public");
-		String[] publicFileNames = publicDirectory.list();
-
-		String listOfDirectoryLinks = HTMLContent.listOfLinks(publicFileNames);
+		String listOfDirectoryLinks = HTMLContent.listOfLinks(mockPublicDirectory.list());
 		assertTrue(responseBody.contains(listOfDirectoryLinks));
+		assertTrue(responseBody.contains(file1.getName()));
+		assertTrue(responseBody.contains(file2.getName()));
 	}
-
 }

@@ -2,24 +2,26 @@ package javaserver;
 
 import java.io.IOException;
 import java.net.Socket;
-
 import javaserver.responders.Responder;
 
 public class ClientWorker implements Runnable {
-
 	private Socket clientSocket;
 	protected Reader reader;
 	protected SocketWriter writer;
+	protected RequestLog requestLog;
 
 	public ClientWorker(Socket clientSocket) {
 		this.clientSocket = clientSocket;
 		this.reader = new Reader();
 		this.writer = new SocketWriter();
+		this.requestLog = App.log;
 	}
 
 	public void run() {
 		reader.openReader(clientSocket);
-		Request request = RequestParser.createRequest(getRequest(reader));
+		String rawRequest = getRequest(reader);
+		requestLog.addRequest(rawRequest);
+		Request request = RequestParser.createRequest(rawRequest);
 		Responder responder = Routes.getResponder(RequestParser.getURIWithoutParams(request.getURI()));
 		Response response = responder.getResponse(request);
 
@@ -28,7 +30,7 @@ public class ClientWorker implements Runnable {
 		try {
 			clientSocket.close();
 		} catch (IOException e) {
-			System.out.println("Unable to close client socket ");
+			System.err.println("Unable to close client socket ");
 			e.printStackTrace();
 		}
 	}

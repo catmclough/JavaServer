@@ -1,29 +1,28 @@
 package javaserver.responders;
 
+import java.io.File;
 import javaserver.App;
 import javaserver.HTMLContent;
 import javaserver.HTTPStatusCode;
-import javaserver.PublicDirectory;
 import javaserver.Request;
 import javaserver.Response;
 
 public class DirectoryResponder implements Responder {
-
 	private String[] supportedMethods;
-	private PublicDirectory directory;
+	private File directory;
 	private String htmlHeader = "Content-Type: text/html;";
 
-	public DirectoryResponder(String[] supportedMethods, PublicDirectory directory) {
+	public DirectoryResponder(String[] supportedMethods, File publicDir) {
 		this.supportedMethods = supportedMethods;
-		this.directory = directory;
+		this.directory = publicDir;
 	}
 
 	@Override
 	public Response getResponse(Request request) {
-		return new Response.ResponseBuilder(getStatusLine(request))
-      .header(htmlHeader)
-      .body(getDirectoryLinksHTML())
-      .build();
+        return new Response.ResponseBuilder(getStatusLine(request))
+          .header(htmlHeader)
+          .body(getDirectoryLinksHTML())
+          .build();
 	}
 
 	@Override
@@ -36,6 +35,6 @@ public class DirectoryResponder implements Responder {
 	}
 
 	private String getDirectoryLinksHTML() {
-		return HTMLContent.openHTMLAndBody(App.name) + HTMLContent.listOfLinks(directory.getDirectoryListing()) + HTMLContent.closeBodyAndHTML();
+		return HTMLContent.openHTMLAndBody(App.name) + HTMLContent.listOfLinks(directory.list()) + HTMLContent.closeBodyAndHTML();
 	}
 }

@@ -1,24 +1,23 @@
 package javaserver;
 
 import java.net.Socket;
+import java.util.Arrays;
 import org.junit.Before;
 import org.junit.Test;
 import junit.framework.TestCase;
 
 public class ClientWorkerTest extends TestCase {
-
 	private ClientWorker clientWorker;
 	private MockClientSocket mockSocket;
 	private MockReader mockReader;
 	private MockSocketWriter mockWriter;
+    private String getRequest = "GET /foo";
 
 	@Before
 	public void setUp() throws Exception {
-		App.initializeDirectoryRouter();
 		mockSocket = new MockClientSocket();
 		clientWorker = new ClientWorker(mockSocket);
 
-		String getRequest = "GET /foo";
 		mockReader = new MockReader(getRequest);
 		mockWriter = new MockSocketWriter();
 		clientWorker.reader = mockReader;
@@ -26,9 +25,18 @@ public class ClientWorkerTest extends TestCase {
 		clientWorker.run();
 	}
 
+	public void testSetsUpLog() {
+	    assertNotNull(clientWorker.requestLog);
+	}
+
 	@Test
 	public void testOpensReader() {
 		assertTrue(mockReader.opened);
+	}
+
+	@Test
+	public void testGetsAndLogsRequest() {
+	    assertTrue(clientWorker.requestLog.getLogContents().contains(getRequest));
 	}
 
 	@Test
@@ -39,7 +47,7 @@ public class ClientWorkerTest extends TestCase {
 	@Test
 	public void testSendsFormattedResponseToWriter() {
 		String fourOhFour = HTTPStatusCode.FOUR_OH_FOUR.getStatusLine() + "\n\n";
-		assertEquals(fourOhFour, mockWriter.latestResponse);
+		assertTrue(Arrays.equals(fourOhFour.getBytes(), mockWriter.latestResponse));
 	}
 
 	@Test
@@ -49,14 +57,12 @@ public class ClientWorkerTest extends TestCase {
 	}
 
 	class MockClientSocket extends Socket {
-
 		MockClientSocket() {
 			super();
 		}
 	}
 
 	class MockReader extends Reader {
-
 		private String request;
 		public boolean opened = false;
 
@@ -76,8 +82,7 @@ public class ClientWorkerTest extends TestCase {
 	}
 
 	class MockSocketWriter extends SocketWriter {
-
-		public String latestResponse;
+	  public byte[] latestResponse;
 		public boolean opened = false;
 		public boolean closed = false;
 
@@ -87,8 +92,8 @@ public class ClientWorkerTest extends TestCase {
 		}
 
 		@Override
-		public void respond(String response) {
-			this.latestResponse = response;
+		public void respond(byte[] response) {
+		    this.latestResponse = response;
 		}
 
 		@Override

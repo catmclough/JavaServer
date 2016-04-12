@@ -9,7 +9,7 @@ public class ErrorResponder implements Responder {
 	@Override
 	public Response getResponse(Request request) {
 		return new Response.ResponseBuilder(getStatusLine(request))
-      .build();
+          .build();
 	}
 
 	@Override

@@ -5,9 +5,9 @@ import javaserver.Request;
 import javaserver.Response;
 
 public class RedirectResponder implements Responder {
-
 	private String[] supportedMethods;
 	private String defaultRedirectLocation = "http://localhost:5000/";
+	private String redirectHeader = "Location: ";
 
 	public RedirectResponder(String[] supportedMethods) {
 		this.supportedMethods = supportedMethods;
@@ -15,9 +15,9 @@ public class RedirectResponder implements Responder {
 
 	@Override
 	public Response getResponse(Request request) {
-		  return new Response.ResponseBuilder(getStatusLine(request))
-		    .header(getResponseHeader(request))
-		    .build();
+      return new Response.ResponseBuilder(getStatusLine(request))
+        .header(getResponseHeader(request))
+        .build();
 	}
 
 	@Override
@@ -32,8 +32,7 @@ public class RedirectResponder implements Responder {
 	private String getResponseHeader(Request request) {
 		String header = new String();
 		if (requestIsSupported(supportedMethods, request.getMethod())) {
-		  header += "Location: ";
-		  header += defaultRedirectLocation;
+		  header += redirectHeader + defaultRedirectLocation;
 		}
 		return header;
 	}

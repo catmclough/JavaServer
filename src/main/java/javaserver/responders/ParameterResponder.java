@@ -6,7 +6,6 @@ import javaserver.Request;
 import javaserver.Response;
 
 public class ParameterResponder implements Responder {
-
 	private String[] supportedMethods;
 
 	public ParameterResponder(String[] supportedMethods) {
@@ -16,8 +15,8 @@ public class ParameterResponder implements Responder {
 	@Override
 	public Response getResponse(Request request) {
 		return new Response.ResponseBuilder(getStatusLine(request))
-      .body(decodedParameterBody(request))
-      .build();
+          .body(decodedParameterBody(request))
+          .build();
 	}
 
 	@Override
@@ -25,7 +24,7 @@ public class ParameterResponder implements Responder {
 		if (requestIsSupported(supportedMethods, request.getMethod())) {
 			return HTTPStatusCode.TWO_HUNDRED.getStatusLine();
 		} else {
-			return HTTPStatusCode.FOUR_OH_FIVE.getStatusLine();
+			return HTTPStatusCode.FOUR_OH_FOUR.getStatusLine();
 		}
 	}
 
@@ -48,7 +47,7 @@ public class ParameterResponder implements Responder {
 			String encoding = "UTF-8";
 			parameterLine = java.net.URLDecoder.decode(parameterLine, encoding);
 		} catch (UnsupportedEncodingException e) {
-			System.out.println("ParameterHandler could not decode one or more of the request's parameters");
+			System.err.println("ParameterHandler could not decode one or more of the request's parameters");
 		}
 		return parameterLine;
 	}

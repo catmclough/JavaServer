@@ -1,26 +1,28 @@
 package javaserver.responders;
 
 import static org.junit.Assert.*;
-
 import org.junit.Test;
-
+import javaserver.Form;
 import javaserver.HTTPStatusCode;
 import javaserver.Request;
 import javaserver.RequestParser;
 import javaserver.Response;
-import javaserver.Routes;
 
 public class FormResponderTest {
-
 	private String formRoute = "/form";
-	private String postData = "snack=crackerjack";
+	private String mockPostData = "snack=crackerjack";
 
 	private Request getForm = RequestParser.createRequest("GET " + formRoute);
-	private Request postFormWithData = RequestParser.createRequest("POST " + formRoute + "\n\n" + postData);
+	private Request postFormWithData = RequestParser.createRequest("POST " + formRoute + "\n\n" + mockPostData);
 	private Request putForm = RequestParser.createRequest("PUT " + formRoute);
 	private Request deleteForm = RequestParser.createRequest("DELETE " + formRoute);
+	private Request invalidRequest = RequestParser.createRequest("PATCH " + formRoute);
 
-	private Responder responder = Routes.getResponder(formRoute);
+	private String[] supportedFormMethods = new String[] {"GET", "POST", "PUT", "DELETE"};
+	
+	private String mockData = "XOXOXOXO";
+	private Form mockForm = new Form(mockData);
+	private FormResponder responder = new FormResponder(supportedFormMethods, mockForm);
 
 	private String twoHundred = HTTPStatusCode.TWO_HUNDRED.getStatusLine();
 
@@ -49,19 +51,19 @@ public class FormResponderTest {
 	}
 
 	@Test
-	public void testFormInitializedWithEmptyDataLine() {
-		Response getFormResponse = responder.getResponse(getForm);
-		assertTrue(getFormResponse.getBody().isEmpty());
+	public void testInvalidMethodForm() {
+		Response deleteFormResponse = responder.getResponse(invalidRequest);
+		assertEquals(deleteFormResponse.getResponseCode(), HTTPStatusCode.FOUR_OH_FOUR.getStatusLine());
 	}
 
 	@Test
 	public void testPostDataToForm() {
 		Response getFormResponse = responder.getResponse(getForm);
-		assertFalse(getFormResponse.getBody().contains(postData));
+		assertFalse(getFormResponse.getBody().contains(mockPostData));
 
 		responder.getResponse(postFormWithData);
 		Response getUpdatedForm = responder.getResponse(getForm);
-		assertTrue(getUpdatedForm.getBody().contains(postData));
+		assertTrue(getUpdatedForm.getBody().contains(mockPostData));
 	}
 
 	@Test

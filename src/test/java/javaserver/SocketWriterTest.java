@@ -8,7 +8,6 @@ import org.junit.Before;
 import org.junit.Test;
 
 public class SocketWriterTest {
-
 	private static SocketWriter testWriter;
 	private static String standardResponse = "200 A-OKAY";
 
@@ -21,14 +20,15 @@ public class SocketWriterTest {
 	}
 
 	@Test
-	public void testResponds() {
-		Exception exception = null;
-		try {
-			testWriter.respond(standardResponse);
-		} catch (Exception e){
-			exception = e;
-		}
-		assertNull(exception);
+	public void testWritesByteResponse() {
+	  String exception = null;
+	  byte[] responseBytes = standardResponse.getBytes();
+	  try {
+          testWriter.respond(responseBytes);
+	  } catch (Exception e) {
+	      exception = e.getMessage();
+	  }
+	  assertNull(exception);
 	}
 
 	@Test
