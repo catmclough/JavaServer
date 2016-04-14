@@ -15,13 +15,13 @@ public class App {
 		setUpServer(args);
 		runServer(server);
 	}
-	
+
 	private static RequestLog initializeLog() {
 	    return new RequestLog();
 	}
 
 	protected static void setUpServer(String[] args) throws IOException {
-	    handleArgs(args);
+	  handleArgs(args);
 		server = new Server(new ServerSocket(port));
 	}
 
