@@ -11,113 +11,131 @@ import java.net.Socket;
 import java.net.UnknownHostException;
 import java.util.concurrent.ThreadPoolExecutor;
 import org.junit.After;
+import org.junit.AfterClass;
 import org.junit.Before;
+import org.junit.BeforeClass;
 import org.junit.Test;
-import junit.framework.TestCase;
+import exceptions.DirectoryNotFoundException;
+import io.SocketWriter;
+import static org.junit.Assert.*;
+import javaserver.Directory;
+import javaserver.Server;
+import routers.CobSpecRouter;
+import test_helpers.MockDirectory;
 
-public class ServerTest extends TestCase {
-	private Server server;
-	private Socket mockedClientSocket;
-	int defaultPort = 6000;
+public class ServerTest {
+    private Server server;
+    private Socket mockedClientSocket;
+    int defaultPort = 6000;
+    private static Directory directory;
 
-	@Before
-	public void setUp() throws Exception {
-		ServerSocket mockedServerSocket = new MockServerSocket(defaultPort);
-		server = new Server(mockedServerSocket);
-	}
+    @BeforeClass
+    public static void createPublicDirectory() throws IOException, DirectoryNotFoundException {
+        directory = MockDirectory.getMock();
+    }
 
-	@After
-	public void tearDown() throws IOException {
-		server.serverSocket.close();
-	}
+    @Before
+    public void setUp() throws Exception {
+        ServerSocket mockServerSocket = new MockServerSocket(defaultPort);
+        server = new Server(mockServerSocket, directory, new CobSpecRouter(directory));
+    }
 
-	@Test
-	public void testAcceptsClient() throws IOException {
-		server.run();
-		assertEquals(mockedClientSocket.getChannel(), server.serverSocket.getChannel());
-	}
+    @AfterClass
+    public static void deleteTempFolder() {
+       MockDirectory.deleteFiles();
+    }
 
-	@Test
-	public void testUsesThreadPoolExecutor() throws IOException, InterruptedException {
-		server.run();
-		Thread.sleep(1000);
-		assertEquals(server.threadPool.getClass(), ThreadPoolExecutor.class);
-	}
+    @After
+    public void tearDown() throws IOException {
+        server.serverSocket.close();
+    }
 
-	@Test
-	public void testExecutesThreadPool() throws IOException {
-		server.run();
-		int openThreads = ((ThreadPoolExecutor) server.threadPool).getActiveCount();
-		assertEquals(1, openThreads);
-	}
+    @Test
+    public void testAcceptsClient() throws IOException {
+        server.run();
+        assertEquals(mockedClientSocket.getChannel(), server.serverSocket.getChannel());
+    }
 
-	@Test
-	public void testShutsDownThreadPool() throws IOException {
-		server.shutDown();
-		assertTrue(server.threadPool.isShutdown());
-	}
+    @Test
+    public void testUsesThreadPoolExecutor() throws IOException, InterruptedException {
+        server.run();
+        Thread.sleep(1000);
+        assertEquals(server.threadPool.getClass(), ThreadPoolExecutor.class);
+    }
 
-	@Test
-	public void testClosesServerSocket() throws IOException {
-		server.shutDown();
-		assertTrue(server.serverSocket.isClosed());
-	}
+    @Test
+    public void testExecutesThreadPool() throws IOException {
+        server.run();
+        int openThreads = ((ThreadPoolExecutor) server.threadPool).getActiveCount();
+        assertEquals(1, openThreads);
+    }
 
-	@Test
-	public void serverCanBeShutDown() {
-		boolean caughtError = false;
-		try {
-			server.shutDown();
-		} catch (IOException e) {
-			caughtError = true;
-		}
-		assertFalse("Server's ServerSocket failed to close", caughtError);
-	}
+    @Test
+    public void testShutsDownThreadPool() throws IOException {
+        server.shutDown();
+        assertTrue(server.threadPool.isShutdown());
+    }
 
-	class MockSocket extends Socket {
-		MockSocket(String hostName, int port) throws UnknownHostException, IOException {
-			super(hostName, port);
-		}
+    @Test
+    public void testClosesServerSocket() throws IOException {
+        server.shutDown();
+        assertTrue(server.serverSocket.isClosed());
+    }
 
-	 	@Override
-	 	public OutputStream getOutputStream() {
-	 		ByteArrayOutputStream out = new ByteArrayOutputStream();
-	 		return new DataOutputStream(out);
-	 	}
+    @Test
+    public void serverCanBeShutDown() {
+        boolean caughtError = false;
+        try {
+            server.shutDown();
+        } catch (IOException e) {
+            caughtError = true;
+        }
+        assertFalse("Server's ServerSocket failed to close", caughtError);
+    }
 
-	 	@Override
-	 	public InputStream getInputStream() {
-	 		return new ByteArrayInputStream("GET /foo".getBytes());
-	 	}
-	}
+    class MockSocket extends Socket {
+        MockSocket(String hostName, int port) throws UnknownHostException, IOException {
+        super(hostName, port);
+        }
 
-	class MockServerSocket extends ServerSocket {
-		private int port;
+        @Override
+        public OutputStream getOutputStream() {
+            ByteArrayOutputStream out = new ByteArrayOutputStream();
+            return new DataOutputStream(out);
+        }
 
-		MockServerSocket(int port) throws IOException {
-		  super(port);
-		  this.port = port;
-		}
+        @Override
+        public InputStream getInputStream() {
+            return new ByteArrayInputStream("GET /foo".getBytes());
+        }
+    }
 
-		@Override
-		public Socket accept() throws IOException {
-		  mockedClientSocket = new MockSocket("localhost", port);
-		  server.isOn = false;
-		  return mockedClientSocket;
-		}
+    class MockServerSocket extends ServerSocket {
+        private int port;
 
-	}
+        MockServerSocket(int port) throws IOException {
+            super(port);
+            this.port = port;
+        }
 
-	class MockSocketWriter extends SocketWriter {
-		public String latestResponse;
+        @Override
+        public Socket accept() throws IOException {
+            mockedClientSocket = new MockSocket("localhost", port);
+            server.isOn = false;
+            return mockedClientSocket;
+        }
+    }
 
-		MockSocketWriter(Socket clientSocket) {
-		 	super();
-	 	}
+    class MockSocketWriter extends SocketWriter {
+        public String latestResponse;
 
-	 	@Override
-	 	public void respond(byte[] response) {
-	 		this.latestResponse = response.toString();
-	 	}
-	}
+        MockSocketWriter(Socket clientSocket) {
+            super();
+        }
+
+        @Override
+        public void respond(byte[] response) {
+            this.latestResponse = response.toString();
+        }
+    }
 }

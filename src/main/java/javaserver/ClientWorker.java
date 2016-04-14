@@ -2,46 +2,55 @@ package javaserver;
 
 import java.io.IOException;
 import java.net.Socket;
-import javaserver.responders.Responder;
+import http_messages.Request;
+import http_messages.Response;
+import io.RequestReader;
+import io.SocketWriter;
+import responders.Responder;
+import routers.CobSpecRouter;
 
 public class ClientWorker implements Runnable {
-	private Socket clientSocket;
-	protected Reader reader;
-	protected SocketWriter writer;
-	protected RequestLog requestLog;
+    private Socket clientSocket;
+    private CobSpecRouter router;
+    private Directory directory;
+    protected RequestReader reader;
+    protected SocketWriter writer;
+    protected RequestLog requestLog;
 
-	public ClientWorker(Socket clientSocket) {
-		this.clientSocket = clientSocket;
-		this.reader = new Reader();
-		this.writer = new SocketWriter();
-		this.requestLog = App.log;
-	}
+    public ClientWorker(Socket clientSocket, CobSpecRouter router, Directory directory) {
+        this.clientSocket = clientSocket;
+        this.router = router;
+        this.directory = directory;
+        this.reader = new RequestReader();
+        this.writer = new SocketWriter();
+        this.requestLog = RequestLog.getInstance();
+    }
 
-	public void run() {
-		reader.openReader(clientSocket);
-		String rawRequest = getRequest(reader);
-		requestLog.addRequest(rawRequest);
-		Request request = RequestParser.createRequest(rawRequest);
-		Responder responder = Routes.getResponder(RequestParser.getURIWithoutParams(request.getURI()));
-		Response response = responder.getResponse(request);
+    public void run() {
+        reader.openReader(clientSocket);
+        String rawRequest = getRawRequest(reader);
+        requestLog.addRequest(rawRequest);
+        Request request = new Request.RequestBuilder(rawRequest).build();
+        Responder responder = router.getResponder(request, directory);
+        Response response = responder.getResponse(request);
 
-		writer.openWriter(clientSocket);
-		writer.respond(response.formatResponse());
-		try {
-			clientSocket.close();
-		} catch (IOException e) {
-			System.err.println("Unable to close client socket ");
-			e.printStackTrace();
-		}
-	}
+        writer.openWriter(clientSocket);
+        writer.respond(response.formatResponse());
+        try {
+            clientSocket.close();
+        } catch (IOException e) {
+            System.err.println("Unable to close client socket ");
+            e.printStackTrace();
+        }
+    }
 
-	private String getRequest(Reader reader) {
-		String request = "";
-		try {
-			request = reader.readFromSocket();
-		} catch (IOException | NullPointerException e) {
-			System.out.println("Did not get any request from socket.");
-		}
-		return request;
-	}
+    private String getRawRequest(RequestReader reader) {
+        String request = "";
+        try {
+            request = reader.readFromSocket();
+        } catch (IOException | NullPointerException e) {
+            System.err.println("Did not get any request from socket.");
+        }
+        return request;
+    }
 }

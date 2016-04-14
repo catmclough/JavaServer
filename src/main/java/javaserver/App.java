@@ -1,45 +1,37 @@
 package javaserver;
 
+import java.io.File;
 import java.io.IOException;
-import java.net.ServerSocket;
+import exceptions.DirectoryNotFoundException;
+import factories.*;
+import routers.CobSpecRouter;
+import text_parsers.ArgParser;
 
 public class App {
-	public static String name = "Cat's Java Server";
-	public static final int DEFAULT_PORT = 5000;
-	public static final String DEFAULT_PUBLIC_DIRECTORY = "public/";
-	protected static int port;
-	protected static Server server;
-	public static RequestLog log = initializeLog();
+     protected static final int DEFAULT_PORT = 5000;
+     protected static final String DEFAULT_DIRECTORY_NAME = "public/";
+     private static Directory directory;
+     private static CobSpecRouter router;
+     protected static int port;
+     protected static ServerCreator serverCreator = new ServerCreator();
+     protected static Server server;
 
-	public static void main(String[] args) throws IOException {
-		setUpServer(args);
-		runServer(server);
-	}
-	
-	private static RequestLog initializeLog() {
-	    return new RequestLog();
-	}
+    public static void main(String[] args) throws IOException, DirectoryNotFoundException {
+        port = ArgParser.getPortChoice(args, DEFAULT_PORT);
+        directory = new Directory(getChosenFile(args));
+        router = new CobSpecRouter(directory);
+        describeServer();
+        server = serverCreator.createServer(port, directory, router);
+        server.run();
+    }
 
-	protected static void setUpServer(String[] args) throws IOException {
-	    handleArgs(args);
-		server = new Server(new ServerSocket(port));
-	}
+    private static File getChosenFile(String[] args) {
+        String chosenDirectory = ArgParser.getDirectoryChoice(args, DEFAULT_DIRECTORY_NAME);
+        return new File(chosenDirectory);
+    }
 
-	private static void handleArgs(String[] args) {
-		port = ArgHandler.getPort(args, DEFAULT_PORT);
-
-		String directoryName = ArgHandler.getDirectory(args, DEFAULT_PUBLIC_DIRECTORY);
-		try {
-            DirectoryHandler.createPublicDirectory(directoryName);
-		} catch (DirectoryNotFoundException e) {
-			e.getMessage();
-			System.exit(0);
-		}
-	}
-
-	protected static void runServer(Server server) throws IOException {
-		System.out.println("Server running on port " + port);
-		System.out.println("Public Directory: " + DirectoryHandler.getPublicDirectoryPath());
-		server.run();
-	}
+    private static void describeServer() throws IOException {
+        System.out.println("Server running on port " + port);
+        System.out.println("Public Directory: " + directory.getPath());
+    }
 }

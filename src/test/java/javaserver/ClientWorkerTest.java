@@ -1,23 +1,44 @@
 package javaserver;
-
+import static org.junit.Assert.*;
+import java.io.IOException;
+import org.junit.AfterClass;
 import java.net.Socket;
 import java.util.Arrays;
 import org.junit.Before;
+import org.junit.BeforeClass;
 import org.junit.Test;
-import junit.framework.TestCase;
 
-public class ClientWorkerTest extends TestCase {
+import exceptions.DirectoryNotFoundException;
+import http_messages.HTTPStatus;
+import io.RequestReader;
+import io.SocketWriter;
+import routers.CobSpecRouter;
+import test_helpers.MockDirectory;
+
+public class ClientWorkerTest {
 	private ClientWorker clientWorker;
 	private MockClientSocket mockSocket;
 	private MockReader mockReader;
 	private MockSocketWriter mockWriter;
-    private String getRequest = "GET /foo";
+	private String getRequest = "GET /foo";
+	private static Directory mockDirectory;
+	private static CobSpecRouter router;
+
+	@BeforeClass
+	public static void setup() throws IOException {
+	    try {
+            mockDirectory = MockDirectory.getMock();
+        } catch (DirectoryNotFoundException e) {
+            System.err.println("ClientWorkerTest tried to run tests with a non-existant public directory");
+            e.printStackTrace();
+        }
+	    router = new CobSpecRouter(mockDirectory);
+	}
 
 	@Before
 	public void setUp() throws Exception {
-		mockSocket = new MockClientSocket();
-		clientWorker = new ClientWorker(mockSocket);
-
+	    mockSocket = new MockClientSocket();
+		clientWorker = new ClientWorker(mockSocket, router, mockDirectory);
 		mockReader = new MockReader(getRequest);
 		mockWriter = new MockSocketWriter();
 		clientWorker.reader = mockReader;
@@ -25,34 +46,24 @@ public class ClientWorkerTest extends TestCase {
 		clientWorker.run();
 	}
 
-	public void testSetsUpLog() {
-	    assertNotNull(clientWorker.requestLog);
+	@AfterClass
+	public static void tearDown() {
+	    MockDirectory.deleteFiles();
 	}
-
+	
 	@Test
-	public void testOpensReader() {
-		assertTrue(mockReader.opened);
-	}
-
-	@Test
-	public void testGetsAndLogsRequest() {
+	public void readsAndLogsRequest() {
 	    assertTrue(clientWorker.requestLog.getLogContents().contains(getRequest));
 	}
 
 	@Test
-	public void testOpensWriter() {
-		assertTrue(mockWriter.opened);
+	public void getsAndSendsFormattedResponseToWriter() {
+        String getRequestResponse = HTTPStatus.NOT_FOUND.getStatusLine() + System.lineSeparator() + System.lineSeparator();
+		assertTrue(Arrays.equals(getRequestResponse.getBytes(), mockWriter.latestResponse));
 	}
 
 	@Test
-	public void testSendsFormattedResponseToWriter() {
-		String fourOhFour = HTTPStatusCode.FOUR_OH_FOUR.getStatusLine() + "\n\n";
-		assertTrue(Arrays.equals(fourOhFour.getBytes(), mockWriter.latestResponse));
-	}
-
-	@Test
-	public void testClosesClientSocket() {
-	  clientWorker.run();
+	public void closesClientSocket() {
 	  assertTrue(mockSocket.isClosed());
 	}
 
@@ -62,9 +73,8 @@ public class ClientWorkerTest extends TestCase {
 		}
 	}
 
-	class MockReader extends Reader {
-		private String request;
-		public boolean opened = false;
+	class MockReader extends RequestReader {
+	  private String request;
 
 		MockReader(String request) {
 			this.request = request;
@@ -72,7 +82,6 @@ public class ClientWorkerTest extends TestCase {
 
 		@Override
 		public void openReader(Socket socket) {
-			this.opened = true;
 		}
 
 		@Override
@@ -83,12 +92,9 @@ public class ClientWorkerTest extends TestCase {
 
 	class MockSocketWriter extends SocketWriter {
 	  public byte[] latestResponse;
-		public boolean opened = false;
-		public boolean closed = false;
 
 		@Override
 		public void openWriter(Socket socket) {
-			this.opened = true;
 		}
 
 		@Override
@@ -98,7 +104,6 @@ public class ClientWorkerTest extends TestCase {
 
 		@Override
 		public void closeOutputStream() {
-			this.closed = true;
 		}
 	}
 }
