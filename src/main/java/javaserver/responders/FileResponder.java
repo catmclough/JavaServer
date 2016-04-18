@@ -8,47 +8,47 @@ import javaserver.Request;
 import javaserver.Response;
 
 public class FileResponder implements Responder {
-	protected String[] supportedMethods;
-	protected File directory;
+    protected String[] supportedMethods;
+    protected File directory;
 
-	public FileResponder(String[] supportedMethods, File publicDir) {
-		this.supportedMethods = supportedMethods;
-		this.directory = publicDir;
-	}
+    public FileResponder(String[] supportedMethods, File publicDir) {
+        this.supportedMethods = supportedMethods;
+        this.directory = publicDir;
+    }
 
-	@Override
-	public Response getResponse(Request request) {
-	    if (requestIsSupported(supportedMethods, request.getMethod())) {
+    @Override
+    public Response getResponse(Request request) {
+        if (requestIsSupported(supportedMethods, request.getMethod())) {
             Responder responder = createResponder(request);
             return responder.createResponse(request);
-	    } else {
+        } else {
             return new Response.ResponseBuilder(HTTPStatusCode.FOUR_OH_FIVE.getStatusLine())
-              .build();
-	    }
-	}
+                .build();
+        }
+    }
 
-	private Responder createResponder(Request request) {
-		if (request.getHeaders().containsKey("Range")) {
-			return new PartialResponder(supportedMethods, directory);
-		} else if (request.getMethod().equals("PATCH")) {
-		    return new PatchResponder(supportedMethods, directory);
-		} else {
-		    return this;
-		}
-	}
+    private Responder createResponder(Request request) {
+        if (request.getHeaders().containsKey("Range")) {
+            return new PartialResponder(supportedMethods, directory);
+        } else if (request.getMethod().equals("PATCH")) {
+            return new PatchResponder(supportedMethods, directory);
+        } else {
+            return this;
+        }
+    }
 
-	public Response createResponse(Request request) {
+    public Response createResponse(Request request) {
         return new Response.ResponseBuilder(getStatusLine(request))
-          .body(getBody(request))
-          .build();
-	}
+            .body(getBody(request))
+            .build();
+    }
 
-	@Override
-	public String getStatusLine(Request request) {
+    @Override
+    public String getStatusLine(Request request) {
         return HTTPStatusCode.TWO_HUNDRED.getStatusLine();
-	}
+    }
 
-	protected String getBody(Request request) {
+    protected String getBody(Request request) {
         File thisFile = new File(directory + request.getURI());
         int fileLength = (int) thisFile.length();
         byte[] fileContents = new byte[fileLength];

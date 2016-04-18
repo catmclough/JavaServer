@@ -9,13 +9,13 @@ public class ResponseTest {
     private Response mockResponse() {
         String twoHundred = HTTPStatusCode.TWO_HUNDRED.getStatusLine();
         return new Response.ResponseBuilder(twoHundred)
-                .header("Some header.")
-                .body("Some content")
-                .build();
+            .header("Some header.")
+            .body("Some content")
+            .build();
     }
 
     private String formatResponseProperly(String statusLine, String headers, String body) {
-       return statusLine + System.lineSeparator() + headers + System.lineSeparator() + System.lineSeparator() + body + System.lineSeparator();
+        return statusLine + System.lineSeparator() + headers + System.lineSeparator() + System.lineSeparator() + body + System.lineSeparator();
     }
 
     @Test

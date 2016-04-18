@@ -12,20 +12,20 @@ import javaserver.RequestParser;
 import javaserver.Response;
 
 public class ImageResponderTest {
-	private static String jpegRoute = "/image.jpeg";
-	private String pngRoute = "/image.png";
-	private String gifRoute = "/image.gif";
-	private static File mockPublicDirectory;
-	private static ImageResponder responder;
-	private static String[] supportedFileMethods = new String[] {"GET"};
-
-	@BeforeClass
-	public static void loadTestResources() throws IOException {
-	   mockPublicDirectory = new File("testResources");
-       responder = new ImageResponder(supportedFileMethods, mockPublicDirectory);
-	}
+    private static String jpegRoute = "/image.jpeg";
+    private String pngRoute = "/image.png";
+    private String gifRoute = "/image.gif";
+    private static File mockPublicDirectory;
+    private static ImageResponder responder;
+    private static String[] supportedFileMethods = new String[] {"GET"};
 
     private Request jpegRequest = RequestParser.createRequest("GET " + jpegRoute);
+
+    @BeforeClass
+    public static void loadTestResources() throws IOException {
+        mockPublicDirectory = new File("testResources");
+        responder = new ImageResponder(supportedFileMethods, mockPublicDirectory);
+    }
 
     @Test
     public void testImageResponderCreation() {
@@ -47,33 +47,33 @@ public class ImageResponderTest {
 
     @Test
     public void testContentLengthHeaderExists() {
-       Response imageResponse = responder.getResponse(jpegRequest);
-       assertTrue(imageResponse.getHeader().contains("Content-Length: "));
+        Response imageResponse = responder.getResponse(jpegRequest);
+        assertTrue(imageResponse.getHeader().contains("Content-Length: "));
     }
 
     @Test
     public void testJPEGHeader() {
-       Response imageResponse = responder.getResponse(jpegRequest);
-       assertTrue(imageResponse.getHeader().contains("Content-Type: image/jpeg"));
+        Response imageResponse = responder.getResponse(jpegRequest);
+        assertTrue(imageResponse.getHeader().contains("Content-Type: image/jpeg"));
     }
 
     @Test
     public void testPNGHeader() {
-       Request pngRequest = RequestParser.createRequest("GET " + pngRoute);
-       Response imageResponse = responder.getResponse(pngRequest);
-       assertTrue(imageResponse.getHeader().contains("Content-Type: image/png"));
+        Request pngRequest = RequestParser.createRequest("GET " + pngRoute);
+        Response imageResponse = responder.getResponse(pngRequest);
+        assertTrue(imageResponse.getHeader().contains("Content-Type: image/png"));
     }
 
     @Test
     public void testGIFHeader() {
-       Request pngRequest = RequestParser.createRequest("GET " + gifRoute);
-       Response imageResponse = responder.getResponse(pngRequest);
-       assertTrue(imageResponse.getHeader().contains("Content-Type: image/gif"));
+        Request pngRequest = RequestParser.createRequest("GET " + gifRoute);
+        Response imageResponse = responder.getResponse(pngRequest);
+        assertTrue(imageResponse.getHeader().contains("Content-Type: image/gif"));
     }
 
     @Test
     public void testImageResponseBody() {
-       Response imageResponse = responder.getResponse(jpegRequest);
-       assertTrue(Arrays.equals(imageResponse.getBodyData(), responder.getImageData(jpegRequest)));
+        Response imageResponse = responder.getResponse(jpegRequest);
+        assertTrue(Arrays.equals(imageResponse.getBodyData(), responder.getImageData(jpegRequest)));
     }
 }

@@ -11,11 +11,11 @@ public class ClientWorkerTest extends TestCase {
 	private MockClientSocket mockSocket;
 	private MockReader mockReader;
 	private MockSocketWriter mockWriter;
-    private String getRequest = "GET /foo";
+  private String getRequest = "GET /foo";
 
 	@Before
 	public void setUp() throws Exception {
-		mockSocket = new MockClientSocket();
+	  mockSocket = new MockClientSocket();
 		clientWorker = new ClientWorker(mockSocket);
 
 		mockReader = new MockReader(getRequest);
@@ -26,7 +26,7 @@ public class ClientWorkerTest extends TestCase {
 	}
 
 	public void testSetsUpLog() {
-	    assertNotNull(clientWorker.requestLog);
+    assertNotNull(clientWorker.requestLog);
 	}
 
 	@Test
@@ -36,7 +36,7 @@ public class ClientWorkerTest extends TestCase {
 
 	@Test
 	public void testGetsAndLogsRequest() {
-	    assertTrue(clientWorker.requestLog.getLogContents().contains(getRequest));
+    assertTrue(clientWorker.requestLog.getLogContents().contains(getRequest));
 	}
 
 	@Test
@@ -63,7 +63,7 @@ public class ClientWorkerTest extends TestCase {
 	}
 
 	class MockReader extends Reader {
-		private String request;
+	  private String request;
 		public boolean opened = false;
 
 		MockReader(String request) {
@@ -93,7 +93,7 @@ public class ClientWorkerTest extends TestCase {
 
 		@Override
 		public void respond(byte[] response) {
-		    this.latestResponse = response;
+      this.latestResponse = response;
 		}
 
 		@Override

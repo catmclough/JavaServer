@@ -12,11 +12,11 @@ public class RequestLog {
     public void addRequest(String request) {
         log.add(request);
     }
-    
+
     public String getLogContents() {
-       return String.join(System.lineSeparator(), log); 
+        return String.join(System.lineSeparator(), log);
     }
-    
+
     public void clearLog() {
         log.clear();
     }
