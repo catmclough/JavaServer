@@ -15,7 +15,7 @@ public class RoutesTest {
         Responder responder = Routes.getResponder(unknownRoute);
         assertEquals(responder.getClass(), ErrorResponder.class);
     }
-    
+
     @Test
     public void testCreatesErrorResponderForUnknownRouteWithParams() {
         String unknownRouteWithParams = "/foobar?var1=xyz";
@@ -30,26 +30,25 @@ public class RoutesTest {
         assertEquals(responder.getClass(), ErrorResponder.class);
     }
 
-	@Test
-	public void testFormResponderCreation() {
-	    String formRoute = "/form";
-	    Responder responder = Routes.getResponder(formRoute);
-	    assertEquals(responder.getClass(), FormResponder.class);
-	}
+    @Test
+    public void testFormResponderCreation() {
+        String formRoute = "/form";
+        Responder responder = Routes.getResponder(formRoute);
+        assertEquals(responder.getClass(), FormResponder.class);
+    }
 
-	@Test
-	public void testCreatesFormWithEmptyDataLine() {
-	    String formRoute = "/form";
-	    Responder responder = Routes.getResponder(formRoute);
-	    Request getForm = RequestParser.createRequest("GET " + formRoute);
-	    assertTrue(responder.getResponse(getForm).getBody().isEmpty());
-	}
+    @Test
+    public void testCreatesFormWithEmptyDataLine() {
+        String formRoute = "/form";
+        Responder responder = Routes.getResponder(formRoute);
+        Request getForm = RequestParser.createRequest("GET " + formRoute);
+        assertTrue(responder.getResponse(getForm).getBody().isEmpty());
+    }
 
-	@Test
-	public void testCreatesParameterResponder() {
-	   String simpleParamRoute = "/parameters"; 
-	   Responder responder = Routes.getResponder(simpleParamRoute);
-	   assertEquals(responder.getClass(), ParameterResponder.class);
-	}
-
+    @Test
+    public void testCreatesParameterResponder() {
+        String simpleParamRoute = "/parameters";
+        Responder responder = Routes.getResponder(simpleParamRoute);
+        assertEquals(responder.getClass(), ParameterResponder.class);
+    }
 }

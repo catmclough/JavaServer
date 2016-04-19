@@ -20,10 +20,10 @@ public class ImageResponder extends FileResponder {
     @Override
     public Response getResponse(Request request) {
         return new Response.ResponseBuilder(getStatusLine(request))
-          .header(getImageHeaders(request))
-          .body(getImageData(request))
-          .statusLine(getStatusLine(request))
-          .build();
+            .header(getImageHeaders(request))
+            .body(getImageData(request))
+            .statusLine(getStatusLine(request))
+            .build();
     }
 
     @Override
@@ -36,9 +36,9 @@ public class ImageResponder extends FileResponder {
     }
 
     private String getImageHeaders(Request request) {
-       String header = "Content-Length: " + getImageData(request).length + System.lineSeparator()
-       + "Content-Type: image/" + getImageFormat(request);
-       return header;
+        String header = "Content-Length: " + getImageData(request).length + System.lineSeparator()
+            + "Content-Type: image/" + getImageFormat(request);
+        return header;
     }
 
     private String getImageFormat(Request request) {
@@ -50,19 +50,19 @@ public class ImageResponder extends FileResponder {
         return format;
     }
 
-	protected byte[] getImageData(Request request) {
-		File thisFile = new File(directory + request.getURI());
-		byte[] fileContents = new byte[0];
+    protected byte[] getImageData(Request request) {
+    File thisFile = new File(directory + request.getURI());
+    byte[] fileContents = new byte[0];
 
-		if (requestIsSupported(supportedMethods, request.getMethod())) {
-            try {
-                fileContents = Files.readAllBytes(thisFile.toPath());
-                return fileContents;
-            } catch (IOException e1) {
-                this.imageWasFound = false;
-                System.err.println("Unable to read from file.");
-            }
-		}
-        return fileContents;
-	}
+    if (requestIsSupported(supportedMethods, request.getMethod())) {
+        try {
+            fileContents = Files.readAllBytes(thisFile.toPath());
+            return fileContents;
+        } catch (IOException e1) {
+            this.imageWasFound = false;
+            System.err.println("Unable to read from file.");
+        }
+    }
+    return fileContents;
+    }
 }
