@@ -1,4 +1,4 @@
-package routers;
+package javaserver;
 
 import static org.junit.Assert.*;
 import java.io.IOException;
@@ -12,13 +12,13 @@ import responders.ErrorResponder;
 import responders.FormResponder;
 import responders.ParameterResponder;
 import responders.Responder;
-import responders.file_responders.PartialResponder;
-import responders.file_responders.PatchResponder;
-import routers.CobSpecRouter;
+import responders.file_responders.TextFileResponder;
+import javaserver.Router;
+import routes.CobSpecRoutes;
 import test_helpers.MockDirectory;
 
 public class RouterTest {
-    private static CobSpecRouter router;
+    private static Router router;
     private static Directory directory;
 
     private String textFileRoute = "/" + MockDirectory.txtFile.getName();
@@ -27,7 +27,8 @@ public class RouterTest {
     @BeforeClass
     public static void setup() throws DirectoryNotFoundException, IOException {
         directory = MockDirectory.getMock();
-        router = new CobSpecRouter(directory);
+        CobSpecRoutes routes = new CobSpecRoutes(directory);
+        router = new Router(routes.getRoutesAndResponders());
     }
 
     @AfterClass
@@ -38,54 +39,47 @@ public class RouterTest {
     @Test
     public void testCreatesErrorResponderForUnknownRoute() {
         Request unknownRouteRequest = new Request.RequestBuilder("GET /foobar").build();
-        Responder responder = router.getResponder(unknownRouteRequest, directory);
+        Responder responder = router.getResponder(unknownRouteRequest);
         assertEquals(responder.getClass(), ErrorResponder.class);
     }
 
     @Test
     public void testCreatesErrorResponderForUnknownRouteWithParams() {
         Request unknownRequestWithParams = new Request.RequestBuilder("GET /foobar?var1=xyz").build();
-        Responder responder = router.getResponder(unknownRequestWithParams, directory);
+        Responder responder = router.getResponder(unknownRequestWithParams);
         assertEquals(responder.getClass(), ErrorResponder.class);
     }
 
     @Test
     public void testCreatesErrorResponderForUnknownRouteWithPartialRange() {
         Request unknownFileRequestWithPartial = new Request.RequestBuilder("GET /foobar\nRange: bytes=0-10").build();
-        Responder responder = router.getResponder(unknownFileRequestWithPartial, directory);
+        Responder responder = router.getResponder(unknownFileRequestWithPartial);
         assertEquals(responder.getClass(), ErrorResponder.class);
     }
 
     @Test
     public void testFormResponderCreation() {
-        Responder responder = router.getResponder(formRouteRequest, directory);
+        Responder responder = router.getResponder(formRouteRequest);
         assertEquals(responder.getClass(), FormResponder.class);
     }
 
     @Test
     public void testCreatesFormWithEmptyDataLine() {
-        Responder responder = router.getResponder(formRouteRequest, directory);
+        Responder responder = router.getResponder(formRouteRequest);
         assertTrue(responder.getResponse(formRouteRequest).getBody().isEmpty());
     }
 
     @Test
     public void testCreatesParameterResponder() {
         Request paramRequest = new Request.RequestBuilder("GET /parameters").build();
-        Responder responder = router.getResponder(paramRequest, directory);
+        Responder responder = router.getResponder(paramRequest);
         assertEquals(responder.getClass(), ParameterResponder.class);
     }
 
     @Test
-    public void testCreatesPartialResponder() {
+    public void testCreateTextFileResponder() {
         Request getPartial = new Request.RequestBuilder("GET " + textFileRoute + "\nRange: bytes=0-4").build();
-        Responder responder = router.getResponder(getPartial, directory);
-        assertEquals(responder.getClass(), PartialResponder.class);
-    }
-
-    @Test
-    public void testCreatesPatchResponder() {
-        Request patchContent = new Request.RequestBuilder("PATCH " + textFileRoute + "\nIf-Match: xyz").build();
-        Responder responder = router.getResponder(patchContent, directory);
-        assertEquals(responder.getClass(), PatchResponder.class);
+        Responder responder = router.getResponder(getPartial);
+        assertEquals(responder.getClass(), TextFileResponder.class);
     }
 }

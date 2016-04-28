@@ -5,7 +5,7 @@ import java.io.IOException;
 import java.io.PrintStream;
 import java.net.ServerSocket;
 import factories.ServerCreator;
-import routers.CobSpecRouter;
+
 import org.junit.After;
 import org.junit.Before;
 import exceptions.DirectoryNotFoundException;
@@ -64,15 +64,15 @@ public class AppTest {
 class MockServerCreator extends ServerCreator {
 
     @Override
-    public Server createServer(int port, Directory directory, CobSpecRouter router) throws IOException {
-        return new MockServer(new ServerSocket(port), directory, router);
+    public Server createServer(int port, Router router) throws IOException {
+        return new MockServer(new ServerSocket(port), router);
     }
 }
 
 class MockServer extends Server {
 
-    MockServer(ServerSocket serverSocket, Directory dir, CobSpecRouter router) {
-        super(serverSocket, dir, router);
+    MockServer(ServerSocket serverSocket, Router router) {
+        super(serverSocket, router);
     }
 
     @Override

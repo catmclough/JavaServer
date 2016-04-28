@@ -23,20 +23,20 @@ public class PatchResponderTest {
     private String defaultContentMatchHeader = "If-Match: dc50a0d27dda2eee9f65644cd7e4c9cf11de8bec";
     private String nonMatchingEtagHeader = "If-Match: x";
 
-    private static PatchResponder responder;
+    private static TextFileResponder responder;
     private static String[] supportedFileMethods = new String[] {"GET", "PATCH"};
 
     private String twoHundred = HTTPStatus.OK.getStatusLine();
     private String twoOhFour = HTTPStatus.NO_CONTENT.getStatusLine();
 
-    private Request validPatchRequest = new Request.RequestBuilder(createPatchRequest(defaultContentMatchHeader)).build();
+    private Request validPatchRequest = createPatchRequest(defaultContentMatchHeader);
     private static Directory directory;
 
     @BeforeClass
     public static void createTextFile() throws DirectoryNotFoundException, IOException {
         directory = MockDirectory.getMock();
         textFileRoute = "/" + MockDirectory.txtFile.getName();
-        responder = new PatchResponder(supportedFileMethods, directory);
+        responder = new TextFileResponder(supportedFileMethods, directory);
     }
 
     @After
@@ -60,9 +60,11 @@ public class PatchResponderTest {
         }
     }
 
-    private String createPatchRequest(String ifMatchHeader) {
-        return "PATCH " + textFileRoute + System.lineSeparator() + ifMatchHeader
+    private Request createPatchRequest(String ifMatchHeader) {
+        String request = "PATCH " + textFileRoute + System.lineSeparator() + ifMatchHeader
             + System.lineSeparator() + System.lineSeparator() + patchedContent;
+        
+        return new Request.RequestBuilder(request).build();
     }
 
     private Response getFile() {
@@ -80,7 +82,7 @@ public class PatchResponderTest {
 
     @Test
     public void testNonMatchingEtagDoesNotChangeFileContents() {
-        Request invalidPatchRequest = new Request.RequestBuilder(createPatchRequest(nonMatchingEtagHeader)).build();
+        Request invalidPatchRequest = createPatchRequest(nonMatchingEtagHeader);
         responder.getResponse(invalidPatchRequest);
         assertEquals(getFile().getBody(), defaultContent);
     }
@@ -93,7 +95,7 @@ public class PatchResponderTest {
 
     @Test
     public void TestRecognizesEtagMatch() {
-        assertTrue(responder.etagMatchesFileContent(validPatchRequest));
+        assertTrue(PatchResponder.etagMatchesFileContent(validPatchRequest, defaultContent));
     }
 
     @Test

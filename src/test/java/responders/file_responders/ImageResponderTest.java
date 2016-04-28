@@ -44,7 +44,7 @@ public class ImageResponderTest {
 
     @Test
     public void testPublicImageStatusLine() {
-        assertEquals(responder.getSuccessfulStatusLine(), HTTPStatus.OK.getStatusLine());
+        assertEquals(responder.getSuccessfulStatusLine(jpegRequest), HTTPStatus.OK.getStatusLine());
     }
 
     @Test

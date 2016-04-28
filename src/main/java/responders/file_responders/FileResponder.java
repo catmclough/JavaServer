@@ -12,14 +12,14 @@ public abstract class FileResponder implements Responder {
     protected String[] supportedMethods;
     protected Directory directory;
     private FileReader fileReader;
-    public abstract String getSuccessfulStatusLine();
+    public abstract String getSuccessfulStatusLine(Request request);
     public abstract Header[] getHeaders(Request request);
     public abstract String getBody(Request request);
     public abstract byte[] getBodyData(Request request, FileReader reader);
 
-    public FileResponder(String[] supportedMethods, Directory dir) {
+    public FileResponder(String[] supportedMethods, Directory directory) {
         this.supportedMethods = supportedMethods;
-        this.directory = dir;
+        this.directory = directory;
         this.fileReader = new FileReader();
     }
 
@@ -27,7 +27,7 @@ public abstract class FileResponder implements Responder {
     public Response getResponse(Request request) {
         if (requestIsSupported(supportedMethods, request.getMethod())) {
             return new Response.ResponseBuilder()
-                .statusLine(getSuccessfulStatusLine())
+                .statusLine(getSuccessfulStatusLine(request))
                 .body(getBody(request))
                 .bodyData(getBodyData(request, fileReader))
                 .headers(getHeaders(request))

@@ -9,40 +9,31 @@ import http_messages.Header;
 import http_messages.Request;
 import http_messages.RequestHeader;
 import http_messages.ResponseHeader;
-import javaserver.Directory;
 
-public class PartialResponder extends TextFileResponder {
-    private byte[] partialContent;
+public class PartialResponder {
+    private static byte[] partialContent;
 
-    public PartialResponder(String[] supportedMethods, Directory dir) {
-        super(supportedMethods, dir);
-    }
-
-    @Override
-    public String getSuccessfulStatusLine() {
+    public static String getSuccessfulStatusLine() {
         return HTTPStatus.PARTIAL_CONTENT.getStatusLine();
     }
 
-    @Override
-    public String getBody(Request request) {
-        this.partialContent = readPartialContentsOfFile(request);
+    public static String getPartialBody(Request request, File file) {
+        partialContent = readPartialContentsOfFile(request, file);
         return new String(partialContent);
     }
 
-    @Override
-    public Header[] getHeaders(Request request) {
-        String headerLine = ResponseHeader.CONTENT_LENGTH.getKeyword() + this.partialContent.length;
+    public static Header[] getHeaders(Request request) {
+        String headerLine = ResponseHeader.CONTENT_LENGTH.getKeyword() + partialContent.length;
         Header contentLength = new Header.HeaderBuilder(headerLine).build();
         return new Header[] {contentLength};
     }
 
 
-    private byte[] readPartialContentsOfFile(Request request) {
-        File thisFile = new File(directory.getPath() + request.getURI());
-        int fileLength = (int) thisFile.length();
+    private static byte[] readPartialContentsOfFile(Request request, File file) {
+        int fileLength = (int) file.length();
         byte[] fileContents;
         try {
-            fileContents = Files.readAllBytes(thisFile.toPath());
+            fileContents = Files.readAllBytes(file.toPath());
         } catch (IOException e) {
             System.out.println("Unable to read partial.");
             e.printStackTrace();
@@ -55,13 +46,13 @@ public class PartialResponder extends TextFileResponder {
         return Arrays.copyOfRange(fileContents, startOfRange, endOfRange);
     }
 
-    private int[] splitRange(String requestData, int fileLength) {
+    private static int[] splitRange(String requestData, int fileLength) {
         String rawRange = requestData.split("=")[1];
         String[] rangeData = rawRange.trim().split("-");
         return getRange(rangeData, fileLength);
     }
 
-    private int[] getRange(String[] range, int fileLength) {
+    private static int[] getRange(String[] range, int fileLength) {
         int rangeStart = 0;
         int rangeEnd = fileLength;
 
@@ -77,15 +68,15 @@ public class PartialResponder extends TextFileResponder {
         return new int[] {rangeStart, rangeEnd};
     }
 
-    private boolean rangeHasNoEnd(String[] range) {
+    private static boolean rangeHasNoEnd(String[] range) {
         return range.length == 1;
     }
 
-    private boolean rangeHasNoBeginning(String[] range) {
+    private static boolean rangeHasNoBeginning(String[] range) {
         return range[0].isEmpty();
     }
 
-    private int getInt(String[] range, int index) {
+    private static int getInt(String[] range, int index) {
         try {
             return Integer.parseInt(range[index]);
         } catch (NumberFormatException e) {

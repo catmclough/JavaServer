@@ -3,6 +3,7 @@ package responders.file_responders;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
+
 import http_messages.HTTPStatus;
 import http_messages.Header;
 import http_messages.Request;
@@ -16,18 +17,34 @@ public class TextFileResponder extends FileResponder {
     }
 
     @Override
-    public String getSuccessfulStatusLine() {
-        return HTTPStatus.OK.getStatusLine();
+    public String getSuccessfulStatusLine(Request request) {
+        if (request.isPartialRequest()) {
+            return HTTPStatus.PARTIAL_CONTENT.getStatusLine();
+        } else if (request.isPatchRequest()) {
+            return HTTPStatus.NO_CONTENT.getStatusLine();
+        } else {
+            return HTTPStatus.OK.getStatusLine();
+        }
     }
 
     @Override
     public Header[] getHeaders(Request request) {
-        return null;
+        if (request.isPartialRequest()) {
+           return PartialResponder.getHeaders(request); 
+        } else {
+            return null;
+        }
     }
 
     @Override
     public String getBody(Request request) {
-        return getFileContents(request);
+        File file = new File(directory.getPath() + request.getURI());
+        if (request.isPartialRequest()) {
+            return PartialResponder.getPartialBody(request, file);
+        } else if (request.isPatchRequest()) {
+           PatchResponder.updateFileContents(request, file, getFileContents(request, file)); 
+        }
+        return getFileContents(request, file);
     }
 
     @Override
@@ -35,13 +52,12 @@ public class TextFileResponder extends FileResponder {
         return null;
     }
 
-    protected String getFileContents(Request request) {
-        File thisFile = new File(directory.getPath() + request.getURI());
-        int fileLength = (int) thisFile.length();
+    protected String getFileContents(Request request, File file) {
+        int fileLength = (int) file.length();
         byte[] fileContents = new byte[fileLength];
 
         try {
-            FileInputStream fileInput = new FileInputStream(directory.getPath() + thisFile.getName());
+            FileInputStream fileInput = new FileInputStream(directory.getPath() + file.getName());
             fileInput.read(fileContents);
             fileInput.close();
         } catch (IOException e) {

@@ -9,11 +9,12 @@ import responders.RedirectResponder;
 
 public class RedirectResponderTest {
     private String redirectRoute = "/redirect";
-    private String redirectHeader = "Location: http://localhost:5000/";
+    private String redirectLocation = "http://localhost:5000/" ;
+    private String redirectHeader = "Location: " + redirectLocation;
     private Request supportedRequest = new Request.RequestBuilder("GET " + redirectRoute).build();
 
     private String[] supportedMethods = new String[] {"GET"};
-    private RedirectResponder responder = new RedirectResponder(supportedMethods);
+    private RedirectResponder responder = new RedirectResponder(supportedMethods, redirectLocation);
 
     @Test
         public void testRedirectResponderCreation() {

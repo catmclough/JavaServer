@@ -7,20 +7,17 @@ import http_messages.Response;
 import io.RequestReader;
 import io.SocketWriter;
 import responders.Responder;
-import routers.CobSpecRouter;
 
 public class ClientWorker implements Runnable {
     private Socket clientSocket;
-    private CobSpecRouter router;
-    private Directory directory;
+    private Router router;
     protected RequestReader reader;
     protected SocketWriter writer;
     protected RequestLog requestLog;
 
-    public ClientWorker(Socket clientSocket, CobSpecRouter router, Directory directory) {
+    public ClientWorker(Socket clientSocket, Router router) {
         this.clientSocket = clientSocket;
         this.router = router;
-        this.directory = directory;
         this.reader = new RequestReader();
         this.writer = new SocketWriter();
         this.requestLog = RequestLog.getInstance();
@@ -31,7 +28,7 @@ public class ClientWorker implements Runnable {
         String rawRequest = getRawRequest(reader);
         requestLog.addRequest(rawRequest);
         Request request = new Request.RequestBuilder(rawRequest).build();
-        Responder responder = router.getResponder(request, directory);
+        Responder responder = router.getResponder(request);
         Response response = responder.getResponse(request);
 
         writer.openWriter(clientSocket);
