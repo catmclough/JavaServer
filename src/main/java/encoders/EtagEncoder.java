@@ -6,8 +6,7 @@ import java.util.Formatter;
 
 public class EtagEncoder {
 
-    public static String encode(String text) {
-        byte[] content = text.getBytes();
+    public static String encode(byte[] content) {
         try {
             MessageDigest md = MessageDigest.getInstance("SHA-1");
             md.update(content);

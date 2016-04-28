@@ -2,6 +2,7 @@ package responders.file_responders;
 
 import java.io.File;
 import java.util.Arrays;
+
 import http_messages.HTTPStatus;
 import http_messages.Header;
 import http_messages.Request;
@@ -19,7 +20,7 @@ public class ImageResponder extends FileResponder {
     }
 
     @Override
-    public String getSuccessfulStatusLine() {
+    public String getSuccessfulStatusLine(Request request) {
         return HTTPStatus.OK.getStatusLine();
     }
 

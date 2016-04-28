@@ -5,19 +5,16 @@ import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
-import routers.CobSpecRouter;
 
 public class Server {
     protected ServerSocket serverSocket;
-    private Directory directory;
-    private CobSpecRouter router;
+    private Router router;
     protected ExecutorService threadPool;
     protected boolean isOn = true;
     protected ClientWorker clientWorker;
 
-    public Server(ServerSocket serverSocket, Directory directory, CobSpecRouter router) {
+    public Server(ServerSocket serverSocket, Router router) {
         this.serverSocket = serverSocket;
-        this.directory = directory;
         this.router = router;
         this.threadPool = Executors.newFixedThreadPool(8);
     }
@@ -25,7 +22,7 @@ public class Server {
     public void run() throws IOException {
         while (isOn()) {
             Socket clientSocket = serverSocket.accept();
-            clientWorker = new ClientWorker(clientSocket, router, directory);
+            clientWorker = new ClientWorker(clientSocket, router);
             threadPool.execute(clientWorker);
         }
         shutDown();

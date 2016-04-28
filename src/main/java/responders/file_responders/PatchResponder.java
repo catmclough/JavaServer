@@ -5,47 +5,24 @@ import java.io.IOException;
 import java.nio.file.Files;
 import encoders.EtagEncoder;
 import http_messages.HTTPStatus;
-import http_messages.Header;
 import http_messages.Request;
 import http_messages.RequestHeader;
-import io.FileReader;
-import javaserver.Directory;
 
-public class PatchResponder extends TextFileResponder {
+public class PatchResponder {
 
-    public PatchResponder(String[] supportedMethods, Directory publicDir) {
-        super(supportedMethods, publicDir);
-    }
-
-    @Override
-    public String getSuccessfulStatusLine() {
+    public static String getSuccessfulStatusLine() {
         return HTTPStatus.NO_CONTENT.getStatusLine();
     }
 
-    @Override
-    public Header[] getHeaders(Request request) {
-        return null;
-    }
-
-    @Override
-    public String getBody(Request request) {
-        return getUpdatedFileContents(request);
-    }
-
-    @Override
-    public byte[] getBodyData(Request request, FileReader reader) {
-       return null;
-    }
-
-    private String getUpdatedFileContents(Request request) {
-        if (etagMatchesFileContent(request)) {
-            writePatchContentToFile(request);
+    public static void updateFileContents(Request request, File file, String fileContent) {
+        if (etagMatchesFileContent(request, fileContent)) {
+            writePatchContentToFile(request, file);
         }
-        return getFileContents(request);
     }
 
-    protected boolean etagMatchesFileContent(Request request) {
-        String encodedFileContent = EtagEncoder.encode(getFileContents(request));
+    protected static boolean etagMatchesFileContent(Request request, String content) {
+        String encodedFileContent = EtagEncoder.encode(content.getBytes());
+       
         String etag = request.getHeaderData(RequestHeader.ETAG.getKeyword());
         if (etag != null) {
             return (etag.equals(encodedFileContent));
@@ -54,8 +31,7 @@ public class PatchResponder extends TextFileResponder {
         }
     }
 
-    private void writePatchContentToFile(Request request) {
-        File file = new File(directory.getPath() + request.getURI());
+    private static void writePatchContentToFile(Request request, File file) {
         try {
             Files.write(file.toPath(), request.getData().getBytes());
         } catch (IOException e) {

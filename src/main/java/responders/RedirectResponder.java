@@ -8,10 +8,11 @@ import http_messages.ResponseHeader;
 
 public class RedirectResponder implements Responder {
     private String[] supportedMethods;
-    private String defaultRedirectLocation = "http://localhost:5000/";
+    private String redirectLocation;
 
-    public RedirectResponder(String[] supportedMethods) {
+    public RedirectResponder(String[] supportedMethods, String redirectLocation) {
         this.supportedMethods = supportedMethods;
+        this.redirectLocation = redirectLocation;
     }
 
     @Override
@@ -32,7 +33,7 @@ public class RedirectResponder implements Responder {
 
     private Header[] getHeaders(Request request) {
         if (requestIsSupported(supportedMethods, request.getMethod())) {
-            Header redirectHeader = new Header.HeaderBuilder(ResponseHeader.REDIRECT.getKeyword() + defaultRedirectLocation).build();
+            Header redirectHeader = new Header.HeaderBuilder(ResponseHeader.REDIRECT.getKeyword() + redirectLocation).build();
             return new Header[] {redirectHeader};
         }
         return null;
