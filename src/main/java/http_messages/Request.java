@@ -73,7 +73,7 @@ public class Request {
 
         private Header[] getKnownHeaders(String rawRequest) {
             ArrayList<Header> headerCollection = new ArrayList<Header>();
-            for (String rawHeader : RequestParser.getKnownRawRequestHeaders(rawRequest)) {
+            for (String rawHeader : RequestParser.getRawRequestHeaders(rawRequest)) {
                 headerCollection.add(new Header.HeaderBuilder(rawHeader).build());
             }
             Header[] allHeaders = new Header[headerCollection.size()];

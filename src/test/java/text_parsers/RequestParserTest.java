@@ -28,12 +28,12 @@ public class RequestParserTest {
 
     @Test
     public void testParsesRawRangeHeader() {
-        assertEquals(RequestParser.getKnownRawRequestHeaders(requestWithRange)[0], partialDataHeader);
+        assertEquals(RequestParser.getRawRequestHeaders(requestWithRange)[0], partialDataHeader);
     }
 
     @Test
     public void testParsesKnownHeaders() {
-        assertEquals(RequestParser.getKnownRawRequestHeaders(requestWithHeadersAndData)[1], etagHeader);
+        assertEquals(RequestParser.getRawRequestHeaders(requestWithHeadersAndData)[1], etagHeader);
     }
 
     @Test
