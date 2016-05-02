@@ -10,11 +10,11 @@ public class RequestTest {
     private Header[] headers = new Header[] {new Header.HeaderBuilder("Content-Length: 15").build(),
                                              new Header.HeaderBuilder("Host: localhost:5000").build(),
                                              new Header.HeaderBuilder("Range: bytes=0-2").build()};
-    private String headerLines = headers[0].getLine() + System.lineSeparator() +
-                                 headers[1].getLine() + System.lineSeparator() +
-                                 headers[2].getLine() + System.lineSeparator() + System.lineSeparator();
+    private String headerLines = headers[0].getLine() + Request.newLine +
+                                 headers[1].getLine() + Request.newLine +
+                                 headers[2].getLine() + Request.newLine + Request.newLine;
     private String data = "some patched content";
-    private String complicatedRawRequest = "PATCH /some%20file.txt?var_1=wat%20the&var_2=foo" + System.lineSeparator() + headerLines + data;
+    private String complicatedRawRequest = "PATCH /some%20file.txt?var_1=wat%20the&var_2=foo" + Request.newLine + headerLines + data;
 
     private String[] decodedParams = new String[] {"var_1 = wat the", "var_2 = foo"};
     private Request complicatedRequest = new Request.RequestBuilder(complicatedRawRequest).build();

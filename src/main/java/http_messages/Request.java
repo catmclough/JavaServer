@@ -5,6 +5,7 @@ import text_parsers.ParameterParser;
 import text_parsers.RequestParser;
 
 public class Request {
+    public static String newLine = "\r\n";
     private String method;
     private String uri;
     private String[] params;
@@ -55,7 +56,7 @@ public class Request {
     public boolean isPartialRequest() {
         return getHeaderData(RequestHeader.PARTIAL_REQUEST.getKeyword()) != null;
     }
-
+    
     public static class RequestBuilder {
         protected String method;
         protected String uri;
@@ -73,7 +74,7 @@ public class Request {
 
         private Header[] getKnownHeaders(String rawRequest) {
             ArrayList<Header> headerCollection = new ArrayList<Header>();
-            for (String rawHeader : RequestParser.getKnownRawRequestHeaders(rawRequest)) {
+            for (String rawHeader : RequestParser.getRawRequestHeaders(rawRequest)) {
                 headerCollection.add(new Header.HeaderBuilder(rawHeader).build());
             }
             Header[] allHeaders = new Header[headerCollection.size()];

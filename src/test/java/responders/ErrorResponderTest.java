@@ -27,13 +27,6 @@ public class ErrorResponderTest {
     }
 
     @Test
-    public void testRespondsToBlankRequest() {
-        Request emptyRequest = new Request.RequestBuilder("").build();
-        Response response = responder.getResponse(emptyRequest);
-        assertEquals(response.getStatusLine(), fourOhFour);
-    }
-
-    @Test
     public void testRespondsToCrazyRequest() {
         Request crazyRequest = new Request.RequestBuilder("FOO /BAR").build();
         Response response = responder.getResponse(crazyRequest);

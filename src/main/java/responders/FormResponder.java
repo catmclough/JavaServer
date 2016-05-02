@@ -15,10 +15,10 @@ public class FormResponder implements Responder {
 
     @Override
     public Response getResponse(Request request) {
-    return new Response.ResponseBuilder()
-        .statusLine(getStatusLine(request, supportedMethods))
-        .body(getData(request))
-        .build();
+        return new Response.ResponseBuilder()
+            .statusLine(getStatusLine(request, supportedMethods))
+            .body(getData(request))
+            .build();
     }
 
     private String getData(Request request) {

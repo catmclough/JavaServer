@@ -5,6 +5,8 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import org.junit.Test;
+
+import http_messages.Request;
 import io.RequestReader;
 import java.io.ByteArrayInputStream;
 
@@ -12,7 +14,7 @@ public class ReaderTest {
     private RequestReader testReader;
     private BufferedReader testBufferedReader;
     private String simpleRequestLine = "GET /";
-    private String requestWithData = "POST /form HTTP/1.1\n\n\"Data\"=\"My Info\"";
+    private String requestWithData = "POST /form HTTP/1.1" + Request.newLine + Request.newLine + "Data\"=\"My Info\"";
 
     @Test
     public void testReaderReadsSimpleRequestLine() throws IOException {

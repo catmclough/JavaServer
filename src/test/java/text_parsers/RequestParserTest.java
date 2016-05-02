@@ -2,6 +2,8 @@ package text_parsers;
 
 import static org.junit.Assert.*;
 import org.junit.Test;
+
+import http_messages.Request;
 import text_parsers.RequestParser;
 
 public class RequestParserTest {
@@ -9,12 +11,12 @@ public class RequestParserTest {
     private String requestMethod = "POST";
     private String requestURI = "/users/123";
     private String partialDataHeader = "Range: bytes=0-4";
-    private String requestWithRange = "GET /partial_content.txt HTTP/1.1" + System.lineSeparator() + partialDataHeader;
+    private String requestWithRange = "GET /partial_content.txt HTTP/1.1" + Request.newLine + partialDataHeader;
     private String unimportantHeader = "Content-Length: 15";
     private String etagHeader = "If-Match: xyz";
     private String patchData = "new content";
-    private String requestWithHeadersAndData = "PATCH /path-content.txt HTTP/1.1" + System.lineSeparator() + unimportantHeader  + System.lineSeparator() + etagHeader +
-            System.lineSeparator() + System.lineSeparator() + patchData;
+    private String requestWithHeadersAndData = "PATCH /path-content.txt HTTP/1.1" + Request.newLine + unimportantHeader  + Request.newLine + etagHeader +
+            Request.newLine + Request.newLine + patchData;
 
     @Test
     public void testParsesMethod() {
@@ -28,12 +30,12 @@ public class RequestParserTest {
 
     @Test
     public void testParsesRawRangeHeader() {
-        assertEquals(RequestParser.getKnownRawRequestHeaders(requestWithRange)[0], partialDataHeader);
+        assertEquals(RequestParser.getRawRequestHeaders(requestWithRange)[0], partialDataHeader);
     }
 
     @Test
-    public void testParsesKnownHeaders() {
-        assertEquals(RequestParser.getKnownRawRequestHeaders(requestWithHeadersAndData)[1], etagHeader);
+    public void testParsesHeaders() {
+        assertEquals(RequestParser.getRawRequestHeaders(requestWithHeadersAndData)[1], etagHeader);
     }
 
     @Test

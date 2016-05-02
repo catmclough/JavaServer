@@ -20,8 +20,8 @@ public class LogResponderTest {
     private String validCredentialsAuthHeader = "Authorization: Basic YWRtaW46aHVudGVyMg==";
 
     private Request getLogsWithoutAuth = new Request.RequestBuilder("GET " + logsRoute).build();
-    private Request getLogsWithInvalidAuth = new Request.RequestBuilder("GET " + logsRoute +  System.lineSeparator() + invalidCredentialsAuthHeader).build();
-    private Request getLogsWithValidAuth = new Request.RequestBuilder("GET " + logsRoute +  System.lineSeparator() + validCredentialsAuthHeader).build();
+    private Request getLogsWithInvalidAuth = new Request.RequestBuilder("GET " + logsRoute +  Request.newLine + invalidCredentialsAuthHeader).build();
+    private Request getLogsWithValidAuth = new Request.RequestBuilder("GET " + logsRoute +  Request.newLine + validCredentialsAuthHeader).build();
 
     private String simpleGet = "GET /foo";
     private String fourOhOne = HTTPStatus.UNAUTHORIZED.getStatusLine();

@@ -13,7 +13,7 @@ public class FormResponderTest {
     private String mockPostData = "snack=crackerjack";
 
     private Request getForm = new Request.RequestBuilder("GET " + formRoute).build();
-    private Request postFormWithData = new Request.RequestBuilder("POST " + formRoute + "\n\n" + mockPostData).build();
+    private Request postFormWithData = new Request.RequestBuilder("POST " + formRoute + Request.newLine + Request.newLine + mockPostData).build();
     private Request deleteForm = new Request.RequestBuilder("DELETE " + formRoute).build();
 
     private String[] supportedFormMethods = new String[] {"GET", "POST", "PUT", "DELETE"};

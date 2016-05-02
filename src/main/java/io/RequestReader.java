@@ -5,6 +5,8 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.Socket;
 
+import http_messages.Request;
+
 public class RequestReader {
     protected BufferedReader readingMechanism;
     private char lastCharOfRequest = (char) -1;
@@ -23,7 +25,7 @@ public class RequestReader {
         String fullRequest = "";
         fullRequest += getRequestLine();
         if (readingMechanism.ready()) {
-            fullRequest += System.lineSeparator();
+            fullRequest += Request.newLine;
             fullRequest += getData();
         }
         return fullRequest;

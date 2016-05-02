@@ -20,7 +20,7 @@ public class TextFileResponderTest {
     private static String[] supportedMethods = new String[] {"GET", "PATCH"};
     private static FileResponder responder;
     private Request simpleGet = new Request.RequestBuilder("GET " + textFileRoute).build();
-    private Request partialFileRequest = new Request.RequestBuilder("GET " + textFileRoute + "\nRange: bytes=0-4").build();
+    private Request partialFileRequest = new Request.RequestBuilder("GET " + textFileRoute + Request.newLine + "Range: bytes=0-4").build();
     private Request patchFileRequest = new Request.RequestBuilder("PATCH " + textFileRoute).build();
 
     @BeforeClass
@@ -79,14 +79,14 @@ public class TextFileResponderTest {
     @Test
     public void testPartialContentWithFullRange() {
         String firstFiveBytes = textFileContents.substring(0, 5);
-        Request fullRangeRequest = new Request.RequestBuilder("GET " + textFileRoute + "\nRange: bytes=0-4").build();
+        Request fullRangeRequest = new Request.RequestBuilder("GET " + textFileRoute + Request.newLine + "Range: bytes=0-4").build();
         Response partialResponse = responder.getResponse(fullRangeRequest);
         assertEquals(partialResponse.getBody(), firstFiveBytes);
     }
 
     @Test
     public void testPartialContentWithEndOfRange() {
-        Request request = new Request.RequestBuilder("GET " + textFileRoute + "\nRange: bytes=-6").build();
+        Request request = new Request.RequestBuilder("GET " + textFileRoute + Request.newLine + "Range: bytes=-6").build();
         String lastSixBytes = textFileContents.substring(textFileContents.length() - 6);
         Response partialResponse = responder.getResponse(request);
         assertEquals(partialResponse.getBody(), lastSixBytes);
@@ -94,7 +94,7 @@ public class TextFileResponderTest {
 
     @Test
     public void testPartialContentWithStartOfRange() {
-        Request startOfRangeRequest = new Request.RequestBuilder("GET " + textFileRoute + "\nRange: bytes=4-").build();
+        Request startOfRangeRequest = new Request.RequestBuilder("GET " + textFileRoute + Request.newLine + "Range: bytes=4-").build();
         String bytesFrom4 = textFileContents.substring(4);
         Response response = responder.getResponse(startOfRangeRequest);
         assertEquals(response.getBody(), bytesFrom4);

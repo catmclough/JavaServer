@@ -61,8 +61,8 @@ public class PatchResponderTest {
     }
 
     private Request createPatchRequest(String ifMatchHeader) {
-        String request = "PATCH " + textFileRoute + System.lineSeparator() + ifMatchHeader
-            + System.lineSeparator() + System.lineSeparator() + patchedContent;
+        String request = "PATCH " + textFileRoute + Request.newLine + ifMatchHeader
+            + Request.newLine + Request.newLine + patchedContent;
         
         return new Request.RequestBuilder(request).build();
     }
