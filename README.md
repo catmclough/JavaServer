@@ -14,20 +14,24 @@ An HTTP Server, written in Java, that handles most standard HTTP Requests.
 
 ##### To Run The Server:
 
-- Use maven to install dependencies and generate a jar file using
+- Include the server in existing projects with Clojars
+
+[![Clojars Project](https://img.shields.io/clojars/v/javaserver.svg)](https://clojars.org/javaserver)
+
+- Or use maven to install dependencies and generate a jar file
 ```
-mvn clean install
+$ mvn clean install
 ```
 
-- Start the server from the root directory by running the jar file, with a command like the following (replacing the jar file path with your own) :
+- Then start the server from the root directory by running the jar file
 ```
-java -jar target/javaserver-1.0-SNAPSHOT.jar
+$ java -jar target/javaserver-1.0-SNAPSHOT.jar
 ```
 - To specify a public directory from which to serve files, you can use the "-D" flag followed by the name of an existing directory
 ```
-java -jar target/javaserver-1.0-SNAPSHOT.jar -D some_directory/
+$ java -jar target/javaserver-1.0-SNAPSHOT.jar -D path/to/some_directory/
 ```
-- To specify the port on which the server will run, use the "-P" flag followed by the port number
+- To specify the port on which to run the server, use the "-P" flag followed by a valid port number
 ```
 java -jar target/javaserver-1.0-SNAPSHOT.jar -P 9090
 ```
