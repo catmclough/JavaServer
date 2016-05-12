@@ -12,7 +12,8 @@ import exceptions.DirectoryNotFoundException;
 import http_messages.HTTPStatus;
 import io.RequestReader;
 import io.SocketWriter;
-import routes.CobSpecRoutes;
+import routers.CobSpecRouter;
+import routers.Router;
 import test_helpers.MockDirectory;
 
 public class ClientWorkerTest {
@@ -32,8 +33,7 @@ public class ClientWorkerTest {
             System.err.println("ClientWorkerTest tried to run tests with a non-existant public directory");
             e.printStackTrace();
         }
-	    CobSpecRoutes routes = new CobSpecRoutes(mockDirectory);
-	    router = new Router(routes.getRoutesAndResponders());
+	    router = new CobSpecRouter(mockDirectory);
 	}
 
 	@Before

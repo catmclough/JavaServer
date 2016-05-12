@@ -5,6 +5,7 @@ import java.io.IOException;
 import java.io.PrintStream;
 import java.net.ServerSocket;
 import factories.ServerCreator;
+import routers.Router;
 
 import org.junit.After;
 import org.junit.Before;
