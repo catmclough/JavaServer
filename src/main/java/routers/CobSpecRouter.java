@@ -1,17 +1,16 @@
-package routes;
+package routers;
 
 import java.util.HashMap;
-
 import javaserver.Directory;
 import responders.*;
 import responders.file_responders.*;
 import forms.Form;
 
-public class CobSpecRoutes {
+public class CobSpecRouter implements Router {
     private Directory directory;
     private String defaultRedirectLocation = "http://localhost:5000/";
 
-    public CobSpecRoutes(Directory dir) {
+    public CobSpecRouter(Directory dir) {
         this.directory = dir;
     }
 
@@ -19,6 +18,7 @@ public class CobSpecRoutes {
         return new String[] {"GET"};
     }
 
+    @Override
     public HashMap<String, Responder> getRoutesAndResponders() {
         HashMap<String, Responder> routes = new HashMap<String, Responder>();
         routes.put("/", new DirectoryResponder(getOption(), directory));

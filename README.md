@@ -33,5 +33,5 @@ $ java -jar target/javaserver-1.0-SNAPSHOT.jar -D path/to/some_directory/
 ```
 - To specify the port on which to run the server, use the "-P" flag followed by a valid port number
 ```
-java -jar target/javaserver-1.0-SNAPSHOT.jar -P 9090
+$ java -jar target/javaserver-1.0-SNAPSHOT.jar -P 9090
 ```

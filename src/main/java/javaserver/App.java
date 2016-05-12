@@ -4,14 +4,14 @@ import java.io.File;
 import java.io.IOException;
 import exceptions.DirectoryNotFoundException;
 import factories.*;
-import routes.CobSpecRoutes;
+import routers.CobSpecRouter;
+import routers.Router;
 import text_parsers.ArgParser;
 
 public class App {
      protected static final int DEFAULT_PORT = 5000;
      protected static final String DEFAULT_DIRECTORY_NAME = "public/";
      private static Directory directory;
-     private static Router router;
      protected static int port;
      protected static ServerCreator serverCreator = new ServerCreator();
      protected static Server server;
@@ -19,8 +19,7 @@ public class App {
     public static void main(String[] args) throws IOException, DirectoryNotFoundException {
         port = ArgParser.getPortChoice(args, DEFAULT_PORT);
         directory = new Directory(getChosenFile(args));
-        CobSpecRoutes routes = new CobSpecRoutes(directory);
-        router = new Router(routes.getRoutesAndResponders());
+        Router router = new CobSpecRouter(directory);
         describeServer();
         server = serverCreator.createServer(port, router);
         server.run();

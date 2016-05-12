@@ -20,7 +20,8 @@ import io.SocketWriter;
 import static org.junit.Assert.*;
 import javaserver.Directory;
 import javaserver.Server;
-import routes.CobSpecRoutes;
+import routers.CobSpecRouter;
+import routers.Router;
 import test_helpers.MockDirectory;
 
 public class ServerTest {
@@ -37,8 +38,8 @@ public class ServerTest {
     @Before
     public void setUp() throws Exception {
         ServerSocket mockServerSocket = new MockServerSocket(defaultPort);
-	    CobSpecRoutes routes = new CobSpecRoutes(directory);
-        server = new Server(mockServerSocket, new Router(routes.getRoutesAndResponders()));
+	    Router router = new CobSpecRouter(directory);
+        server = new Server(mockServerSocket, router);
     }
 
     @AfterClass

@@ -3,7 +3,7 @@ package factories;
 import java.io.IOException;
 import java.net.ServerSocket;
 import javaserver.Server;
-import javaserver.Router;
+import routers.Router;
 
 public class ServerCreator {
 
