@@ -8,13 +8,14 @@ import http_messages.Response;
 import io.RequestReader;
 import io.SocketWriter;
 import responders.Responder;
+import routers.Router;
 
 public class ClientWorker implements Runnable {
     private Socket clientSocket;
-    private Router router;
     protected RequestReader reader;
     protected SocketWriter writer;
     protected RequestLog requestLog;
+    private Router router;
 
     public ClientWorker(Socket clientSocket, Router router) {
         this.clientSocket = clientSocket;

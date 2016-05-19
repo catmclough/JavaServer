@@ -13,8 +13,8 @@ import responders.FormResponder;
 import responders.ParameterResponder;
 import responders.Responder;
 import responders.file_responders.TextFileResponder;
-import javaserver.Router;
-import routes.CobSpecRoutes;
+import routers.CobSpecRouter;
+import routers.Router;
 import test_helpers.MockDirectory;
 
 public class RouterTest {
@@ -27,8 +27,7 @@ public class RouterTest {
     @BeforeClass
     public static void setup() throws DirectoryNotFoundException, IOException {
         directory = MockDirectory.getMock();
-        CobSpecRoutes routes = new CobSpecRoutes(directory);
-        router = new Router(routes.getRoutesAndResponders());
+        router = new CobSpecRouter(directory);
     }
 
     @AfterClass
