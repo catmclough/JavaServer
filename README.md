@@ -10,7 +10,7 @@ An HTTP Server, written in Java, that handles most standard HTTP Requests.
 
 ##### Acceptance Tests
 
-[Cob Spec] (https://github.com/8thlight/cob_spec)
+[Cob Spec](https://github.com/8thlight/cob_spec)
 
 ##### To Run The Server:
 
